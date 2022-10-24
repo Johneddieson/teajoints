@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- <ion-title>{{firstname}} {{lastname}}</ion-title> -->
+    
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+      
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="customerInfo()"><ion-icon name="information-circle-outline" slot="icon-only"></ion-icon></ion-button>
+      <ion-button color="success" (click)="approveOrder()"  [hidden]="status != 'Open'"><ion-icon name="checkmark-circle-outline" slot="icon-only"></ion-icon></ion-button>
+      <ion-button color="danger" (click)="cancelOrder()"  [hidden]="status != 'Open'"><ion-icon name="close-circle-outline" slot="icon-only"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="card-background-page" padding>
+<!-- <ion-card *ngFor="let data of orders">
+    <img [src]="data.ImageUrl" style="max-width: 29%; height: auto;"/>
+  <div class="card-title">{{data.Category}}</div>
+  <div class="card-subtitle">{{data.ProductName}}</div>
+  <div class="card-subtitle">{{data.ProductName}}</div>
+
+
+
+</ion-card> -->
+<ion-card *ngFor="let data of orders">
+  <img [src]="data.ImageUrl" style="max-width: 35%; height: auto;" />
+  <ion-card-header>
+    <ion-card-title>{{data.Category}}</ion-card-title>
+    <ion-card-subtitle>{{data.ProductName}} {{data.UnitPrice | currency: '₱'}}  ({{data.Quantity}}) PCS</ion-card-subtitle>
+  </ion-card-header>
+
+  <!-- <ion-card-content>
+    {{data.Quantity}} PCS
+   <br>
+    {{data.UnitPrice | currency: '₱'}} 
+  </ion-card-content> -->
+</ion-card>
+
+
+</ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col size="7">
+     <!-- <ion-text>
+        <h4>Total :  {{total | currency: '₱'}} </h4>
+      </ion-text> -->
+    </ion-col>
+    <ion-col size="5">
+      <ion-text>
+        <h4>Total :  {{total | currency: '₱'}} </h4>
+      </ion-text>
+      <!-- <ion-button *ngIf="total > 0" color="light" (click)="OrderNow()">Confirm Order</ion-button> -->
+    </ion-col>
+  </ion-row>
+</ion-footer>

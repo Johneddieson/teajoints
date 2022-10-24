@@ -1,0 +1,80 @@
+
+<!-- 
+<ion-content>
+   <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div class="center">
+      <h1>Sign In</h1>
+      <h5 [hidden]="ishide" >New Here? <a class="link" (click)="gotosignup()">Sign Up</a></h5>
+      <form method="post">
+        <div class="txt_field">
+          <input type="text" [disabled]="ishide"  [(ngModel)]="Email1" required [ngModelOptions]="{standalone: true}"  #email>
+          <span></span>
+          <label>Email</label>
+        </div>
+        <div class="txt_field">
+          <input type="password" [disabled]="ishide" [(ngModel)]="Password1" required [ngModelOptions]="{standalone: true}" #password>
+          <span></span>
+          <label>Password</label>
+        </div>
+        <div *ngIf="!ishide" class="pass" (click)="ResetPassword()">Forgot Password?</div>
+        <button class="button" *ngIf="!ishide" (click)="LogIn(email, password)">Login</button>
+        <button class="button" *ngIf="ishide && isthisadmin" (click)="navigateadmin()"  >Continue as Admin</button>
+        <button class="button" *ngIf="ishide && !isthisadmin" (click)="navigatecustomer()" >Continue as Customer</button>
+      
+      
+        <div class="signup_link">
+        </div>
+
+        
+      </form>
+    </div>
+
+  </body>
+</ion-content> -->
+
+
+<ion-content>
+  <div class="login-section ion-padding">
+   <div class="heading ion-padding">
+    <p class="haha" routerLink="/mainpage"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></p>
+    <h1>Sign in to continue</h1>
+    
+   </div> 
+   <div class="login-form ion-padding">
+    <div class="form-input">
+      <ion-icon name="mail-outline"></ion-icon>
+      <ion-item>
+        <ion-label position="floating">EMAIL</ion-label>
+        <ion-input type="email" #email [disabled]="ishide"></ion-input>
+      </ion-item>
+    </div>
+    <div class="form-input">
+      <ion-icon name="lock-closed-outline"></ion-icon>
+      <ion-item>
+        <ion-label position="floating">PASSWORD</ion-label>
+        <ion-input type="password" #password [disabled]="ishide"></ion-input>
+      </ion-item>
+    </div>
+   </div>
+
+   <div class="action-button ion-padding" *ngIf="!ishide">
+    <ion-button size="large" class="login-button" (click)="LogIn(email, password)">Log in</ion-button>
+    <p>Forgot password? Click <a class="haha" (click)="ResetPassword()">here!</a></p>
+    <ion-button class="signup-button" size="large" fill="outline" routerLink="/signup">Signup</ion-button>
+   </div>
+
+   <div class="action-button ion-padding" *ngIf="ishide && isthisadmin">
+    <ion-button size="large" class="login-button" (click)="navigateadmin()">Continue as Admin</ion-button>
+   </div>
+   <div class="action-button ion-padding" *ngIf="ishide && !isthisadmin">
+    <ion-button size="large" class="login-button" (click)="navigatecustomer()">Continue as Customer</ion-button>
+   </div>
+  </div>
+</ion-content>
+
+
+
+

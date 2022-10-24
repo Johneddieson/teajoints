@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar color="primary">
+<ion-title>Our Products</ion-title>
+<ion-buttons slot="end">
+  <ion-button><ion-icon slot="icon-only" name="search-outline"></ion-icon></ion-button>
+  <ion-button routerLink="/login"><ion-icon slot="icon-only" name="log-in-outline"></ion-icon></ion-button>
+</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item button *ngFor="let item of products" routerLink="/productdetails/{{item.id}}">
+      <ion-avatar slot="start">
+        <img [src]="item.ImageUrl"  />
+      </ion-avatar>
+      <ion-label>
+        {{item.ProductName}}
+        <p>{{item.Category}}</p>
+      </ion-label>
+      
+      <ion-badge slot="end"> {{item.Stock}}</ion-badge>
+    </ion-item>
+  </ion-list>
+</ion-content>

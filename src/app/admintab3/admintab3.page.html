@@ -1,0 +1,35 @@
+
+<!-- 
+<ion-content fullscreen>
+  <ion-list>
+    
+    <ion-item *ngFor="let data of inventoryList">
+      <ion-avatar slot="start">
+        <img src="{{data.ImageUrl}}" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{data.ProductName}}</h2>
+        <h3>{{data.Quantity}}</h3>
+        <p>{{data.Destination}}</p>
+        <p>{{data.Datetime}}</p>
+      </ion-label>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content> -->
+<ion-content>
+  <ion-card>
+    <ion-item  *ngFor="let data of inventoryList" lines="none">
+      <ion-avatar slot="start">
+        <img [src]="data.ImageUrl"/>
+      </ion-avatar>
+      <ion-label>
+        <h2 text-capitalize>{{data.ProductName}} ({{data.Quantity}})</h2>
+        <p>{{data.Destination}}</p>
+        <p>{{data.Datetime}}</p>
+      </ion-label>
+    </ion-item>
+   
+  </ion-card>
+</ion-content>

@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar color="success">
+    <ion-title>{{category}}</ion-title>
+  <ion-buttons slot="start">
+    <ion-back-button></ion-back-button>
+  </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ion-card>
+  <img [src]="imageUrl" class="img"/>
+  <ion-card-header>
+    <ion-card-title>{{productname}}</ion-card-title>
+    <ion-card-subtitle>{{unitprice | currency: '₱'}}</ion-card-subtitle>
+    <!-- <ion-text color="tertiary">
+      <span>P129.30</span>
+    </ion-text> -->
+  </ion-card-header>
+</ion-card>
+</ion-content>

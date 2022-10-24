@@ -1,0 +1,114 @@
+<ion-header>
+  <ion-toolbar class="toolbar">
+    <ion-title>Products</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+      
+    </ion-buttons>
+    <ion-buttons  slot="end">
+      <!-- <ion-back-button color="light" defaultHref="home"></ion-back-button> -->
+      <!-- <ion-icon class="buttonsactive"  name="cart"></ion-icon> -->
+      <ion-button #productbtn (mouseenter)="dropdown=true" (mouseleave)="hideDropdown($event)" fill="clear" color="dark"
+      class="dropdown-btn"  routerDirection="root" routerLinkActive="active-item">
+      Categories
+      <ion-icon slot="end" [name]="dropdown ? 'chevron-down' : 'chevron-up'"></ion-icon>
+    </ion-button>
+    
+    </ion-buttons>
+
+    
+  </ion-toolbar>
+  <div *ngIf="dropdown" class="dropdown" (mouseleave)="dropdown = false" #dropdownbox>
+   
+    <ion-item button routerLink="/viewproducts"  (click)="dropdown = false"  [queryParams]="{category: 'Milktea'}" lines="none"
+    routerDirection="root">
+    All
+    </ion-item>
+    <ion-item button routerLink="/viewproducts"  (click)="dropdown = false"  lines="none"
+    routerDirection="root">
+    All
+    </ion-item>
+    <ion-item button routerLink="/viewproducts"  (click)="dropdown = false"  [queryParams]="{category: 'Frappe'}" lines="none"
+    routerDirection="root">
+    Frappe
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Milktea'}" lines="none"
+    routerDirection="root">
+    Milk Tea
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Noodles'}" lines="none"
+    routerDirection="root">
+    Noodles
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Pares'}" lines="none"
+    routerDirection="root">
+    Pares
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Platters'}" lines="none"
+    routerDirection="root">
+    Platters
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Shakes'}" lines="none"
+    routerDirection="root">
+    Shakes
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Silog Meals'}" lines="none"
+    routerDirection="root">
+    Silog Meals
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Sizzling Meal W/ Rice'}" lines="none"
+    routerDirection="root">
+    Sizzling Meal W Rice
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Snacks'}" lines="none"
+    routerDirection="root">
+    Snacks
+    </ion-item>
+    <ion-item button routerLink="/viewproducts" (click)="dropdown = false"  [queryParams]="{category: 'Rice Meal'}" lines="none"
+    routerDirection="root">
+    Rice Meal
+    </ion-item>
+  </div>
+</ion-header>
+<ion-content>
+  <div class="container">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+      <ion-list>
+        <ion-item *ngFor="let data of products">
+          <ion-thumbnail slot="start">
+           <img src="{{data.ImageUrl}}" />  
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{data.ProductName}} <span style="float: right; color: #69a03a;"> {{data.UnitPrice | currency: '₱'}}</span>
+            </h2>
+            <h3>
+              <!-- <ion-icon name="star-outline"></ion-icon>
+              <ion-icon name="star-outline"></ion-icon>
+              <ion-icon name="star-outline"></ion-icon>
+              <ion-icon name="star-outline"></ion-icon> -->
+            </h3>
+            <p class="rate"> {{data.Stock}} remaining stock</p>
+            <div id="qty">
+              <!-- <span (click)="Decrease(data)" class="minus"> - </span>  1
+              <span (click)="Increase(data)" class="plus"> + </span>   -->
+              <span style="float: right; ">
+               <button id="btn2" (click)="DeleteProduct(data)"> Delete</button> 
+             
+              </span>
+              <span style="float: right; ">
+                <button id="btn" (click)="EditProduct(data)"> Edit</button> 
+              
+               </span>
+               
+            </div>
+          </ion-label>
+        </ion-item>
+       
+      </ion-list>      
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  </div>
+  </ion-content>

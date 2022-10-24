@@ -1,0 +1,245 @@
+
+
+.haha {
+  cursor: pointer;
+}
+
+
+
+
+// ion-content {
+//   --background:  url('../../assets/milktea4.jpg') no-repeat center center / cover;
+//  background: linear-gradient(120deg,#2980b9, #8e44ad);
+// }
+
+
+// @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@700&family=Poppins:wght@400;500;600&display=swap');
+// *{
+//   margin: 0;
+//   padding: 0;
+//   box-sizing: border-box;
+//   font-family: "Poppins", sans-serif;
+// }
+// body{
+//   margin: 0;
+//   padding: 0;
+// //   background: linear-gradient(120deg,#2980b9, #8e44ad);
+//   height: 100vh;
+//   overflow: hidden;
+// }
+// .center{
+//   position: absolute;
+//   top: 50%;
+//   left: 50%;
+//   transform: translate(-50%, -50%);
+//   width: 400px;
+//   background: white;
+//   border-radius: 10px;
+//   box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
+  
+// }
+// .center h1{
+//   text-align: center;
+//   padding: 20px 0;
+// //   border-bottom: 1px solid silver;
+// }
+// .center h5{
+//     text-align: center;
+//     // padding: 20px 0;
+//     border-bottom: 1px solid silver;
+//   }
+// .center form{
+//   padding: 0 40px;
+//   box-sizing: border-box;
+// }
+// form .txt_field{
+//   position: relative;
+//   border-bottom: 2px solid #adadad;
+//   margin: 30px 0;
+// }
+// .txt_field input{
+//   width: 100%;
+//   padding: 0 5px;
+//   height: 40px;
+//   font-size: 16px;
+//   border: none;
+//   background: none;
+//   outline: none;
+// }
+// .txt_field label{
+//   position: absolute;
+//   top: 50%;
+//   left: 5px;
+//   color: #adadad;
+//   transform: translateY(-50%);
+//   font-size: 16px;
+//   pointer-events: none;
+//   transition: .5s;
+// }
+// .txt_field span::before{
+//   content: '';
+//   position: absolute;
+//   top: 40px;
+//   left: 0;
+//   width: 0%;
+//   height: 2px;
+//   background: #2691d9;
+//   transition: .5s;
+// }
+// .txt_field input:focus ~ label,
+// .txt_field input:valid ~ label{
+//   top: -5px;
+//   color: #2691d9;
+// }
+// .txt_field input:focus ~ span::before,
+// .txt_field input:valid ~ span::before{
+//   width: 100%;
+// }
+// .pass{
+//   margin: -5px 0 20px 5px;
+//   color: #a6a6a6;
+//   cursor: pointer;
+// }
+// .pass:hover{
+//   text-decoration: underline;
+// }
+// input[type="submit"]{
+//   width: 100%;
+//   height: 50px;
+//   border: 1px solid;
+//   background: #2691d9;
+// //   border-radius: 25px;
+//   font-size: 18px;
+//   color: #e9f4fb;
+//   font-weight: 700;
+//   cursor: pointer;
+//   outline: none;
+// }
+// .button {
+//     width: 100%;
+//     height: 50px;
+//     border: 1px solid;
+//     background: #2691d9;
+//   //   border-radius: 25px;
+//     font-size: 18px;
+//     color: #e9f4fb;
+//     font-weight: 700;
+//     cursor: pointer;
+//     outline: none;
+// }
+// input[type="submit"]:hover{
+//   border-color: #2691d9;
+//   transition: .5s;
+// }
+// .signup_link{
+//   margin: 30px 0;
+//   text-align: center;
+//   font-size: 16px;
+//   color: #666666;
+// }
+// .signup_link a{
+//   color: #2691d9;
+//   text-decoration: none;
+// }
+// .signup_link a:hover{
+//   text-decoration: underline;
+// }
+
+// .link {
+//     cursor: pointer;
+//     color: rgb(93, 93, 226);
+    
+// }
+
+
+
+
+ion-content {
+  --background: linear-gradient(0deg,rgba(0,0,0,0.7), rgba(0,0,0,0.1)),
+  url("../../assets/icon/teajointslogo.jpg") no-repeat center center / cover;
+}
+
+.login-section {
+  height: 90vh;
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  position: fixed;
+  margin: auto;
+  border-top-left-radius: 46px;
+  border-top-right-radius: 46px;
+  
+  .heading {
+    margin-top: 20px;
+    h1 {
+      font-size: 1.6rem;
+      font-weight: bolder;
+    }
+    p {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #7b7b7b;
+
+    }
+  }
+.login-form {
+  .form-input {
+    position: relative;
+    margin-bottom: 10px;
+    ion-item::part(native) {
+      padding-left: 0;
+    }
+    ion-icon {
+      position: absolute;
+      top: 37px;
+      z-index: 2;
+      font-size: 1.2rem;
+      left: 5px;
+    }
+    // ion-item {
+    //   position: absolute;
+    //   top:37px;
+    //   z-index: 2;
+    //   font-size: 1.2rem;
+    //   left: 5px;
+    // }
+    ion-label {
+      position: absolute;
+      margin-left: 35px;
+      font-weight: bolder;
+      font-size: 0.8rem;
+      top: 3px;
+    }
+    ion-input {
+      font-size: 0.9rem;
+      --padding-start: 36px;
+      --padding-top: 36px;
+      color: #7b7b7b;
+    }
+  }
+
+}
+.action-button {
+  text-align: center;
+  .login-button {
+    --background: #f9b801;
+    width: 100%;
+    font-weight: bold;
+  }
+  p {
+    margin-top: 15px;
+    font-size: 1rem;
+    color: #7b7b7b;
+  }
+  .signup-button {
+    --border-color: #b4b4b4;
+    --color: #000000;
+    font-weight: bold;
+    margin-top: 30px;
+    width: 100%;
+  }
+}
+}
