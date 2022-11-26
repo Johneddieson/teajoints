@@ -1,26 +1,18 @@
 
-<!-- 
-<ion-content fullscreen>
-  <ion-list>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+      <ion-title>Inventory</ion-title>
+    </ion-buttons>
+    <!-- (ionChange)="handleChange($event)" -->
+    <ion-searchbar  [debounce]="1000" show-clear-button="always" clear-icon="trash-bin" 
+    placeholder="Fullname & Productname" (ionChange)="handleChange($event)"></ion-searchbar>
     
-    <ion-item *ngFor="let data of inventoryList">
-      <ion-avatar slot="start">
-        <img src="{{data.ImageUrl}}" />
-      </ion-avatar>
-      <ion-label>
-        <h2>{{data.ProductName}}</h2>
-        <h3>{{data.Quantity}}</h3>
-        <p>{{data.Destination}}</p>
-        <p>{{data.Datetime}}</p>
-      </ion-label>
-    </ion-item>
-
-  </ion-list>
-
-</ion-content> -->
-<ion-content>
+  </ion-toolbar>
+ 
+ <ion-content>
   <ion-card>
-    <ion-item  *ngFor="let data of inventoryList" lines="none">
+    <ion-item  *ngFor="let data of inventoryList" lines="none" color="dark">
       <ion-avatar slot="start">
         <img [src]="data.ImageUrl"/>
       </ion-avatar>
@@ -32,4 +24,4 @@
     </ion-item>
    
   </ion-card>
-</ion-content>
+</ion-content>   

@@ -1,18 +1,13 @@
-<ion-header>
-  <ion-toolbar class="toolbar">
+<!-- <ion-header>
+  <ion-toolbar color="primary">
     <ion-buttons  slot="start">
-      <!-- <ion-back-button color="light" defaultHref="home"></ion-back-button> -->
-      <ion-icon class="buttonsactive"   name="checkbox"></ion-icon>
+      <ion-buttons  slot="start">
+        <ion-back-button></ion-back-button>
+        </ion-buttons>
     </ion-buttons>
-
-    <!-- <ion-buttons *ngIf="numbers != 0" slot="end">
-      
-      <ion-button (click)="checkout()"><ion-badge color="danger">{{numbers}}</ion-badge>Checkout</ion-button>
-      </ion-buttons> -->
-    <ion-title>Check Out</ion-title>
+     <ion-title>Check Out</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
 <div class="container">
 <ion-grid>
@@ -24,13 +19,9 @@
          <img src="{{data.ImageUrl}}" />  
         </ion-thumbnail>
         <ion-label>
-          <h2>{{data.ProductName}} <span style="float: right; color: #69a03a;">{{data.UnitPrice | currency: '₱'}}</span>
+          <h2>{{data.ProductName}} <span style="float: right; color: #3880ff;">{{data.UnitPrice | currency: '₱'}}</span>
           </h2>
           <h3>
-            <!-- <ion-icon name="star-outline"></ion-icon>
-            <ion-icon name="star-outline"></ion-icon>
-            <ion-icon name="star-outline"></ion-icon>
-            <ion-icon name="star-outline"></ion-icon> -->
           </h3>
           <p class="rate"> {{data.Stock}} remaining stock</p>
           <div id="qty">
@@ -59,4 +50,66 @@
       <ion-button *ngIf="total > 0" color="light" (click)="OrderNow()">Confirm Order</ion-button>
     </ion-col>
   </ion-row>
-</ion-footer>
+</ion-footer> -->
+
+
+
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons  slot="start">
+   <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Check Out</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="small-container cart-page">
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+      </tr>
+      <tr *ngFor="let data of getCartDetails">
+        <td>
+          <div class="cart-info">
+           <img src="{{data.ImageUrl}}">
+            <div>
+              <p>{{data.ProductName}} <br> <small>Price: {{data.UnitPrice | currency: '₱'}}</small>
+              <br><a (click)="singleDelete(data)">Remove</a>
+              </p>
+            </div>
+          </div>
+        </td>
+        <td><input type="text" value="{{data.Quantity}}" disabled></td>
+        <td>{{(data.Quantity * data.UnitPrice) | currency: '₱'}}</td>
+      </tr>    
+    </table>
+    <div class="total-price" *ngIf="total > 0">
+      <table>
+        <tr>
+          <td>Subtotal</td>
+          <td>{{(total) | currency: '₱'}}</td>
+        </tr>
+
+        <tr>
+          <td>Shipping Fee</td>
+          <td>{{0 | currency: '₱'}}</td>
+        </tr>
+
+        <tr>
+          <td>Total Amount</td>
+          <td>{{(total) | currency: '₱'}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <ion-button *ngIf="total > 0" color="light" (click)="OrderNow()">Confirm Order</ion-button>
+
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</ion-content>

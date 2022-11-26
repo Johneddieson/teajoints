@@ -1,33 +1,15 @@
-<div class="tabs">
-<ion-tabs>
 
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="atab1">
-      <ion-icon name="wine-outline"></ion-icon>
-      <ion-label>Online Orders</ion-label>
-    </ion-tab-button>
-   
+  <ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-menu-button menu="main-menu"></ion-menu-button>
+    <ion-title>Online Orders</ion-title>
+  </ion-buttons>
+  <ion-searchbar  [debounce]="1000" show-clear-button="always" clear-icon="trash-bin" 
+  placeholder="Fullname & Email" (ionChange)="handleChange($event)"></ion-searchbar>
+  
+</ion-toolbar>
 
-    <ion-tab-button tab="atab2">
-      <ion-icon name="time"></ion-icon>
-      <ion-label>History</ion-label>
-    </ion-tab-button>
 
-    <ion-tab-button tab="atab3">
-      <ion-icon name="cart-outline"></ion-icon>
-      <ion-label>Inventory</ion-label>
-    </ion-tab-button>
-
-    <!-- <ion-tab-button tab="atab4">
-      <ion-icon name="create-outline"></ion-icon>
-      <ion-label>Edit Information</ion-label>
-    </ion-tab-button>  -->
-
-    <ion-tab-button (click)="addproduct()">
-      <ion-icon name="settings"></ion-icon>
-      <ion-label>More</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
-
-</ion-tabs>
-</div>
+<ion-content>
+  <app-admintab1 [categoryId]="queryinput"></app-admintab1>
+</ion-content>

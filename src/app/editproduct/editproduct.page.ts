@@ -21,7 +21,7 @@ registerForm: FormGroup;
   stock;
   price;
   currentstock;
-  
+  isDisabled: boolean = false
   @ViewChild(IonInput) myInputVariable: IonInput;
  productReference: AngularFirestoreDocument
  sub;
@@ -125,7 +125,7 @@ registerForm: FormGroup;
     //00fb1c6ab7c377f68517
     
     //this for my github account 760e7038539ea9dd5176
-    data.append('UPLOADCARE_PUB_KEY', '2f6b781d802ebb97d2e3')
+    data.append('UPLOADCARE_PUB_KEY', 'd215c12fb1b590263b07')
     this.http.post('https://upload.uploadcare.com/base/', data).subscribe((events: any) => {
       var json = {events}
       for (var prop in json) {
