@@ -160,7 +160,6 @@ OrderNow() {
               }
             ]
           }).then(els => {
-            console.log("my info", this.myInformation)
             if (!this.myInformation.FirstName || !this.myInformation.LastName
               || !this.myInformation.Address1 || !this.myInformation.Address2 || 
               !this.myInformation.PhoneNumber) {
@@ -181,6 +180,7 @@ OrderNow() {
               } else {
                 els.present()
                 var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
+                this.total = this.total + 30;
             this.afstore.collection('Orders').add({
               OrderDetails: this.getCartDetails,
               BillingFirstname: this.myInformation.FirstName,

@@ -1,4 +1,4 @@
-
+<!-- 
 <ion-content>
   <div class="wrapper">
     <h3>My Information</h3>
@@ -32,4 +32,68 @@
     
     <ion-button (click)="Edit()">Edit</ion-button>
   </div>
+</ion-content> -->
+<ion-toolbar color="light">
+  <ion-buttons  slot="start">
+ <ion-back-button></ion-back-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content>
+  <body>
+    <div class="container">
+      <div class="title">
+        Edit Information
+      </div>
+      <form action="#">
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">First Name</span>
+            <input [(ngModel)]="firstname" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your firstname">
+          </div>
+          <div class="input-box">
+            <span class="details">Last Name</span>
+            <input [(ngModel)]="lastname" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your lastname">
+          </div>
+          <div class="input-box">
+            <span class="details">Email</span>
+            <input [(ngModel)]="email" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your email" disabled>
+          </div>
+          <div class="input-box">
+            <span class="details">Phone Number</span>
+            <input [(ngModel)]="phonenumber" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your number">
+          </div>
+          <div class="input-box">
+            <span class="details">Address 1</span>
+            <input [(ngModel)]="address1" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address1">
+          </div>
+          <div class="input-box">
+            <span class="details">Address 2</span>
+            <input [(ngModel)]="address2" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address2">
+          </div>
+        </div>
+        <div class="gender-details" hidden>
+          <span class="gender-title">Gender</span>
+          <div class="category">
+            <label for="">
+              <span class="dot one"></span>
+              <span class="gender">Male</span>
+            </label>
+  
+            <label for="">
+              <span class="dot one"></span>
+              <span class="gender">Female</span>
+            </label>
+  
+            <label for="">
+              <span class="dot one"></span>
+              <span class="gender">Prefer not to say</span>
+            </label>
+          </div>
+        </div>
+        <div class="button">
+          <input (click)="Edit()" type="submit" name="" value="Save Changes">
+        </div>
+      </form>
+    </div>
+  </body>
 </ion-content>

@@ -1,5 +1,5 @@
 import { LocationStrategy } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertButton, AlertController, Platform } from '@ionic/angular';
 import { AuthServiceService } from '../auth-service.service';
@@ -10,12 +10,14 @@ import { AuthServiceService } from '../auth-service.service';
   styleUrls: ['./adminpage.page.scss'],
 })
 export class AdminpagePage implements OnInit {
-
+  queryinput: string;
   constructor(private locationStrategy: LocationStrategy,
     private alertCtrl: AlertController,
     private auth: AuthServiceService,
     private plt: Platform,
-    private router: Router) { }
+    private router: Router) {
+
+     }
 
   ngOnInit() {
   
@@ -24,6 +26,10 @@ export class AdminpagePage implements OnInit {
     //   history.pushState(null, null, location.href);
     // })
 }
+onChange(UpdatedValue : string) :void
+  {
+    this.queryinput = UpdatedValue;
+  }
 
 approveOrder(data) {
   console.log("approved", data)
@@ -105,5 +111,10 @@ addproduct() {
   }).then(el => {
     el.present()
   })
+}
+
+handleChange(event) {
+  const query = event.target.value.toLowerCase();
+  this.queryinput = query
 }
 }

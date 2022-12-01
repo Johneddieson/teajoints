@@ -13,8 +13,10 @@ import { AuthGuard } from './auth.guard';
 import {HttpClientModule } from '@angular/common/http';
 import { AuthForLoginSignupGuard } from './auth-for-login-signup.guard';
 import { CurrencyPipe } from '@angular/common';
+import { AdminpagePage } from './adminpage/adminpage.page';
+import { Admintab1Page } from './admintab1/admintab1.page';
 @NgModule({
-  declarations: [AppComponent],
+  
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
     AngularFireModule.initializeApp({
@@ -26,9 +28,12 @@ import { CurrencyPipe } from '@angular/common';
       appId: "1:759068302345:web:50e19be44bd88c59912cd8",
       measurementId: "G-B9D63X54DV"
     }),
+    
     AngularFirestoreModule,
   HttpClientModule,],
+  declarations: [AppComponent],
   providers: [CurrencyPipe, AuthForLoginSignupGuard, AuthGuard, AuthServiceService,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  
   bootstrap: [AppComponent],
 })
 export class AppModule {}

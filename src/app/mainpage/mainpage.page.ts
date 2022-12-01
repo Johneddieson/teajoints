@@ -22,44 +22,119 @@ export class MainpagePage implements OnInit {
   productCollection: AngularFirestoreCollection
 sub
 products: any[] = []
-public category: string
+category = "";
   constructor(private afauth: AngularFireAuth, private afstore: AngularFirestore,
     private actRoute: ActivatedRoute,
     private router : Router,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController) {
-   
-        this.actRoute.queryParams.subscribe(params => {
-          if (params.category == undefined) {
-            
-        this.loadMovies()
-          this.productCollection = this.afstore.collection('Products')
-          
-        } else  {
-          
-        this.loadMovies()
-          this.productCollection = this.afstore.collection('Products', ref => ref.where("Category", "==", params.category))
-            
-        }
-          this.sub = this.productCollection.snapshotChanges()
-          .pipe(map(actions => actions.map(a => {
-            return {
-              id: a.payload.doc.id,
-              ...a.payload.doc.data() as any
-            }
-          }))).subscribe(data => {
-            
-             this.products = data
-          })
-        })
+      this.getAllProducts()
    }
-  async loadMovies() {
+
+   getAllProducts() {
+    this.productCollection = !this.category ?  this.afstore.collection('Products') :     this.afstore.collection('Products', ref => ref.where("Category", "==", this.category))
+    this.sub = this.productCollection.snapshotChanges()
+    .pipe(map(actions => actions.map(a => {
+      return {
+        id: a.payload.doc.id,
+        ...a.payload.doc.data() as any
+      }
+    }))).subscribe(data => {
+      
+       this.products = data
+    })
+   }
+ async  SearchCategory() {
+    var alert =  this.alertCtrl.create({
+      header: 'Choose Category',
+      inputs: [
+        {
+          type: 'radio',
+          label: '--SHOW ALL--',
+          value: ''
+        },
+        {
+          type: 'radio',
+          label: 'Frappe',
+          value: 'Frappe'
+        },
+        {
+          type: 'radio',
+          label: 'Milktea',
+          value: 'Milktea'
+        },
+        {
+          type: 'radio',
+          label: 'Noodles',
+          value: 'Noodles'
+        },
+        {
+          type: 'radio',
+          label: 'Pares',
+          value: 'Pares'
+        },
+        {
+          type: 'radio',
+          label: 'Platters',
+          value: 'Platters'
+        },
+       
+        {
+          type: 'radio',
+          label: 'Shakes',
+          value: 'Shakes'
+        },
+        {
+          type: 'radio',
+          label: 'Silog Meals',
+          value: 'Silog Meals'
+        },
+        {
+          type: 'radio',
+          label: 'Sizzling Meal W Rice',
+          value: 'Sizzling Meal With Rice'
+        },
+        {
+          type: 'radio',
+          label: 'Snacks',
+          value: 'Snacks'
+        },
+        {
+          type: 'radio',
+          label: 'Rice Meal',
+          value: 'Rice Meal'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Search',
+          handler: data => {
+            this.category = data
+            this.loadProducts()
+            
+            setTimeout(() => {
+              this.getAllProducts()
+            }, 500)
+            
+          }
+        },
+        {
+          text: 'Close',
+          role: 'cancel'
+        }
+      ]
+    });
+    (await alert).present()
+   }
+  async loadProducts() {
    var loading = await this.loadingCtrl.create({
       message: 'Loading...',
       spinner: 'bubbles'
     });
     await loading.present()
-  loading.dismiss()
+  setTimeout(() => {
+    loading.dismiss()
+  }, 300)
   }
 
   ngOnInit() {
@@ -78,46 +153,4 @@ public category: string
     }
     
       }
-    
-      categories() {
-        this.dropdownmobile = true
-    
-    this.alertCtrl.create({
-      header: 'Choose Category',
-      
-      buttons: [
-        {
-          text: 'All',
-          handler: (data) => {
-          this.router.navigateByUrl('/mainpage')
-          }
-        },
-        {
-          text: 'Milktea',
-          handler: (data) => {
-            this.router.navigateByUrl('/mainpage?category=Milktea')
-          }
-        },
-        {
-          text: 'Fruit Tea',
-          handler: (data) => {
-            this.router.navigateByUrl('/mainpage?category=Fruit tea')
-          }
-        },
-        {
-          text: 'Slushee',
-          handler: (data) => {
-            this.router.navigateByUrl('/mainpage?category=Slushee')
-          }
-        }
-      ]
-    }).then(El => {
-      El.present()
-    })
-    
-        }
-        async categoriesdown() {
-          this.dropdownmobile = false
-        }
-
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
@@ -17,13 +17,17 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./admintab1.page.scss'],
 })
 export class Admintab1Page implements OnInit {
+  myquery = ""
   @ViewChild(IonAccordionGroup) accordionGroup: IonAccordionGroup;
-
+  @Input() set categoryId(value: string) {
+    this.myquery = value
+  }
+  changes = ""
   productReference: AngularFirestoreCollection
   currentProductStockReference: AngularFirestoreCollection
   sub
   sub2
-  allPendingOrders: any[] = []
+  public allPendingOrders: any[] = []
   currentStock: any[] = []
   page = 0
   users = []
@@ -32,9 +36,55 @@ export class Admintab1Page implements OnInit {
     private currencyPipe: CurrencyPipe,
     private alertCtrl: AlertController,
     private http: HttpClient) {
+    // this.afauth.authState.subscribe(data => {
+    //   if (data && data.uid) {
+       
+    //     this.productReference = this.afstore.collection('Orders', ref => ref.where("Status", "==", "Open")) 
+
+    //     this.sub = this.productReference.snapshotChanges()
+    //       .pipe(map(actions => actions.map(a => {
+    //         return {
+    //           id: a.payload.doc.id,
+    //           ...a.payload.doc.data() as any
+    //         }
+    //       }))).subscribe(data => {
+    //         console.log("orders", data)  
+    //         data = data.map((i, index) => {
+    //           return Object.assign({
+    //             BillingAddress1: i.BillingAddress1,
+    //             BillingAddress2: i.BillingAddress2,
+    //             BillingFirstname: i.BillingFirstname,
+    //             BillingIndexId: i.BillingIndexId,
+    //             BillingLastname: i.BillingLastname,
+    //             BillingPhonenumber: "0" + i.BillingPhonenumber,
+    //             Billingemail: i.Billingemail,
+    //             Datetime: i.Datetime,
+    //             Status: i.Status,
+    //             TotalAmount: i.TotalAmount,
+    //             id: i.id,
+    //             DatetimeToSort: i.DatetimeToSort,
+    //             OrderDetails: i.OrderDetails,
+    //             BillingFullName: `${i.BillingFirstname} ${i.BillingLastname}`
+    //           })
+    //         })
+    //         data = data.sort((a, b) => Number(b.DatetimeToSort) - Number(a.DatetimeToSort))
+    //         this.allPendingOrders = data
+           
+    //       })
+    //   }
+    // })
+  }
+  get categoryId(): string {
+    
+    return this.myquery;
+
+}
+  ngOnChanges(changes: SimpleChanges) {
+ 
     this.afauth.authState.subscribe(data => {
       if (data && data.uid) {
-        this.productReference = this.afstore.collection('Orders', ref => ref.where("Status", "==", "Open"))
+       
+        this.productReference = this.afstore.collection('Orders', ref => ref.where("Status", "==", "Open")) 
 
         this.sub = this.productReference.snapshotChanges()
           .pipe(map(actions => actions.map(a => {
@@ -43,11 +93,6 @@ export class Admintab1Page implements OnInit {
               ...a.payload.doc.data() as any
             }
           }))).subscribe(data => {
-            console.log("orders", data)  
-            // data.forEach(fe => {
-            //     this.allPendingOrdersWithoutRealtimeStock = fe.OrderDetails
-            //   })
-
             data = data.map((i, index) => {
               return Object.assign({
                 BillingAddress1: i.BillingAddress1,
@@ -55,71 +100,31 @@ export class Admintab1Page implements OnInit {
                 BillingFirstname: i.BillingFirstname,
                 BillingIndexId: i.BillingIndexId,
                 BillingLastname: i.BillingLastname,
-                BillingPhonenumber: i.BillingPhonenumber,
+                BillingPhonenumber: "0" + i.BillingPhonenumber,
                 Billingemail: i.Billingemail,
                 Datetime: i.Datetime,
                 Status: i.Status,
                 TotalAmount: i.TotalAmount,
                 id: i.id,
                 DatetimeToSort: i.DatetimeToSort,
-                OrderDetails: i.OrderDetails
+                OrderDetails: i.OrderDetails,
+                BillingFullName: `${i.BillingFirstname} ${i.BillingLastname}`
               })
             })
             data = data.sort((a, b) => Number(b.DatetimeToSort) - Number(a.DatetimeToSort))
-
-
-           this.allPendingOrders = data
-          // this.allPendingOrdersWithoutRealtimeStock = data
+            data = this.categoryId == undefined || this.categoryId == "" ? data : data.filter(f => f.BillingFullName.toLowerCase().includes(this.categoryId) 
+            || f.Billingemail.toLowerCase().includes(this.categoryId)
+            )
+            this.allPendingOrders = data
            
-         //     console.log("sdasda", this.allPendingOrdersWithoutRealtimeStock.map(function (e) {return e.OrderDetails}))
-
           })
-
-          // this.currentProductStockReference = this.afstore.collection('Products')
-
-          // this.sub2 = this.currentProductStockReference.snapshotChanges().pipe(
-          //   map(actions => actions.map(a => {
-          //     return {
-          //       id: a.payload.doc.id,
-          //       ...a.payload.doc.data() as any
-          //     }
-          //   }))
-          // ).subscribe(data => {
-          //   console.log("Current Stock", data)
-          
-          //   const mergeById = (array1, array2) =>
-          //   array1.map(itm => ({
-          //       ...Object.assign({}, itm, {
-          //        Stock: array2.find((item) => (item.id === itm.id) && item).Stock,
-          //        BillingAddress1: itm.BillingAddress1,
-          //        BillingAddress2: itm.BillingAddress2,
-          //        BillingFirstname: itm.BillingFirstname,
-          //        BillingIndexId: itm.BillingIndexId,
-          //        BillingLastname: itm.BillingLastname,
-          //        BillingPhonenumber: itm.BillingPhonenumber,
-          //        Billingemail: itm.Billingemail,
-          //        Datetime: itm.Datetime,
-          //        Status: itm.Status,
-          //        TotalAmount: itm.TotalAmount,
-          //        id: itm.id,
-          //        DatetimeToSort: itm.DatetimeToSort,
-          //        OrderDetails: itm.OrderDetails
-                
-          //      })
-          //   }));
-
-          //  var results = mergeById(this.allPendingOrdersWithoutRealtimeStock.map(function (e) {return e.OrderDetails}), data)
-          //  console.log("bobo ka naman pre", results)
-          // //  this.allPendingOrders = results
-          // })
-
-
       }
     })
+   
   }
-
   ngOnInit() {
   }
+  
   addproduct() {
     this.alertCtrl.create({
       header: 'Choose',

@@ -180,7 +180,7 @@ this.alertCtrl.create({
     this.router.navigateByUrl('adminpage')
   }
   navigatecustomer() {
-    this.router.navigateByUrl('tabs')
+    this.router.navigateByUrl('home')
   }
 
   gotosignin() {
@@ -219,7 +219,7 @@ this.afstore.doc(`users/${res.user.uid}`).set({
 
 setTimeout(() => {
   el.dismiss()
-  this.router.navigateByUrl('/tabs')
+  this.router.navigateByUrl('/home')
   this.Email1 = ''
   this.Password1 = ''
 }, 3000)

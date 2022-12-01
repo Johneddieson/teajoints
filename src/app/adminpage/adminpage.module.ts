@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AdminpagePageRoutingModule } from './adminpage-routing.module';
 
 import { AdminpagePage } from './adminpage.page';
-
+import { Admintab1Page } from '../admintab1/admintab1.page';
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +15,6 @@ import { AdminpagePage } from './adminpage.page';
     IonicModule,
     AdminpagePageRoutingModule
   ],
-  declarations: [AdminpagePage]
+  declarations: [AdminpagePage, Admintab1Page]
 })
 export class AdminpagePageModule {}

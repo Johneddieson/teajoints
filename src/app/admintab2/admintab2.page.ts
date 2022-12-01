@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./admintab2.page.scss'],
 })
 export class Admintab2Page implements OnInit {
+  onchangeQueryEvent: string;
   productReference: AngularFirestoreCollection
   sub
   allPendingOrders: any[] = []
@@ -27,7 +28,7 @@ export class Admintab2Page implements OnInit {
         this.sub = this.productReference.snapshotChanges()
           .pipe(map(actions => actions.map(a => {
             return {
-              id: a.payload.doc.id,
+              historyid: a.payload.doc.id,
               ...a.payload.doc.data() as any
             }
           }))).subscribe(data => {
@@ -46,7 +47,7 @@ export class Admintab2Page implements OnInit {
                 Datetime: i.Datetime,
                 Status: i.Status == "Closed" ? "Approved" : "Cancelled",
                 TotalAmount: i.TotalAmount,
-                id: i.id,
+                id: i.historyid,
                 DatetimeToSort: i.DatetimeToSort,
                 OrderDetails: i.OrderDetails
               })
@@ -64,64 +65,55 @@ export class Admintab2Page implements OnInit {
   }
 
 
-  addproduct() {
-    this.alertCtrl.create({
-      header: 'Choose',
-      inputs: [
-        {
-          type: 'radio',
-          label: 'POS',
-          value: 'POS'
+  handleChange(event) { 
+    const query = event.target.value.toLowerCase();
+    this.onchangeQueryEvent = query
+    this.afauth.authState.subscribe(data => {
+      if (data && data.uid) {
+        this.productReference = this.afstore.collection('History')
 
-        },
-        {
-          type: 'radio',
-          label: 'View Products',
-          value: 'View Products'
-
-        },
-        {
-          type: 'radio',
-          label: 'Add Product',
-          value: 'Add Product'
-
-        },
-        // {
-        //   type: 'radio',
-        //   label: 'Edit Information',
-        //   value: 'Edit Information'
-
-        // },
-        {
-          type: 'radio',
-          label: 'Change Password',
-          value: 'Change Password'
-
-        },
-      ],
-      buttons: [
-        {
-          text: 'Go',
-          handler: data => {
-            console.log("data", data)
-            if (data == "View Products") {
-              this.router.navigateByUrl('/viewproducts')  
-            } else if (data == "Add Product") {
-
-              this.router.navigateByUrl('/add-product')
-            } else if (data == "POS") {
-              this.router.navigateByUrl('/createpos')
+        this.sub = this.productReference.snapshotChanges()
+          .pipe(map(actions => actions.map(a => {
+            return {
+              historyid: a.payload.doc.id,
+              ...a.payload.doc.data() as any
             }
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel'
-        }
-      ]
-    }).then(el => {
-      el.present()
+          }))).subscribe(data => {
+
+
+            data = data.map((i, index) => {
+              return Object.assign({
+                BillingAddress1: i.BillingAddress1,
+                BillingAddress2: i.BillingAddress2,
+                BillingFirstname: i.BillingFirstname,
+                BillingIndexId: i.BillingIndexId,
+                BillingLastname: i.BillingLastname,
+                BillingPhonenumber: i.BillingPhonenumber,
+                Billingemail: i.Billingemail,
+                Datetime: i.Datetime,
+                Status: i.Status == "Closed" ? "Approved" : "Cancelled",
+                TotalAmount: i.TotalAmount,
+                id: i.historyid,
+                DatetimeToSort: i.DatetimeToSort,
+                OrderDetails: i.OrderDetails,
+                BillingFullName: `${i.BillingFirstname} ${i.BillingLastname}`
+              })
+            })
+            data = data.sort((a, b) => Number(b.DatetimeToSort) - Number(a.DatetimeToSort))
+               data = this.onchangeQueryEvent == undefined || this.onchangeQueryEvent == "" ? data :
+               data.filter(f => f.BillingFullName.toLowerCase().includes(this.onchangeQueryEvent) 
+            || f.Billingemail.toLowerCase().includes(this.onchangeQueryEvent)
+            || f.Status.toLowerCase().includes(this.onchangeQueryEvent))   
+       
+            this.allPendingOrders = data
+          })
+      }
     })
+  
+  
+  
+  
   }
+
 
 }

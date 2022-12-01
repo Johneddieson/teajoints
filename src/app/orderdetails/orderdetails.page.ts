@@ -31,6 +31,7 @@ address2;
 phonenumber;
 status;
 email;
+name;
   constructor(private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private router: Router,
@@ -39,10 +40,11 @@ email;
     private http: HttpClient) {
 this.afauth.authState.subscribe(user => {
   if (user.uid && user) {
-
+    this.name = this.actRoute.snapshot.paramMap.get('name')
     this.id = this.actRoute.snapshot.paramMap.get('id')
 
-    this.orderDetails = this.afstore.collection('Orders').doc(this.id)
+    
+    this.orderDetails = this.name == 'orders' ? this.afstore.collection('Orders').doc(this.id) : this.afstore.collection('History').doc(this.id)
 
     // this.sub = this.orderDetails.valueChanges().subscribe(data => {
     //   console.log("haha", data)
@@ -65,7 +67,7 @@ return {
       this.address1 = data.BillingAddress1
       this.address2 = data.BillingAddress2
       this.status = data.Status
-      this.phonenumber = data.BillingPhonenumber
+      this.phonenumber = data.BillingPhonenumber.toUpperCase() == "WALK-IN" ? "Walk-In" : "0" + data.BillingPhonenumber
       this.email = data.Billingemail
     })
   } 

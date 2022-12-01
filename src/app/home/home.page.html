@@ -1,106 +1,43 @@
-<ion-header>
-  <ion-toolbar class="toolbar">
-    <ion-buttons  slot="start">
-      <!-- <ion-back-button color="light" defaultHref="home"></ion-back-button> -->
-      <!-- <ion-icon class="buttonsactive"  name="cart"></ion-icon> -->
-      <ion-button #productbtn (mouseenter)="dropdown=true" (mouseleave)="hideDropdown($event)" fill="clear" color="dark"
-      class="dropdown-btn"  routerDirection="root" routerLinkActive="active-item">
-      <ion-title>Categories</ion-title>
-      
-      <ion-icon slot="end" [name]="dropdown ? 'chevron-down' : 'chevron-up'"></ion-icon>
-    </ion-button>
-    
-    </ion-buttons>
 
-    <ion-buttons *ngIf="numbers != 0" slot="end">
-      
-      <ion-button (click)="checkout()"><ion-badge color="danger">{{numbers}}</ion-badge>Checkout</ion-button>
-      </ion-buttons>
-    
-  </ion-toolbar>
-  <div *ngIf="dropdown" class="dropdown" (mouseleave)="dropdown = false" #dropdownbox>
-    <ion-item button routerLink="/tabs/tab1"  (click)="dropdown = false"  routerDirection="root"  lines="none">
-      All
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1"  (click)="dropdown = false"  [queryParams]="{category: 'Milktea'}" lines="none"
-    routerDirection="root">
-    Milktea
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1"  (click)="dropdown = false"  [queryParams]="{category: 'Frappe'}" lines="none"
-    routerDirection="root">
-    Frappe
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Milktea'}" lines="none"
-    routerDirection="root">
-    Milk Tea
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Noodles'}" lines="none"
-    routerDirection="root">
-    Noodles
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Pares'}" lines="none"
-    routerDirection="root">
-    Pares
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Platters'}" lines="none"
-    routerDirection="root">
-    Platters
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Shakes'}" lines="none"
-    routerDirection="root">
-    Shakes
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Silog Meals'}" lines="none"
-    routerDirection="root">
-    Silog Meals
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Sizzling Meal W/ Rice'}" lines="none"
-    routerDirection="root">
-    Sizzling Meal W Rice
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Snacks'}" lines="none"
-    routerDirection="root">
-    Snacks
-    </ion-item>
-    <ion-item button routerLink="/tabs/tab1" (click)="dropdown = false"  [queryParams]="{category: 'Rice Meal'}" lines="none"
-    routerDirection="root">
-    Rice Meal
-    </ion-item>
-  </div>
-</ion-header>
+<ion-toolbar color="primary">
+  <ion-buttons slot="start">
+    <ion-menu-button menu="main-menu"></ion-menu-button>
+    <ion-title>Shop</ion-title>
+  </ion-buttons>
+  <ion-buttons slot="end">
+    <ion-button *ngIf="numbers != 0" (click)="checkout()">
+      <ion-badge color="danger">{{numbers}}</ion-badge>
+      <ion-icon name="cart-outline"></ion-icon>
+    </ion-button>
+    <ion-button routerLink="/notifications">
+      <ion-badge *ngIf="notifCounts != 0" color="danger">{{notifCounts}}</ion-badge>
+      <ion-icon name="notifications-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+
 
 <ion-content>
-<div class="container">
-<ion-grid>
-  <ion-row>
-    <ion-col>
-    <ion-list>
-      <ion-item *ngFor="let data of productList" lines="none"  class="item-background-color">
-        <ion-thumbnail slot="start">
-         <img src="{{data.ImageUrl}}" />  
-        </ion-thumbnail>
-        <ion-label>
-          <h2>{{data.ProductName}} <span style="float: right; color: #69a03a;">₱ {{data.UnitPrice}}</span>
-          </h2>
-          <h3>
-            <!-- <ion-icon name="star-outline"></ion-icon>
-            <ion-icon name="star-outline"></ion-icon>
-            <ion-icon name="star-outline"></ion-icon>
-            <ion-icon name="star-outline"></ion-icon> -->
-          </h3>
-          <p class="rate"> {{data.Stock}} remaining stock</p>
-          <div id="qty">
-            <span (click)="Decrease(data)" class="minus"> - </span>  {{data.Quantity}}
-            <span (click)="Increase(data)" class="plus"> + </span>  
-            <span style="float: right; ">
-             <button id="btn" (click)="AddtoCart(data)"> Add</button> 
-            </span>
-          </div>
-        </ion-label>
-      </ion-item>
-    </ion-list>      
-    </ion-col>
-  </ion-row>
-</ion-grid>
-</div>
+  <section class="shop" id="shop">
+    <div class="container">
+      <div class="box" *ngFor="let data of productList">
+        <img src="{{data.ImageUrl}}">
+        <h4>{{data.ProductName}}</h4>
+        <h5>{{data.UnitPrice | currency: '₱'}}</h5>
+        <h5>{{data.Stock}} remaining</h5>
+        <h5><span (click)="Decrease(data)" class="minus"> - </span>{{data.Quantity}}<span (click)="Increase(data)" class="plus"> + </span></h5>
+        <div class="cart" (click)="AddtoCart(data)">
+          <ion-button>Add to cart</ion-button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">  
+    <ion-fab-button color="primary" (click)="SearchCategory()">  
+      <ion-icon  name="search-outline"></ion-icon>  
+    </ion-fab-button>  
+  </ion-fab>  
 </ion-content>
+
+

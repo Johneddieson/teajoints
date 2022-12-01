@@ -1,112 +1,211 @@
+// ion-back-button {
+//     display: block;
+//  }
+
+// .toolbar {
+//     height: 84px;
+//     --background: #69A03A;
+//     color: #fff;
+//     font-size: 20px;
+//     line-height: 84px;
+// }
+
+// .container {
+//     width: 100%;
+//     ion-thumbnail {
+//         width: 100px !important;
+//         height: 100px !important;
+//         img {
+//             border-radius: 10px;
+//         }
+//     }
+//     .rate {
+//         color: #ccc;
+//     }
+//     #qty {
+//         margin-top: 5px;
+//         .minus {
+//             font-weight: 600;
+//             padding: 5px;
+//             margin-right: 20px;
+//             cursor: pointer;
+//         }
+//         .plus {
+//             margin-left: 20px;
+//             font-weight: 600;
+//             padding:  5px;
+//             cursor: pointer;
+
+//         }
+//         .plus:active {
+//             background-color: #69a03a;
+//         }
+//         .minus:active {
+//             background-color: red;
+
+//         }
+//         #btn {
+//             padding: 10px 20px;
+//             color: #fff;
+//             background-color: #3880ff;
+
+//         }
+//         #btn:active {
+//             background-color: rgb(5, 21, 66);
+//         }
+//         #btn2 {
+//             padding: 10px 20px;
+//             color: #fff;
+//             background-color: #c31111;
+
+//         }
+//         #btn2:active {
+//             background-color: rgb(153, 4, 4);
+//         }
+//     }
+//     ion-label {
+//         ion-icon {
+//             margin: 10px;
+//             color: #69A03A;
+//         }
+//     }
+// }
+
+
+// @media(min-width: 768px) {
+//     .mobile-header {
+//         display: none;
+//     }
+//     .header {
+//         display: flex;
+//         background: #92949c;
+//         padding-left: 40px;
+//         padding-right: 40px;
+//     }
+// }
+
+// @media(max-width: 768px) {
+//     .mobile-header {
+//         display: block;
+//     }
+//     .header {
+//         display: none;
+
+//     }
+// }
+
+// .active-item {
+//     border-bottom: 2px solid var(--ion-color-dark);
+// }
+
+// .dropdown {
+//     width: 136px;
+//     height: 150px;
+//     background: #fff;
+//     position: absolute;
+//     top: 40px;
+//     right: 87px;
+//     z-index: 1;
+//     ion-item:hover {
+//         --ion-item-color: var(--ion-color-primary);
+//     }
+// }
+
+
+
+
+
+
+
+
+
 ion-back-button {
     display: block;
- }
-
-.toolbar {
-    height: 84px;
-    --background: #69A03A;
-    color: #fff;
-    font-size: 20px;
-    line-height: 84px;
 }
 
-.container {
-    width: 100%;
-    ion-thumbnail {
-        width: 100px !important;
-        height: 100px !important;
-        img {
-            border-radius: 10px;
-        }
-    }
-    .rate {
-        color: #ccc;
-    }
-    #qty {
-        margin-top: 5px;
-        .minus {
-            font-weight: 600;
-            padding: 5px;
-            margin-right: 20px;
-            cursor: pointer;
-        }
-        .plus {
-            margin-left: 20px;
-            font-weight: 600;
-            padding:  5px;
-            cursor: pointer;
-            
-        }
-        .plus:active {
-            background-color: #69a03a;
-        }
-        .minus:active {
-            background-color: red;
-            
-        }
-        #btn {
-            padding: 10px 20px;
-            color: #fff;
-            background-color: #69a03a;
-            
-        }
-        #btn:active {
-            background-color: rgb(5, 21, 66);
-        }
-        #btn2 {
-            padding: 10px 20px;
-            color: #fff;
-            background-color: #c31111;
-            
-        }
-        #btn2:active {
-            background-color: rgb(153, 4, 4);
-        }
-    }
-    ion-label {
-        ion-icon {
-            margin: 10px;
-            color: #69A03A;
-        }
-    }
-}
+ion-content {
+    #btn {
+        padding: 10px 20px;
+        color: #fff;
+        background-color: #ff523b;
 
-
-@media(min-width: 768px) {
-    .mobile-header {
-        display: none;
     }
-    .header {
+
+    #btn:active {
+        background-color: rgb(5, 21, 66);
+    }
+
+    .cart-page {
+        margin: 16px auto;
+        border: 12vmax;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .cart-info {
         display: flex;
-        background: #92949c;
-        padding-left: 40px;
-        padding-right: 40px;
+        flex-wrap: wrap;
     }
-}
 
-@media(max-width: 768px) {
-    .mobile-header {
-        display: block;
+    th {
+        text-align: left;
+        padding: 5px;
+        color: #fff;
+        background: #ff523b;
+        font-weight: normal;
     }
-    .header {
-        display: none;
-      
-    }
-}
 
-.active-item {
-    border-bottom: 2px solid var(--ion-color-dark);
-}
-
-.dropdown {
-    width: 136px;
-    height: 150px;
-    background: #fff;
-    position: absolute;
-    top: 40px;
-    right: 87px;
-    z-index: 1;
-    ion-item:hover {
-        --ion-item-color: var(--ion-color-primary);
+    td {
+        padding: 10px 5px;
     }
+
+    td input {
+        width: 70px;
+        height: 30px;
+        padding: 5px;
+    }
+
+    td a {
+        color: #ff523b;
+        font-size: 14px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        cursor: pointer;
+    }
+
+    td small,
+    p {
+        font-size: 16px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    td img {
+        width: 80px;
+        height: 80px;
+        margin-right: 10px;
+    }
+
+    .total-price {
+        display: flex;
+        justify-content: flex-end;
+
+    }
+
+    .total-price table {
+        border-top: 3px solid #ff523b;
+        width: 100%;
+        max-width: 370px;
+    }
+
+    td:last-child {
+        text-align: right;
+
+    }
+
+    th:last-child {
+        text-align: right;
+    }
+
 }

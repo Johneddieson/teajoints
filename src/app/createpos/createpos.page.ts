@@ -25,6 +25,7 @@ getCartDetails: any = []
 cartItem:number = 0
 @Input()title: string;
 dropdown = false;
+category = ""
 @ViewChild('productbtn', {read: ElementRef}) productbtn: ElementRef;
 private unsubscriber : Subject<void> = new Subject<void>();
   constructor(private msg: MessengerService, private alertCtrl: AlertController, private auth: AuthServiceService,  private afstore: AngularFirestore, private afauth: AngularFireAuth,
@@ -32,7 +33,8 @@ private unsubscriber : Subject<void> = new Subject<void>();
     private router: Router,
     private applicationRef: ApplicationRef,
     private zone: NgZone,
-    private actRoute: ActivatedRoute) {
+    private actRoute: ActivatedRoute,
+    private loadingCtrl: LoadingController) {
 
       router.events.subscribe(() => {
         zone.run(() => {
@@ -45,36 +47,31 @@ private unsubscriber : Subject<void> = new Subject<void>();
     this.afauth.authState.subscribe(user => {
 
       if (user && user.uid) {
-      //  this.productReference =  afstore.collection('Products')
-      //  this.sub = this.productReference.snapshotChanges().pipe(map(actions => actions.map(a => {
-      //   return {
-      //     id: a.payload.doc.id,
-      //     ...a.payload.doc.data() as any
-      //   }
-      //  }))).subscribe(data => {
-      //   this.productList = data
-      //  }) 
-       this.actRoute.queryParams.subscribe(params => {
-        //params.category
-        if (params.category == undefined) {
-          this.productReference =  afstore.collection('Products')
-       
-        } else {
-          this.productReference =  afstore.collection('Products', ref => ref.where("Category", "==", params.category))
-        }
-        this.sub = this.productReference.snapshotChanges().pipe(map(actions => actions.map(a => {
-          return {
-            id: a.payload.doc.id,
-            ...a.payload.doc.data() as any
-          }
-         }))).subscribe(data => {
-          this.productList = data
-         }) 
-       })  
+  this.getAllProducts()
       }
     })
    }
-
+   getAllProducts() {
+    this.productReference = !this.category ?  this.afstore.collection('Products') : this.afstore.collection('Products', ref => ref.where("Category", "==", this.category))
+    this.sub = this.productReference.snapshotChanges().pipe(map(actions => actions.map(a => {
+      return {
+        id: a.payload.doc.id,
+        ...a.payload.doc.data() as any
+      }
+     }))).subscribe(data => {
+      this.productList = data
+     }) 
+   }
+   async loadProducts() {
+    var loading = await this.loadingCtrl.create({
+       message: 'Loading...',
+       spinner: 'bubbles'
+     });
+     await loading.present()
+   setTimeout(() => {
+     loading.dismiss()
+   }, 300)
+   }
   ngOnInit(): void {
     
     this.router.events.subscribe(() => {
@@ -85,21 +82,89 @@ private unsubscriber : Subject<void> = new Subject<void>();
         }, 0)
       })
     })
-// history.pushState(null, null, location.href);
-// this.locationStrategy.onPopState(() => {
-//   history.pushState(null, null, location.href);
-// })
-
-var wew = sessionStorage.getItem('cart')
-console.log(wew)
   }
-  // CartDetails() {
-  //   if (sessionStorage.getItem('cart')) {
-  //     this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
-  //     console.log("the cart", this.getCartDetails)
-  //     this.numbers = this.getCartDetails
-  //   }
-  // }
+  async  SearchCategory() {
+    var alert =  this.alertCtrl.create({
+      header: 'Choose Category',
+      inputs: [
+        {
+          type: 'radio',
+          label: '--SHOW ALL--',
+          value: ''
+        },
+        {
+          type: 'radio',
+          label: 'Frappe',
+          value: 'Frappe'
+        },
+        {
+          type: 'radio',
+          label: 'Milktea',
+          value: 'Milktea'
+        },
+        {
+          type: 'radio',
+          label: 'Noodles',
+          value: 'Noodles'
+        },
+        {
+          type: 'radio',
+          label: 'Pares',
+          value: 'Pares'
+        },
+        {
+          type: 'radio',
+          label: 'Platters',
+          value: 'Platters'
+        },
+       
+        {
+          type: 'radio',
+          label: 'Shakes',
+          value: 'Shakes'
+        },
+        {
+          type: 'radio',
+          label: 'Silog Meals',
+          value: 'Silog Meals'
+        },
+        {
+          type: 'radio',
+          label: 'Sizzling Meal W Rice',
+          value: 'Sizzling Meal W/ Rice'
+        },
+        {
+          type: 'radio',
+          label: 'Snacks',
+          value: 'Snacks'
+        },
+        {
+          type: 'radio',
+          label: 'Rice Meal',
+          value: 'Rice Meal'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Search',
+          handler: data => {
+            this.category = data
+            this.loadProducts()
+            
+            setTimeout(() => {
+              this.getAllProducts()
+            }, 500)
+            
+          }
+        },
+        {
+          text: 'Close',
+          role: 'cancel'
+        }
+      ]
+    });
+    (await alert).present()
+   }
 loadCart() {
   if (sessionStorage.getItem('cart') != null) {
 var thearray = []
@@ -112,7 +177,6 @@ var thearray = []
   } 
 }
   Increase(data) {
-    localStorage.removeItem('cart')
     data.Quantity +=1
   this.loadCart()
   }

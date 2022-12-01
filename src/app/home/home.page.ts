@@ -1,7 +1,7 @@
 import { ApplicationRef, Component, ElementRef, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { AuthServiceService } from '../auth-service.service';
 import { map } from 'rxjs/operators';
 import * as firebase from 'firebase/app'
@@ -10,21 +10,26 @@ import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LocationStrategy } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as moment from 'moment';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  notificationsReference: AngularFirestoreCollection
+  sub
 numbers = 0;
 showLog = false
 productReference: AngularFirestoreCollection
-sub
 productList: any[] = []
 getCartDetails: any = []
 cartItem:number = 0
 @Input()title: string;
 dropdown = false;
+category = ""
+notificationsList : any[] = []
+notifCounts = 0
 @ViewChild('productbtn', {read: ElementRef}) productbtn: ElementRef;
 private unsubscriber : Subject<void> = new Subject<void>();
   constructor(private msg: MessengerService, private alertCtrl: AlertController, private auth: AuthServiceService,  private afstore: AngularFirestore, private afauth: AngularFireAuth,
@@ -32,8 +37,9 @@ private unsubscriber : Subject<void> = new Subject<void>();
     private router: Router,
     private applicationRef: ApplicationRef,
     private zone: NgZone,
-    private actRoute: ActivatedRoute) {
-
+    private actRoute: ActivatedRoute,
+    private loadingCtrl: LoadingController) {
+   
       router.events.subscribe(() => {
         zone.run(() => {
           setTimeout(() => {
@@ -45,32 +51,32 @@ private unsubscriber : Subject<void> = new Subject<void>();
     this.afauth.authState.subscribe(user => {
 
       if (user && user.uid) {
-      //  this.productReference =  afstore.collection('Products')
-      //  this.sub = this.productReference.snapshotChanges().pipe(map(actions => actions.map(a => {
-      //   return {
-      //     id: a.payload.doc.id,
-      //     ...a.payload.doc.data() as any
-      //   }
-      //  }))).subscribe(data => {
-      //   this.productList = data
-      //  }) 
-       this.actRoute.queryParams.subscribe(params => {
-        //params.category
-        if (params.category == undefined) {
-          this.productReference =  afstore.collection('Products')
-       
-        } else {
-          this.productReference =  afstore.collection('Products', ref => ref.where("Category", "==", params.category))
-        }
-        this.sub = this.productReference.snapshotChanges().pipe(map(actions => actions.map(a => {
-          return {
-            id: a.payload.doc.id,
-            ...a.payload.doc.data() as any
-          }
-         }))).subscribe(data => {
-          this.productList = data
-         }) 
-       })  
+    this.getAllProducts()
+
+    this.notificationsReference = this.afstore.collection(`users/${user.uid}/notifications`)
+
+        this.sub = this.notificationsReference.snapshotChanges()
+          .pipe(map(actions => actions.map(a => {
+            return {
+              id: a.payload.doc.id,
+              ...a.payload.doc.data() as any
+            }
+          }))).subscribe(data => {
+            data = data.map((i, index) => {
+              return Object.assign({
+                id: i.id,
+                Datetime: i.Datetime,
+                DatetimeToSort: moment(i.Datetime).toDate(),
+                read: i.read,
+                remarks: i.remarks,
+                Message: i.Message
+              })
+            })
+            data = data.sort((a, b) => Number(b.DatetimeToSort) - Number(a.DatetimeToSort))
+            this.notificationsList = data
+            var filterOnlyNotRead = data.filter(f => f.read != true)
+              this.notifCounts = filterOnlyNotRead.length
+          })
       }
     })
    }
@@ -91,12 +97,125 @@ private unsubscriber : Subject<void> = new Subject<void>();
 // })
 
 var wew = sessionStorage.getItem('cart')
-console.log(wew)
+
   }
+  getAllProducts() {
+    this.productReference = !this.category ? this.afstore.collection('Products') : this.afstore.collection('Products', ref => ref.where("Category", "==", this.category))
+  
+  this.sub = this.productReference.snapshotChanges().pipe(map(actions => actions.map(a => {
+    return {
+      id: a.payload.doc.id,
+      ...a.payload.doc.data() as any
+    }
+   }))).subscribe(data => {
+  //  data = data.map((i, index) => {
+  //     var image = i.ImageUrl as string
+  //     var imageApiUrl = image.substring(0,58)
+  //     var imageName = image.replace(image.substring(0,58), "")
+
+  //      return Object.assign({}, i, {
+  //        ImageUrl: `${imageApiUrl}-/smart_resize/440x300/${imageName}`
+  //      })
+  //    })
+    this.productList = data
+   }) 
+  }
+  async  SearchCategory() {
+    var alert =  this.alertCtrl.create({
+      header: 'Choose Category',
+      inputs: [
+        {
+          type: 'radio',
+          label: '--SHOW ALL--',
+          value: ''
+        },
+        {
+          type: 'radio',
+          label: 'Frappe',
+          value: 'Frappe'
+        },
+        {
+          type: 'radio',
+          label: 'Milktea',
+          value: 'Milktea'
+        },
+        {
+          type: 'radio',
+          label: 'Noodles',
+          value: 'Noodles'
+        },
+        {
+          type: 'radio',
+          label: 'Pares',
+          value: 'Pares'
+        },
+        {
+          type: 'radio',
+          label: 'Platters',
+          value: 'Platters'
+        },
+       
+        {
+          type: 'radio',
+          label: 'Shakes',
+          value: 'Shakes'
+        },
+        {
+          type: 'radio',
+          label: 'Silog Meals',
+          value: 'Silog Meals'
+        },
+        {
+          type: 'radio',
+          label: 'Sizzling Meal W Rice',
+          value: 'Sizzling Meal With Rice'
+        },
+        {
+          type: 'radio',
+          label: 'Snacks',
+          value: 'Snacks'
+        },
+        {
+          type: 'radio',
+          label: 'Rice Meal',
+          value: 'Rice Meal'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Search',
+          handler: data => {
+            this.category = data
+            this.loadProducts()
+            
+            setTimeout(() => {
+              this.getAllProducts()
+            }, 500)
+            
+          }
+        },
+        {
+          text: 'Close',
+          role: 'cancel'
+        }
+      ]
+    });
+    (await alert).present()
+   }
+   async loadProducts() {
+    var loading = await this.loadingCtrl.create({
+       message: 'Loading...',
+       spinner: 'bubbles'
+     });
+     await loading.present()
+   setTimeout(() => {
+     loading.dismiss()
+   }, 300)
+   }
   // CartDetails() {
   //   if (sessionStorage.getItem('cart')) {
   //     this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
-  //     console.log("the cart", this.getCartDetails)
+  
   //     this.numbers = this.getCartDetails
   //   }
   // }
@@ -112,7 +231,6 @@ var thearray = []
   } 
 }
   Increase(data) {
-    localStorage.removeItem('cart')
     data.Quantity +=1
   this.loadCart()
   }

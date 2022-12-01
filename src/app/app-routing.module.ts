@@ -51,6 +51,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'orders',
+    loadChildren: () => import("./admintab1/admintab1.module").then(m => m.Admintab1PageModule),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'viewproducts',
     loadChildren: () => import('./viewproducts/viewproducts.module').then( m => m.ViewproductsPageModule),
     canActivate: [AuthGuard]
@@ -85,11 +90,31 @@ const routes: Routes = [
     loadChildren: () => import('./productdetails/productdetails.module').then( m => m.ProductdetailsPageModule),
   },
   {
-    path: 'orderdetails/:id',
+    path: 'orderdetails/:id/:name',
     loadChildren: () => import('./orderdetails/orderdetails.module').then( m => m.OrderdetailsPageModule),
     canActivate: [AuthGuard]
   },
- 
+  {
+    path: 'history',
+    loadChildren: () => import("./admintab2/admintab2.module").then(m => m.Admintab2PageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'inventory',
+    loadChildren: () => import("./admintab3/admintab3.module").then(m => m.Admintab3PageModule),
+    canActivate: [AuthGuard]
+  },
+
+  {
+    path: 'notifications',
+    loadChildren: () => import('./tab2/tab2.module').then(m => m.Tab2PageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'editinfo',
+    loadChildren: () => import('./tab3/tab3.module').then(m => m.Tab3PageModule),
+    canActivate: [AuthGuard]
+  },
  
 ];
 @NgModule({

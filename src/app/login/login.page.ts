@@ -97,12 +97,11 @@ this.alertCtrl.create({
   }
   LogIn(email, password) {
     this.auth.SignIn(email.value, password.value).then((res => {
-     console.log("hahaha", res) 
-        
+       
         if (res.user.displayName == "admin") {
         this.router.navigateByUrl('adminpage')
       } else {
-        this.router.navigateByUrl('tabs')
+        this.router.navigateByUrl('home')
       }
         
      
@@ -123,7 +122,7 @@ this.alertCtrl.create({
     this.router.navigateByUrl('adminpage')
   }
   navigatecustomer() {
-    this.router.navigateByUrl('tabs')
+    this.router.navigateByUrl('home')
   }
 
   gotosignup() {

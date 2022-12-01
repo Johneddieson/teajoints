@@ -19,6 +19,7 @@ lastname;
 address1;
 address2;
 phonenumber;
+email;
 isDisabled = false;
   constructor(private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private loadingCtrl: LoadingController,
@@ -30,6 +31,7 @@ isDisabled = false;
             console.log("my information", data)
             this.firstname = data.FirstName
             this.lastname = data.LastName
+            this.email = data.Email
             if ((!this.firstname || this.firstname == undefined) && (!this.lastname || this.lastname == undefined)) {
               this.isDisabled = !this.isDisabled
             } else {

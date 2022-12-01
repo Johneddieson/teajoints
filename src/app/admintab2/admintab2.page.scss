@@ -52,3 +52,23 @@ ion-accordion.accordion-expanded ion-item[slot="header"] {
 //     --ion-item-background: #0c0254;
 //     --ion-item-color: #fff;
 // }
+
+
+
+
+ion-content {
+    --background:  url('../../assets/icon/teajointslogo.jpg') no-repeat center center / cover; 
+
+}
+ion-card-subtitle {
+    font-weight: bolder;
+    color: black;
+}
+ion-card-title {
+    font-weight: bolder;
+    color: black;
+}
+ion-card-content {
+    font-weight: bolder;
+    color: white;
+}
