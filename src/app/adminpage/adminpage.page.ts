@@ -3,6 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertButton, AlertController, Platform } from '@ionic/angular';
 import { AuthServiceService } from '../auth-service.service';
+import { jsPDF } from "jspdf";
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-adminpage',
@@ -16,8 +18,22 @@ export class AdminpagePage implements OnInit {
     private auth: AuthServiceService,
     private plt: Platform,
     private router: Router) {
+      }
 
+     public convertToPDF()
+     {
+     html2canvas(document.getElementById("contentToConvert")!).then(canvas => {
+     // Few necessary setting options
+      
+     const contentDataURL = canvas.toDataURL('image/png')
+     let pdf = new jsPDF('p', 'mm', 'a4'); // A4 size page of PDF
+     var width = pdf.internal.pageSize.getWidth();
+     var height = canvas.height * width / canvas.width;
+     pdf.addImage(contentDataURL, 'PNG', 10, 10, width, height)
+     pdf.save('output.pdf'); // Generated PDF
+     });
      }
+
 
   ngOnInit() {
   
