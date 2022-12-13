@@ -174,8 +174,6 @@ export class AddProductPage implements OnInit {
                         message: 'Creating New Product'
                       }).then(el => {
                         el.present()
-                  
-                        
                         this.afstore.collection('Products').add({
                           Category:this.registerForm.value.category,
                           ProductName: this.registerForm.value.category.toLowerCase() == "milktea" ?  `${this.registerForm.value.firstname} (${this.registerForm.value.size})` : this.registerForm.value.firstname + " " + data,

@@ -169,7 +169,7 @@ OrderNow() {
                     {
                       text: 'Ok',
                      handler: () => {
-                      this.router.navigateByUrl('/tabs/tab3')
+                      this.router.navigateByUrl('/editinfo')
                      } 
                     }
                   ]
@@ -179,7 +179,7 @@ OrderNow() {
                 })
               } else {
                 els.present()
-                var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
+                var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
                 this.total = this.total + 30;
             this.afstore.collection('Orders').add({
               OrderDetails: this.getCartDetails,

@@ -40,7 +40,15 @@ category = "";
         ...a.payload.doc.data() as any
       }
     }))).subscribe(data => {
-      
+     data = data.sort(function(a, b) {
+        if (a.ProductName < b.ProductName) {
+          return -1
+        }
+        if (a.ProductName > b.ProductName) {
+          return 1
+        }
+        return 0
+      })
        this.products = data
     })
    }
@@ -103,6 +111,11 @@ category = "";
           type: 'radio',
           label: 'Rice Meal',
           value: 'Rice Meal'
+        },
+        {
+          type: 'radio',
+          label: 'Extras',
+          value: 'Extras'
         },
       ],
       buttons: [

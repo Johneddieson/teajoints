@@ -8,7 +8,8 @@ import { AlertController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
-
+import { jsPDF } from "jspdf";
+import html2canvas from 'html2canvas';
 @Component({
   selector: 'app-orderdetails',
   templateUrl: './orderdetails.page.html',
@@ -32,6 +33,10 @@ phonenumber;
 status;
 email;
 name;
+subtotal;
+deliveryfee;
+dateOrdered;
+invoiceDate;
   constructor(private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private router: Router,
@@ -40,6 +45,7 @@ name;
     private http: HttpClient) {
 this.afauth.authState.subscribe(user => {
   if (user.uid && user) {
+    console.log("wew", user)
     this.name = this.actRoute.snapshot.paramMap.get('name')
     this.id = this.actRoute.snapshot.paramMap.get('id')
 
@@ -61,19 +67,51 @@ return {
         console.log("haha", data)
       this.orders = data.OrderDetails;
       this.data = data
-      this.total = data.TotalAmount;
+      this.total =  data.TotalAmount;
+      this.subtotal = data.Billingemail.toUpperCase() != "WALK-IN" ? data.TotalAmount - 30 : data.TotalAmount  
       this.firstname = data.BillingFirstname
       this.lastname = data.BillingLastname
       this.address1 = data.BillingAddress1
       this.address2 = data.BillingAddress2
       this.status = data.Status
-      this.phonenumber = data.BillingPhonenumber.toUpperCase() == "WALK-IN" ? "Walk-In" : "0" + data.BillingPhonenumber
+      this.phonenumber = data.BillingPhonenumber.toString().toUpperCase() == "WALK-IN" ? "Walk-In" : "0" + data.BillingPhonenumber
       this.email = data.Billingemail
+      this.deliveryfee = data.Billingemail.toUpperCase() != "WALK-IN" ? 30 : 0
+      
+      this.dateOrdered = moment(data.Datetime).format("MM-DD-YYYY hh:mm A")
+      this.invoiceDate = moment(new Date()).format("MM-DD-YYYY hh:mm A")
     })
   } 
 })
    }
+   public convertToPDF()
+   {
+   html2canvas(document.getElementById("invoice")!).then(canvas => {
+   const contentDataURL = canvas.toDataURL('image/png')
+   let pdf = new jsPDF('l', 'mm', 'a4'); 
+   var width = pdf.internal.pageSize.getWidth();
+   //var height = canvas.height * width / canvas.width;
+   //console.log("the height", height)
+   pdf.addImage(contentDataURL, 'PNG', 10, 10, width, 209.90)
+   
+    pdf.addPage()
 
+   const contentDataURL2 = canvas.toDataURL('image/png')
+   var width2 = pdf.internal.pageSize.getWidth();
+   //var height2 = canvas.height * width2 / canvas.width;
+   pdf.addImage(contentDataURL2, 'PNG', 10, 10, width2, 209.90)
+   
+   
+   pdf.addPage()
+
+   const contentDataURL3 = canvas.toDataURL('image/png')
+   var width3 = pdf.internal.pageSize.getWidth();
+   //var height3 = canvas.height * width3 / canvas.width;
+   pdf.addImage(contentDataURL3, 'PNG', 10, 10, width3, 209.90)
+   
+   pdf.save('output.pdf'); 
+   });
+  }
   ngOnInit() {
 
   }
@@ -188,8 +226,10 @@ return {
                         buttons: [
                           {
                             text: 'Ok',
-                            role: 'cancel',
-
+                            //role: 'cancel',
+                             handler: data => {
+                              this.router.navigateByUrl(`/invoicepage/${this.id}/orders`)
+                            } 
                           }
                         ]
           
@@ -367,5 +407,11 @@ return {
           ]
         })
         await (await alertCtrl).present()
+      }
+
+      exportPdf() {
+        var paramName = this.name == 'orders' ? 'orders' : 'history'
+        this.router.navigateByUrl(`/invoicepage/${this.id}/${paramName}`)
+ 
       }
 }

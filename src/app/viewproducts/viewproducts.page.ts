@@ -45,6 +45,15 @@ export class ViewproductsPage implements OnInit {
       }
     }))
   ).subscribe(data => {
+    data = data.sort(function(a, b) {
+      if (a.ProductName < b.ProductName) {
+        return -1
+      }
+      if (a.ProductName > b.ProductName) {
+        return 1
+      }
+      return 0
+    })
     this.products = data
   })
   }

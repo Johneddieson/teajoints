@@ -1,0 +1,86 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+<ion-content>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">  
+      <ion-fab-button (click)="convertToPDF()" color="success">  
+        <ion-icon name="print-outline"></ion-icon>  
+      </ion-fab-button>  
+    </ion-fab>  
+  <div id="invoice">
+    <div class="toolbar hidden-print">
+        <div class="text-right">
+        </div>
+        <hr>
+    </div>
+    <div class="invoice overflow-auto">
+        <div style="min-width: 600px">
+  
+            <main>
+                <div class="row contacts">
+                    <div class="col invoice-to">
+                        <div class="text-gray-light">INVOICE TO:</div>
+                        <h2 class="to">{{firstname}} {{lastname}}</h2>
+                        <div class="address">{{address1}}</div>
+                        <div class="address">{{address2}}</div>
+                        <div class="email"><a>{{email}}</a></div>
+                    </div>
+                    <div class="col invoice-details">
+                        <div class="date">Date of Invoice: {{invoiceDate}}</div>
+                        <div class="date">Date Ordered: {{dateOrdered}}</div>
+                    </div>
+                </div>
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th class="text-left">PRODUCT NAME</th>
+                            <th class="text-right">UNIT PRICE</th>
+                            <th class="text-right">QTY</th>
+                            <th class="text-right">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of orders; let i = index;">
+                            <td class="no">{{i}}</td>
+                            <td class="text-left"><h3>
+                                <a>
+                                {{data.Category}}
+                                </a>
+                                </h3>
+                               {{data.ProductName}}
+                            </td>
+                            <td class="unit">{{data.UnitPrice | currency: '₱'}}</td>
+                            <td class="qty">{{data.Quantity}}</td>
+                            <td class="total">{{data.UnitPrice * data.Quantity | currency: '₱'}}</td>
+                        </tr>
+                   
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">SUBTOTAL</td>
+                            <td>{{subtotal | currency: '₱'}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">DELIVERY FEE</td>
+                            <td>{{deliveryfee| currency: '₱'}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">TOTAL AMOUNT</td>
+                            <td>{{total | currency: '₱'}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </main>
+        </div>
+        <div></div>
+    </div>
+  </div>
+</ion-content>

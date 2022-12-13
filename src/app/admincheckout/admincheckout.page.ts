@@ -258,7 +258,7 @@ OrderNow() {
            
                 els.present()
                 //Orders Saving Walk In
-                var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
+                var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
             this.afstore.collection('Orders').add({
               OrderDetails: this.getCartDetails,
               BillingFirstname: data.Name,

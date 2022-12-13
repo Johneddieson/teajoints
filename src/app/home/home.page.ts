@@ -117,7 +117,16 @@ var wew = sessionStorage.getItem('cart')
   //        ImageUrl: `${imageApiUrl}-/smart_resize/440x300/${imageName}`
   //      })
   //    })
-    this.productList = data
+  data = data.sort(function(a, b) {
+    if (a.ProductName < b.ProductName) {
+      return -1
+    }
+    if (a.ProductName > b.ProductName) {
+      return 1
+    }
+    return 0
+  })  
+  this.productList = data
    }) 
   }
   async  SearchCategory() {
@@ -179,6 +188,11 @@ var wew = sessionStorage.getItem('cart')
           type: 'radio',
           label: 'Rice Meal',
           value: 'Rice Meal'
+        },
+        {
+          type: 'radio',
+          label: 'Extras',
+          value: 'Extras'
         },
       ],
       buttons: [

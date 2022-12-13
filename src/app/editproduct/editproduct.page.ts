@@ -119,7 +119,6 @@ registerForm: FormGroup;
       }
   fileChanged(event) {
     const files = event.target.files
-    console.log("the files", files)
     const data = new FormData()
     data.append('file', files[0])
     //00fb1c6ab7c377f68517
@@ -168,7 +167,7 @@ registerForm: FormGroup;
     }).catch(err => {
 
     })
-    var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
+    var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
    
     if(parseInt(this.registerForm.value.cellphonenumber) == parseInt(this.currentstock)) {
         this.productReference.update({
@@ -217,71 +216,6 @@ var totalstocks = parseInt(this.registerForm.value.cellphonenumber) - parseInt(t
       })
       }
     }
-   
-  //   if (this.withPhoto == false) {
-  //       this.alertCtrl.create({
-  //         message: 'Please Choose a Photo',
-  //         buttons: [
-  //         {
-  //           text: 'Ok',
-  //           role: 'cancel'
-  //         }
-  //         ]
-  //       }).then(els2 => {
-  //         els2.present()
-  //       })
-  //   } else {
-
-    
-  //   this.loadingCtrl.create({
-  //     message: 'Creating New Product'
-  //   }).then(el => {
-  //     el.present()
-
-      
-  //     this.afstore.collection('Products').add({
-  //       ProductName: this.registerForm.value.firstname,
-  //       Stock: parseInt(this.registerForm.value.cellphonenumber),
-  //       UnitPrice: this.registerForm.value.password,
-  //       ImageUrl: this.photoLink,
-  //       Quantity: 1
-  //     })
-  //     var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
-  //     this.afstore.collection('Inventory').add({
-  //       Quantity: parseInt(this.registerForm.value.cellphonenumber) *  1,
-  //       Datetime: datetime,
-  //       read: false,
-  //       Destination: "Admin",
-  //       ProductName: this.registerForm.value.firstname,
-  //       UnitPrice: this.registerForm.value.password,
-  //       ImageUrl: this.photoLink
-  //     })
-
-  //     setTimeout(() => {
-  //       el.dismiss()   
-  //       this.registerForm.reset()
-  //       //this.photoLink = 'https://static.wikia.nocookie.net/otonari-no-tenshi/images/c/c9/No_images_available.jpg/revision/latest?cb=20220104141308'
-  //       this.alertCtrl.create({
-  //         header: 'Officially Created',
-  //         message: 'You created the product successfully',
-  //         buttons: [
-  //           {
-  //             text: 'Ok',
-  //             role: 'cancel'
-  //           }
-  //         ]
-  //       }).then(els => {
-  //         els.present()
-  //         this.myInputVariable.value = "";
-  //       }).catch(err => {
-
-  //       })
-  //     }, 3000)
-       
-  //   }).catch(err => {
-
-  //   })
-  // }
   }
 
 }

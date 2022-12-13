@@ -59,6 +59,15 @@ private unsubscriber : Subject<void> = new Subject<void>();
         ...a.payload.doc.data() as any
       }
      }))).subscribe(data => {
+      data = data.sort(function(a, b) {
+        if (a.ProductName < b.ProductName) {
+          return -1
+        }
+        if (a.ProductName > b.ProductName) {
+          return 1
+        }
+        return 0
+      })
       this.productList = data
      }) 
    }

@@ -115,6 +115,11 @@ const routes: Routes = [
     loadChildren: () => import('./tab3/tab3.module').then(m => m.Tab3PageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'invoicepage/:id/:name',
+    loadChildren: () => import('./invoicepage/invoicepage.module').then( m => m.InvoicepagePageModule),
+    canActivate: [AuthGuard]
+  },
  
 ];
 @NgModule({

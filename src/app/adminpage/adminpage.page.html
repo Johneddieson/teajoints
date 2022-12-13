@@ -1,17 +1,65 @@
-
-  <ion-toolbar>
+<ion-toolbar>
   <ion-buttons slot="start">
     <ion-menu-button menu="main-menu"></ion-menu-button>
-    <ion-title>Online Orders</ion-title>
+    <!-- (click)="showPicker = true;" -->
+    <!-- <ion-icon name="calendar-number-outline" style="cursor: pointer; zoom:1.5;" id="open-modal"></ion-icon> -->
+    <ion-title>Online Orders ‎ ‎ ‎ ‎
+    </ion-title>
   </ion-buttons>
-  <ion-searchbar  [debounce]="1000" show-clear-button="always" clear-icon="trash-bin" 
-  placeholder="Fullname & Email" (ionChange)="handleChange($event)"></ion-searchbar>
-  
+  <ion-buttons slot="end">
+    <ion-icon name="search-outline" style="cursor: pointer; zoom:2.0;" id="open-modal"></ion-icon>
+  </ion-buttons>
+  <!-- <ion-searchbar id="pangsearch" [debounce]="1000" show-clear-button="always" clear-icon="trash-bin"
+    placeholder="Fullname & Email" (ionChange)="handleChange($event)">
+  </ion-searchbar> -->
 </ion-toolbar>
 
 
 <ion-content>
-  <app-admintab1 [categoryId]="queryinput"></app-admintab1>
+  <ion-modal trigger="open-modal" mode="md" [backdropDismiss]="false">
+    <ng-template>
+      <ion-content>
+        <ion-item>
+          <ion-label>Customer Fullname :</ion-label>
+          <ion-input [(ngModel)]="customerName" (ionChange)="handleChange($event)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Customer Email :</ion-label>
+          <ion-input [(ngModel)]="customerEmail" (ionChange)="handleChangeEmail($event)"></ion-input>
+        </ion-item>
+        <ion-item counter="true">
+          <ion-label>Start Date :</ion-label>
+          <ion-input type="date" [(ngModel)]="dateStart" (ionChange)="handleChangeStartDate($event)"></ion-input>
+        </ion-item> 
+        <ion-item counter="true">
+          <ion-label>End Date :</ion-label>
+          <ion-input type="date" [(ngModel)]="dateEnd" (ionChange)="handleChangeEndDate($event)"></ion-input>
+        </ion-item>  
+
+        <ion-item lines="none">
+         <ion-buttons slot="end">
+          <ion-button color="danger" (click)="close()">Close</ion-button>
+         </ion-buttons>
+        </ion-item> 
+          <!-- <ion-label>Start Date</ion-label>
+          <ion-input type="date" data-date-format="DD MMMM YYYY"></ion-input> -->
+          <!-- <ion-datetime *ngIf="showPicker"
+          size="cover" #datetime (ionChange)="dateChanged(datetime.value)" 
+          [value]="dateValue" (ionCancel)="showPicker = false;">
+        <ion-buttons slot="buttons">
+          <ion-button (click)="close()">Dismiss</ion-button>
+          <ion-button (click)="select()" color="primary">Select</ion-button>
+        </ion-buttons>
+        </ion-datetime>  -->
+        <!-- <ion-buttons slot="buttons">
+          <ion-button (click)="close()">Dismiss</ion-button>
+          <ion-button (click)="select()" color="primary">Select</ion-button>
+        </ion-buttons> -->
+    
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <app-admintab1 [categoryId]="queryinput" [customerEmail]="inp_customerEmail" [startDate]="inp_startDate" [endDate]="inp_endDate"></app-admintab1>
 </ion-content>
 
 <!-- 

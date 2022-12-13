@@ -5,13 +5,52 @@
       <ion-menu-button menu="main-menu"></ion-menu-button>
       <ion-title>History Orders</ion-title>
     </ion-buttons>
-    <!-- (ionChange)="handleChange($event)" -->
-    <ion-searchbar  [debounce]="1000" show-clear-button="always" clear-icon="trash-bin" 
+    <!-- <ion-searchbar  [debounce]="1000" show-clear-button="always" clear-icon="trash-bin" 
     placeholder="Fullname, Email & Status" (ionChange)="handleChange($event)"></ion-searchbar>
-    
-  </ion-toolbar>
-
-<ion-content>
+     -->
+     <ion-buttons slot="end">
+      <ion-icon name="search-outline" style="cursor: pointer; zoom:2.0;" id="open-modal2"></ion-icon>
+    </ion-buttons>
+    </ion-toolbar>
+    <ion-modal trigger="open-modal2" mode="md" [backdropDismiss]="false">
+      <ng-template>
+        <ion-content>
+          <ion-item>
+            <ion-label>Customer Fullname :</ion-label>
+            <ion-input [(ngModel)]="customerName" (ionChange)="handleChange($event)"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Customer Email :</ion-label>
+            <ion-input [(ngModel)]="customerEmail" (ionChange)="handleChangeEmail($event)"></ion-input>
+          </ion-item>
+          <ion-item counter="true">
+            <ion-label>Start Date :</ion-label>
+            <ion-input type="date" [(ngModel)]="dateStart" (ionChange)="handleChangeStartDate($event)"></ion-input>
+          </ion-item> 
+          <ion-item counter="true">
+            <ion-label>End Date :</ion-label>
+            <ion-input type="date" [(ngModel)]="dateEnd" (ionChange)="handleChangeStartDate($event)"></ion-input>
+          </ion-item>
+          <ion-item counter="true">
+            <ion-label>Status :</ion-label>
+            <ion-select placeholder="Select Status" [(ngModel)]="status" (ionChange)="handleChangeStatus($event)">
+              <ion-select-option value="">--- SHOW ALL ---</ion-select-option>
+              <ion-select-option value="Approved">Approved</ion-select-option>
+              <ion-select-option value="Rejected">Rejected</ion-select-option>
+            </ion-select>
+          </ion-item>  
+  
+          <ion-item lines="none">
+           <ion-buttons slot="end">
+            <ion-button color="danger" (click)="close()">Close</ion-button>
+           </ion-buttons>
+          </ion-item> 
+      
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+<ion-content class="content">
+  
   <!-- xs, sm, md, lg, xl *ngFor="let item of [].constructor(50)" -->
   <ion-grid fixed>
  <ion-row>

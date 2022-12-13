@@ -18,10 +18,23 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Admintab1Page implements OnInit {
   myquery = ""
+  inp_customerEmail = "";
+  inp_startDate = "";
+  inp_endDate = "";
   @ViewChild(IonAccordionGroup) accordionGroup: IonAccordionGroup;
   @Input() set categoryId(value: string) {
-    this.myquery = value
+    this.myquery = value == undefined ? "" : value
   }
+  @Input() set customerEmail(value: string) {
+    this.inp_customerEmail = value == undefined ? "" : value
+  }
+  @Input() set startDate(value: string) {
+     this.inp_startDate = value == undefined ? "" : value
+   }
+   @Input() set endDate(value: string) {
+     this.inp_endDate = value == undefined ? "" : value
+   }
+
   changes = ""
   productReference: AngularFirestoreCollection
   currentProductStockReference: AngularFirestoreCollection
@@ -75,12 +88,20 @@ export class Admintab1Page implements OnInit {
     // })
   }
   get categoryId(): string {
-    
     return this.myquery;
-
+}
+get customerEmail(): string {
+  return this.inp_customerEmail;
+}
+get startDate(): string {
+  return this.inp_startDate;
+}
+get endDate(): string {
+  return this.inp_endDate;
 }
   ngOnChanges(changes: SimpleChanges) {
- 
+ console.log("fullname", this.categoryId)
+ console.log("email", this.customerEmail)
     this.afauth.authState.subscribe(data => {
       if (data && data.uid) {
        
@@ -112,11 +133,24 @@ export class Admintab1Page implements OnInit {
               })
             })
             data = data.sort((a, b) => Number(b.DatetimeToSort) - Number(a.DatetimeToSort))
-            data = this.categoryId == undefined || this.categoryId == "" ? data : data.filter(f => f.BillingFullName.toLowerCase().includes(this.categoryId) 
-            || f.Billingemail.toLowerCase().includes(this.categoryId)
-            )
+     
+              if (this.categoryId != "") 
+            {
+              data = data.filter(f => f.BillingFullName.toLowerCase().includes(this.categoryId))
+            } 
+            if (this.customerEmail != "") 
+            {
+              data = data.filter(f => f.Billingemail.toLowerCase().includes(this.customerEmail))
+            }
+            if (this.inp_startDate != "" && this.inp_endDate != "")
+            {
+              var startdate = this.inp_startDate + " 00:00"
+              var enddate = this.inp_endDate + " 23:59"
+              data = data.filter(f => moment(moment(f.Datetime).format("MM-DD-YYYY hh:mm A")).toDate() >= moment(startdate).toDate() &&  moment(moment(f.Datetime).format("MM-DD-YYYY hh:mm A")).toDate() <= moment(enddate).toDate())
+            }
+            console.log("the data", data)
+            console.log("converted date", data.map(function(i)  {var datetime = moment(i.Datetime).format("DD-MM-YYYY hh:mm A"); return moment(datetime).toDate()})) 
             this.allPendingOrders = data
-           
           })
       }
     })
@@ -235,7 +269,7 @@ this.currentProductStockReference = this.afstore.collection('Products')
     
                   alert(`Insufficient Stock: \n  ${filterGreaterThanStock.map(function (e) { return `${e.ProductName} > ${e.Stock} current stock \n` }).join('\n')}`);
                 } else {
-                  var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
+                  var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
     
                   //Update order to Closed
                   this.afstore.doc(`Orders/${data.id}`).update({
@@ -348,7 +382,7 @@ this.currentProductStockReference = this.afstore.collection('Products')
                   handler: dataremarks => {
 
 
-                    var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
+                    var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
 
                     //Update order to Cancelled
                     this.afstore.doc(`Orders/${data.id}`).update({
