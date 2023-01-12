@@ -4,45 +4,13 @@
     <ion-title>View Products</ion-title>
   </ion-buttons>
 </ion-toolbar>
-<!-- <ion-content>
-  <div class="container">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-list>
-            <ion-item *ngFor="let data of products">
-              <ion-thumbnail slot="start">
-                <img src="{{data.ImageUrl}}" />
-              </ion-thumbnail>
-              <ion-label>
-                <h2>{{data.ProductName}} <span style="float: right; color: #3880ff;"> {{data.UnitPrice | currency: '₱'}}</span>
-                </h2>
-                <h3>
-                </h3>
-                <p class="rate"> {{data.Stock}} remaining stock</p>
-                <div id="qty">
-                  <span style="float: right; ">
-                    <button id="btn2" (click)="DeleteProduct(data)"> Delete</button>
-                  </span>
-                  <span style="float: right; ">
-                    <button id="btn" (click)="EditProduct(data)"> Edit</button>
-                  </span>
-                </div>
-              </ion-label>
-            </ion-item>
-          </ion-list>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
-</ion-content> -->
 
 <ion-content>
   <div class="small-container cart-page">
     <table>
       <tr>
         <th>Product Name</th>
-        <th>Qty On Hand</th>
+        <th>Grams On Hand</th>
         <th></th>
       </tr>
       <tr *ngFor="let data of products">
@@ -50,14 +18,22 @@
           <div class="cart-info">
            <img src="{{data.ImageUrl}}">
             <div>
-              <p>{{data.ProductName}} <br> <small>Price: {{data.UnitPrice | currency: '₱'}}</small>
+              <h3>{{data.ProductName}}</h3>
+              <p *ngIf="data.Category != 'Milktea'"> 
+                <small>Price: {{data.UnitPrice | currency: '₱'}}</small>
               <br><a (click)="DeleteProduct(data)">Remove</a>
+              </p>
+              
+              <p *ngIf="data.Category == 'Milktea'">
+                <small>SmallPrice: {{data.SmallPrice | currency: '₱'}}</small>
+                <br>
+                <small>MediumPrice: {{data.MediumPrice | currency: '₱'}}</small>
+                <br><a (click)="DeleteProduct(data)">Remove</a>
               </p>
             </div>
           </div>
         </td>
         <td><input type="text" value="{{data.Stock}}" disabled style="text-align: right;"></td>
-        <!-- <td>{{(data.Quantity * data.UnitPrice) | currency: '₱'}}</td> -->
         <td>
           <span style="float: right; ">
           <button id="btn" (click)="EditProduct(data)"> Edit</button>
@@ -65,30 +41,5 @@
       </td>
       </tr>    
     </table>
-    <!-- <div class="total-price" *ngIf="total > 0">
-      <table>
-        <tr>
-          <td>Subtotal</td>
-          <td>{{(total) | currency: '₱'}}</td>
-        </tr>
-
-        <tr>
-          <td>Shipping Fee</td>
-          <td>{{30 | currency: '₱'}}</td>
-        </tr>
-
-        <tr>
-          <td>Total Amount</td>
-          <td>{{(total + 30) | currency: '₱'}}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <ion-button *ngIf="total > 0" color="light" (click)="OrderNow()">Confirm Order</ion-button>
-
-          </td>
-        </tr>
-      </table>
-    </div> -->
   </div>
 </ion-content>

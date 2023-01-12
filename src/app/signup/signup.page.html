@@ -44,7 +44,7 @@
 <ion-content>
   <div class="login-section ion-padding">
    <div class="heading ion-padding">
-    <p [hidden]="ishide" class="haha" routerLink="/login"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></p>
+    <p [hidden]="ishide" class="haha" routerLink="/"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></p>
   
     <h1>Create an account</h1>
     <!-- <p>Start appreciating our products</p> -->
@@ -68,8 +68,8 @@
 
    <div class="action-button ion-padding" *ngIf="!ishide">
     <ion-button size="large" class="login-button" (click)="SignUp()">Sign up</ion-button>
-    <p>Already a member?</p>
-    <ion-button class="signup-button" size="large" fill="outline" routerLink="/login">Log in</ion-button>
+    <!-- <p>Already a member?</p> -->
+    <!-- <ion-button class="signup-button" size="large" fill="outline" routerLink="/login">Log in</ion-button> -->
    </div>
    <div class="action-button ion-padding" *ngIf="ishide && isthisadmin">
     <ion-button size="large" class="login-button" (click)="navigateadmin()">Continue as Admin</ion-button>

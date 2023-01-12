@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, SimpleChanges, ViewChild, EventEmitter } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
@@ -7,9 +7,7 @@ import { Router } from '@angular/router';
 import { AlertController, IonAccordionGroup } from '@ionic/angular';
 import { CurrencyPipe } from '@angular/common';
 import * as firebase from 'firebase/app'
-import { Button } from 'protractor';
-import { Action } from 'rxjs/internal/scheduler/Action';
-import { isSymbol } from 'util';
+
 import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-admintab1',
@@ -21,6 +19,7 @@ export class Admintab1Page implements OnInit {
   inp_customerEmail = "";
   inp_startDate = "";
   inp_endDate = "";
+  count = ''
   @ViewChild(IonAccordionGroup) accordionGroup: IonAccordionGroup;
   @Input() set categoryId(value: string) {
     this.myquery = value == undefined ? "" : value
@@ -34,7 +33,7 @@ export class Admintab1Page implements OnInit {
    @Input() set endDate(value: string) {
      this.inp_endDate = value == undefined ? "" : value
    }
-
+   @Output() totalPendingOrders = new EventEmitter();
   changes = ""
   productReference: AngularFirestoreCollection
   currentProductStockReference: AngularFirestoreCollection
@@ -100,12 +99,10 @@ get endDate(): string {
   return this.inp_endDate;
 }
   ngOnChanges(changes: SimpleChanges) {
- console.log("fullname", this.categoryId)
- console.log("email", this.customerEmail)
     this.afauth.authState.subscribe(data => {
       if (data && data.uid) {
        
-        this.productReference = this.afstore.collection('Orders', ref => ref.where("Status", "==", "Open")) 
+        this.productReference = this.afstore.collection('Orders', ref => ref.where("Status", "!=", "Delivered")) 
 
         this.sub = this.productReference.snapshotChanges()
           .pipe(map(actions => actions.map(a => {
@@ -114,6 +111,7 @@ get endDate(): string {
               ...a.payload.doc.data() as any
             }
           }))).subscribe(data => {
+            data = data.filter(f => f.Status != "Cancelled")
             data = data.map((i, index) => {
               return Object.assign({
                 BillingAddress1: i.BillingAddress1,
@@ -148,9 +146,10 @@ get endDate(): string {
               var enddate = this.inp_endDate + " 23:59"
               data = data.filter(f => moment(moment(f.Datetime).format("MM-DD-YYYY hh:mm A")).toDate() >= moment(startdate).toDate() &&  moment(moment(f.Datetime).format("MM-DD-YYYY hh:mm A")).toDate() <= moment(enddate).toDate())
             }
-            console.log("the data", data)
-            console.log("converted date", data.map(function(i)  {var datetime = moment(i.Datetime).format("DD-MM-YYYY hh:mm A"); return moment(datetime).toDate()})) 
+            //console.log("the data", data)
+            //console.log("converted date", data.map(function(i)  {var datetime = moment(i.Datetime).format("DD-MM-YYYY hh:mm A"); return moment(datetime).toDate()})) 
             this.allPendingOrders = data
+            this.totalPendingOrders.emit(this.allPendingOrders.length.toString())
           })
       }
     })
@@ -273,7 +272,7 @@ this.currentProductStockReference = this.afstore.collection('Products')
     
                   //Update order to Closed
                   this.afstore.doc(`Orders/${data.id}`).update({
-                    Status: 'Closed'
+                    Status: 'Delivered'
                   })
       
                   //User Notification Approved
@@ -322,7 +321,7 @@ this.currentProductStockReference = this.afstore.collection('Products')
                     BillingPhonenumber: data.BillingPhonenumber,
                     Billingemail: data.Billingemail,
                     Datetime: data.Datetime,
-                    Status: "Closed",
+                    Status: "Delivered",
                     TotalAmount: data.TotalAmount,
                     id: data.id,
                     OrderDetails: data.OrderDetails,

@@ -1,16 +1,8 @@
-
-
-
-<ion-toolbar>
+<!-- <ion-toolbar>
   <ion-buttons slot="start">
     <ion-menu-button menu="main-menu"></ion-menu-button>
     <ion-title>POS</ion-title>
   </ion-buttons>
-  <!-- <ion-buttons  slot="end">
-    <ion-button (click)="SearchCategory()"><ion-icon slot="icon-only" name="search-outline"></ion-icon></ion-button>
-    <ion-button *ngIf="numbers != 0" (click)="checkout()"><ion-badge color="danger">{{numbers}}</ion-badge>Checkout</ion-button>
-    </ion-buttons> -->
-
     <ion-buttons slot="end">
       <ion-button *ngIf="numbers != 0" (click)="checkout()">
         <ion-badge color="danger">{{numbers}}</ion-badge>
@@ -19,41 +11,7 @@
     </ion-buttons>
   </ion-toolbar>
 
-<!-- <ion-content>
-
-<div class="container">
-<ion-grid>
-  <ion-row>
-    <ion-col>
-    <ion-list>
-      <ion-item *ngFor="let data of productList">
-        <ion-thumbnail slot="start">
-         <img src="{{data.ImageUrl}}" />  
-        </ion-thumbnail>
-        <ion-label>
-          <h2>{{data.ProductName}} <span style="float: right; color: #3880ff;">₱ {{data.UnitPrice}}</span>
-          </h2>
-          <h3>
-          </h3>
-          <p class="rate"> {{data.Stock}} remaining stock</p>
-          <div id="qty">
-            <span (click)="Decrease(data)" class="minus"> - </span>  {{data.Quantity}}
-            <span (click)="Increase(data)" class="plus"> + </span>  
-            <span style="float: right; ">
-             <button id="btn" (click)="AddtoCart(data)"> Add</button> 
-            </span>
-          </div>
-        </ion-label>
-      </ion-item>     
-    </ion-list>      
-    </ion-col>
-  </ion-row>
-</ion-grid>
-</div>
-</ion-content> -->
-
-
-<ion-content>
+   <ion-content>
   <section class="shop" id="shop">
     <div class="container">
       <div class="box" *ngFor="let data of productList">
@@ -74,4 +32,53 @@
       <ion-icon  name="search-outline"></ion-icon>  
     </ion-fab-button>  
   </ion-fab>  
+</ion-content>  -->
+
+<ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-menu-button menu="main-menu">
+    </ion-menu-button>
+    <ion-title>POS</ion-title>
+  </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-menu-button menu="cart">
+        <ion-badge color="danger" *ngIf="numbers != 0">{{numbers}}</ion-badge>
+        <ion-icon name="cart-outline"></ion-icon>
+      </ion-menu-button>
+      
+      <!-- <ion-button *ngIf="numbers != 0" (click)="checkout()">
+        <ion-badge color="danger">{{numbers}}</ion-badge>
+        <ion-icon name="cart-outline"></ion-icon>
+      </ion-button> -->
+      
+    </ion-buttons>
+  </ion-toolbar>
+<ion-content>
+  <section class="shop container">
+    <h2 class="section-title">Shop Products</h2>
+    <div class="shop-content">
+      <div class="product-box" *ngFor="let data of productList">
+        <img src="{{data.ImageUrl}}" alt="" class="product-img">
+        <h2 class="product-title">{{data.ProductName}}</h2>
+        <span class="price">{{data.UnitPrice | currency: '₱'}}</span>
+        <br>
+        <span class="price">{{data.Stock}} remaining</span>
+        <span class="price"><h5><span (click)="Decrease(data)" class="minus"> - </span>{{data.Quantity}}<span (click)="Increase(data)" class="plus"> + </span></h5></span>
+        <i (click)="AddtoCart(data)"><ion-icon name="cart" class="add-cart"></ion-icon></i>
+      </div>
+    </div>
+  </section>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">  
+    <ion-fab-button color="primary" (click)="SearchCategory()">  
+      <ion-icon  name="search-outline"></ion-icon>  
+    </ion-fab-button>  
+  </ion-fab>  
 </ion-content>
+
+
+
+ 
+
+
+

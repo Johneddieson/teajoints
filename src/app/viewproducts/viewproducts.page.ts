@@ -158,18 +158,19 @@ export class ViewproductsPage implements OnInit {
         {
           text: 'Yes',
           handler: () => {
-            var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
+            // var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
 
-            this.afstore.collection('Inventory').add({
-              Quantity: parseInt(data.Stock) * -1,
-              Datetime: datetime,
-              read: false,
-              Destination: "Admin",
-              ProductName: data.ProductName,
-              UnitPrice: data.UnitPrice,
-              ImageUrl: data.ImageUrl
-            })
+            // this.afstore.collection('Inventory').add({
+            //   Quantity: parseInt(data.Stock) * -1,
+            //   Datetime: datetime,
+            //   read: false,
+            //   Destination: "Admin",
+            //   ProductName: data.ProductName,
+            //   UnitPrice: data.UnitPrice,
+            //   ImageUrl: data.ImageUrl
+            // })
             this.afstore.doc(`Products/${data.id}`).delete()
+            this.afstore.doc(`Inventory/${data.id}`).delete()
           }
         },
         {

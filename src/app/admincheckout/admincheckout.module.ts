@@ -15,6 +15,6 @@ import { AdmincheckoutPage } from './admincheckout.page';
     IonicModule,
     AdmincheckoutPageRoutingModule
   ],
-  declarations: [AdmincheckoutPage]
+  declarations: []
 })
 export class AdmincheckoutPageModule {}

@@ -17,8 +17,8 @@ export class MainpagePage implements OnInit {
   dropdownmobile = false;
   istrue;
   iconName = "chevron-up"
-  @ViewChild('productbtn', {read: ElementRef}) productbtn: ElementRef;
 
+  @ViewChild('productbtn') productbtn: ElementRef;
   productCollection: AngularFirestoreCollection
 sub
 products: any[] = []
@@ -49,8 +49,20 @@ category = "";
         }
         return 0
       })
-       this.products = data
-    })
+      this.products = data
+        var mappings = this.products.map( function(f) {return f.ImageUrl})
+        var i = 0;
+       var len = mappings.length
+        //console.log("this products", this.products)
+    
+       setInterval(() => {
+        if (i > len-1) {
+         i = 0;
+       }
+       this.productbtn.nativeElement.src = mappings[i]
+       i++;
+      }, 3000);
+      })
    }
  async  SearchCategory() {
     var alert =  this.alertCtrl.create({

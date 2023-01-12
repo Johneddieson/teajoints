@@ -1,63 +1,7 @@
-<!-- <ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons  slot="start">
-      <ion-buttons  slot="start">
-        <ion-back-button></ion-back-button>
-        </ion-buttons>
-    </ion-buttons>
-     <ion-title>Check Out</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-content>
-<div class="container">
-<ion-grid>
-  <ion-row>
-    <ion-col>
-    <ion-list>
-      <ion-item *ngFor="let data of getCartDetails">
-        <ion-thumbnail slot="start">
-         <img src="{{data.ImageUrl}}" />  
-        </ion-thumbnail>
-        <ion-label>
-          <h2>{{data.ProductName}} <span style="float: right; color: #3880ff;">{{data.UnitPrice | currency: '₱'}}</span>
-          </h2>
-          <h3>
-          </h3>
-          <p class="rate"> {{data.Stock}} remaining stock</p>
-          <div id="qty">
-            <span  class="minus">  </span>  {{data.Quantity}}
-            <span  class="plus">  </span>  
-            <span style="float: right; ">
-             <button id="btn" (click)="singleDelete(data)"> Remove</button> 
-            </span>
-          </div>
-        </ion-label>
-      </ion-item>
-    </ion-list>      
-    </ion-col>
-  </ion-row>
-</ion-grid>
-</div>
-</ion-content>  
-<ion-footer>
-  <ion-row>
-    <ion-col size="7">
-      <ion-text>
-        <h4>Total :  {{total | currency: '₱'}} </h4>
-      </ion-text>
-    </ion-col>
-    <ion-col size="5">
-      <ion-button *ngIf="total > 0" color="light" (click)="OrderNow()">Confirm Order</ion-button>
-    </ion-col>
-  </ion-row>
-</ion-footer> -->
-
-
-
 <ion-header>
   <ion-toolbar color="light">
     <ion-buttons  slot="start">
-   <ion-back-button></ion-back-button>
+   <!-- <ion-back-button></ion-back-button> -->
     </ion-buttons>
     <ion-title>Check Out</ion-title>
   </ion-toolbar>

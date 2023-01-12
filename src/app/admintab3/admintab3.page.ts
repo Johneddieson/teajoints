@@ -3,7 +3,6 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { RSA_PKCS1_OAEP_PADDING } from 'constants';
 import { AlertController, IonModal } from '@ionic/angular';
 import { Router } from '@angular/router';
 @Component({

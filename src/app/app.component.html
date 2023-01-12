@@ -1,5 +1,6 @@
 <ion-app>
-  <ion-menu menuId="main-menu" content-id="main" menu-close="true" *ngIf="isAdmin">
+  <ion-menu menuId="main-menu" content-id="main" menu-close="true" *ngIf="isAdmin"
+  >
     <ion-header>
          <ion-toolbar color="primary">
              <ion-title>Welcome Admin!</ion-title>
@@ -41,6 +42,12 @@
      </ion-content>
   </ion-menu>
 
+  <ion-menu menuId="cart" content-id="main" menu-close="true" *ngIf="isAdmin"
+  side="end">
+  <ion-content>
+    <app-admincheckout></app-admincheckout>
+  </ion-content>
+  </ion-menu>
 
   <ion-menu menuId="main-menu" content-id="main" menu-close="true" *ngIf="!isAdmin">
     <ion-header>

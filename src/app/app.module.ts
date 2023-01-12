@@ -15,6 +15,7 @@ import { AuthForLoginSignupGuard } from './auth-for-login-signup.guard';
 import { CurrencyPipe } from '@angular/common';
 import { AdminpagePage } from './adminpage/adminpage.page';
 import { Admintab1Page } from './admintab1/admintab1.page';
+import { AdmincheckoutPage } from './admincheckout/admincheckout.page';
 @NgModule({
   
   entryComponents: [],
@@ -31,7 +32,8 @@ import { Admintab1Page } from './admintab1/admintab1.page';
     
     AngularFirestoreModule,
   HttpClientModule,],
-  declarations: [AppComponent],
+  declarations: [AppComponent,
+    AdmincheckoutPage],
   providers: [CurrencyPipe, AuthForLoginSignupGuard, AuthGuard, AuthServiceService,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   
   bootstrap: [AppComponent],

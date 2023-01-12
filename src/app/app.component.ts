@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
@@ -13,6 +13,14 @@ import { AuthServiceService } from './auth-service.service';
 export class AppComponent {
   isAdmin: boolean = false
   private angularFireStoreDocument: AngularFirestoreDocument
+  getCartDetails: any = []
+  getCurrentProductDetails: any = []
+  total: number = 0;
+  cartItem:number = 0
+  getOrders: any = []
+  meReference: AngularFirestoreDocument
+  stockRefence: AngularFirestoreCollection
+  myInformation: any = {}
 sub;
 fullname: any = ""
   constructor(private menuCtrl: MenuController, private router: Router,

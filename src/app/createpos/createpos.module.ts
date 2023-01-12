@@ -12,7 +12,7 @@ import { CreateposPage } from './createpos.page';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
+     IonicModule,
     CreateposPageRoutingModule,
     ReactiveFormsModule
   ],

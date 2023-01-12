@@ -39,7 +39,7 @@
 <ion-content>
   <div class="login-section ion-padding">
    <div class="heading ion-padding">
-    <p class="haha" routerLink="/mainpage"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></p>
+    <p class="haha" routerLink="/"><ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon></p>
     <h1>Sign in to continue</h1>
     
    </div> 
@@ -48,14 +48,14 @@
       <ion-icon name="mail-outline"></ion-icon>
       <ion-item>
         <ion-label position="floating">EMAIL</ion-label>
-        <ion-input type="email" #email [disabled]="ishide"></ion-input>
+        <ion-input type="email" #email [disabled]="ishide" [(ngModel)]="Email1"></ion-input>
       </ion-item>
     </div>
     <div class="form-input">
       <ion-icon name="lock-closed-outline"></ion-icon>
       <ion-item>
         <ion-label position="floating">PASSWORD</ion-label>
-        <ion-input type="password" #password [disabled]="ishide"></ion-input>
+        <ion-input type="password" #password [disabled]="ishide" [(ngModel)]="Password1"></ion-input>
       </ion-item>
     </div>
    </div>
@@ -63,7 +63,7 @@
    <div class="action-button ion-padding" *ngIf="!ishide">
     <ion-button size="large" class="login-button" (click)="LogIn(email, password)">Log in</ion-button>
     <p>Forgot password? Click <a class="haha" (click)="ResetPassword()">here!</a></p>
-    <ion-button class="signup-button" size="large" fill="outline" routerLink="/signup">Signup</ion-button>
+    <!-- <ion-button class="signup-button" size="large" fill="outline" routerLink="/signup">Signup</ion-button> -->
    </div>
 
    <div class="action-button ion-padding" *ngIf="ishide && isthisadmin">

@@ -190,7 +190,7 @@ OrderNow() {
               BillingPhonenumber: this.myInformation.PhoneNumber,
               Billingemail: this.myInformation.Email,
               BillingIndexId: this.myInformation.Uid,
-              Status: 'Open',
+              Status: 'Pending',
               Datetime: datetime,
               TotalAmount: parseFloat(this.total.toString()).toFixed(2),
               DatetimeToSort: new Date()

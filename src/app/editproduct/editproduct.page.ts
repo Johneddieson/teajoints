@@ -21,9 +21,20 @@ registerForm: FormGroup;
   stock;
   price;
   currentstock;
+  descriptionvalue;
+  gramsperodervalue
+  category;
+  smallpricevalue;
+  mediumpricevalue;
+  gramsperodersmallvalue;
+  gramsperodermediumvalue;
   isDisabled: boolean = false
+  public isValid: boolean = false
+  public errMsg: string = ''
+  public validationMessageObject: object = {}
   @ViewChild(IonInput) myInputVariable: IonInput;
  productReference: AngularFirestoreDocument
+ inventoryReference: AngularFirestoreDocument
  sub;
  isdisabled : boolean = false
   constructor(private actRoute: ActivatedRoute, public http: HttpClient, public formBuilder: FormBuilder, public loadingCtrl: LoadingController, public alertCtrl: AlertController,
@@ -33,6 +44,7 @@ registerForm: FormGroup;
     this.id = actRoute.snapshot.paramMap.get('id')
     
     this.productReference = this.afstore.doc(`Products/${this.id}`)
+    this.inventoryReference = this.afstore.doc(`Inventory/${this.id}`)
     this.sub = this.productReference.valueChanges().subscribe(data => {
       this.productname = data.ProductName
       this.stock = data.Stock.toString()
@@ -40,7 +52,13 @@ registerForm: FormGroup;
       this.photoLink = data.ImageUrl
       this.withPhoto = true
       this.currentstock = data.Stock.toString()
-      
+      this.descriptionvalue = data.Description
+      this.gramsperodervalue = data.GramsPerOrder.toString()
+      this.category = data.Category
+      this.smallpricevalue = data.SmallPrice;
+      this.mediumpricevalue = data.MediumPrice;
+      this.gramsperodersmallvalue = data.GramsPerOderSmall.toString()
+      this.gramsperodermediumvalue = data.GramsPerOderMedium.toString()
     })
    }
 
@@ -48,37 +66,21 @@ registerForm: FormGroup;
    ngOnInit() {
   //  this.photoLink = 'https://static.wikia.nocookie.net/otonari-no-tenshi/images/c/c9/No_images_available.jpg/revision/latest?cb=20220104141308'
     this.registerForm = new FormGroup({
-      // category: new FormControl('', [
-      //   Validators.required,
-      //   this.customPatternValid({ pattern: /^([A-Z][a-z]*((\s[A-Za-z])?[a-z]*)*)$/, msg: "Always Starts With Capital Letter"}),
-      //   this.customPatternValid({ pattern: /^([^0-9]*)$/, msg: 'Numbers is not allowed' }),
-      //   Validators.minLength(5),
-      //   // Validators.maxLength(10),
-      // ]),
-      firstname: new FormControl('', [
+        firstname: new FormControl('', [
         Validators.required,
         this.customPatternValid({ pattern: /^([A-Z][a-z]*((\s[A-Za-z])?[a-z]*)*)$/, msg: "Always Starts With Capital Letter"}),
         this.customPatternValid({ pattern: /^([^0-9]*)$/, msg: 'Numbers is not allowed' }),
         Validators.minLength(5),
-        // Validators.maxLength(10),
       ]),
-      // middlename: new FormControl('', [
-      //   Validators.required,
-      //   this.customPatternValid({ pattern: /^([A-Z][a-z]*((\s[A-Za-z])?[a-z]*)*)$/, msg: "Always Starts With Capital Letter"}),
-      //   this.customPatternValid({ pattern: /^([^0-9]*)$/, msg: 'Numbers is not allowed' }),
-      //   Validators.minLength(5),
-      //   Validators.maxLength(10)
-      // ]),
-      // surname: new FormControl('', [
-      //   Validators.required,
-      //   this.customPatternValid({ pattern: /^([A-Z][a-z]*((\s[A-Za-z])?[a-z]*)*)$/, msg: "Always Starts With Capital Letter"}),
-      //   this.customPatternValid({ pattern: /^([^0-9]*)$/, msg: 'Numbers is not allowed' }),
-      //   Validators.minLength(5),
-      // ]),
-      cellphonenumber: new FormControl('', [
+      description: new FormControl('', [
         Validators.required,
-        // Validators.pattern("^[0&9]{2}[0-9]{9}")
-             this.customPatternValid({ pattern: /^[+-]?(?:\d*[1-9]\d*(?:\.\d+)?|0+\.\d*[1-9]\d*)$/, msg: 'This format is not allowed' }),
+        // this.customPatternValid({ pattern: /^([A-Z][a-z]*((\s[A-Za-z])?[a-z]*)*)$/, msg: "Always Starts With Capital Letter"}),
+        // this.customPatternValid({ pattern: /^([^0-9]*)$/, msg: 'Numbers is not allowed' }),
+      ]),
+     
+      gramsonhand: new FormControl('', [
+        Validators.required,
+            this.customPatternValid({ pattern: /^[+-]?(?:\d*[1-9]\d*(?:\.\d+)?|0+\.\d*[1-9]\d*)$/, msg: 'This format is not allowed' }),
              this.customPatternValid({ pattern: /^([^.?!-]*)$/, msg: 'Negative is not allowed' }),
              this.customPatternValid({ pattern: /^([^.?!_]*)$/, msg: 'Under Score is not allowed' }),
              this.customPatternValid({ pattern: /^([^.?!=]*)$/, msg: 'Equal is not allowed' }),
@@ -86,7 +88,19 @@ registerForm: FormGroup;
              this.customPatternValid({ pattern: /^([^.?!.]*)$/, msg: 'Period is not allowed' }),
       
     ]),
-      password: new FormControl('', [
+
+    gramsperorder: new FormControl('', [
+      Validators.required,
+           this.customPatternValid({ pattern: /^[+-]?(?:\d*[1-9]\d*(?:\.\d+)?|0+\.\d*[1-9]\d*)$/, msg: 'This format is not allowed' }),
+           this.customPatternValid({ pattern: /^([^.?!-]*)$/, msg: 'Negative is not allowed' }),
+           this.customPatternValid({ pattern: /^([^.?!_]*)$/, msg: 'Under Score is not allowed' }),
+           this.customPatternValid({ pattern: /^([^.?!=]*)$/, msg: 'Equal is not allowed' }),
+           this.customPatternValid({ pattern: /^([^.?!+]*)$/, msg: 'Plus is not allowed' }),
+           this.customPatternValid({ pattern: /^([^.?!.]*)$/, msg: 'Period is not allowed' }),
+    
+  ]),
+
+  unitprice: new FormControl('', [
   Validators.required,
   this.customPatternValid({ pattern: /^[+-]?(?:\d*[1-9]\d*(?:\.\d+)?|0+\.\d*[1-9]\d*)$/, msg: 'This format is not allowed' }),
   this.customPatternValid({ pattern: /^([^-]*)$/, msg: 'Negative is not allowed' }),
@@ -94,11 +108,116 @@ registerForm: FormGroup;
   this.customPatternValid({ pattern: /^([^?!=]*)$/, msg: 'Equal is not allowed' }),
   this.customPatternValid({ pattern: /^([^?!+]*)$/, msg: 'Plus is not allowed' }),
 
-])
+]),
+smallprice: new FormControl('', [
+  Validators.required,
+  this.customPatternValid({
+    pattern: /^[+-]?(?:\d*[1-9]\d*(?:\.\d+)?|0+\.\d*[1-9]\d*)$/,
+    msg: 'This format is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^-]*)$/,
+    msg: 'Negative is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^?!_]*)$/,
+    msg: 'Under Score is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^?!=]*)$/,
+    msg: 'Equal is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^?!+]*)$/,
+    msg: 'Plus is not allowed',
+  }),
+]),
+mediumprice: new FormControl('', [
+  Validators.required,
+  this.customPatternValid({
+    pattern: /^[+-]?(?:\d*[1-9]\d*(?:\.\d+)?|0+\.\d*[1-9]\d*)$/,
+    msg: 'This format is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^-]*)$/,
+    msg: 'Negative is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^?!_]*)$/,
+    msg: 'Under Score is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^?!=]*)$/,
+    msg: 'Equal is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^?!+]*)$/,
+    msg: 'Plus is not allowed',
+  }),
+]),
+gramsperodersmall: new FormControl('', [
+  Validators.required,
+  // Validators.pattern("^[0&9]{2}[0-9]{9}")
+  //this.customPatternValid({ pattern: /^[+-]?(?:\d*[1-9]\d*(?:\.\d+)?|0+\.\d*[1-9]\d*)$/, msg: 'This format is not allowed' }),
+  this.customPatternValid({
+    pattern: /^([^.?!-]*)$/,
+    msg: 'Negative is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^.?!_]*)$/,
+    msg: 'Under Score is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^.?!=]*)$/,
+    msg: 'Equal is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^.?!+]*)$/,
+    msg: 'Plus is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^.?!.]*)$/,
+    msg: 'Period is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^[1-9]\d*$/,
+    msg: 'This format is not allowed',
+  }),
+]),
+gramsperodermedium: new FormControl('', [
+  Validators.required,
+  // Validators.pattern("^[0&9]{2}[0-9]{9}")
+  //this.customPatternValid({ pattern: /^[+-]?(?:\d*[1-9]\d*(?:\.\d+)?|0+\.\d*[1-9]\d*)$/, msg: 'This format is not allowed' }),
+  this.customPatternValid({
+    pattern: /^([^.?!-]*)$/,
+    msg: 'Negative is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^.?!_]*)$/,
+    msg: 'Under Score is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^.?!=]*)$/,
+    msg: 'Equal is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^.?!+]*)$/,
+    msg: 'Plus is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^([^.?!.]*)$/,
+    msg: 'Period is not allowed',
+  }),
+  this.customPatternValid({
+    pattern: /^[1-9]\d*$/,
+    msg: 'This format is not allowed',
+  }),
+]),
     })
+
+    
   }
   customPatternValid(config: any): ValidatorFn {
-    console.log("wew", config)
     return (control: FormControl) => {
       let urlRegeX: RegExp = config.pattern;
       if (control.value && !control.value.match(urlRegeX)) {
@@ -111,9 +230,6 @@ registerForm: FormGroup;
     }
       }
       reset() {
-        console.log("wew", 
-        this.myInputVariable.value)
-
         this.myInputVariable.value = ""
       
       }
@@ -137,85 +253,271 @@ registerForm: FormGroup;
     this.withPhoto = true
     })
   }
-  submit() {
-    this.loadingCtrl.create({
-      message: 'Updating Product'
-    }).then(el => {
-      el.present()
+//   submit() {
+//     //   this.loadingCtrl.create({
+//   //     message: 'Updating Product'
+//   //   }).then(el => {
+//   //     el.present()
 
       
     
       
-      setTimeout(() => {
-        el.dismiss()   
-        this.alertCtrl.create({
-          header: 'Officially Updated',
-          message: 'You updated the product successfully',
-          buttons: [
-            {
-              text: 'Ok',
-              role: 'cancel'
-            }
-          ]
-        }).then(els => {
-          els.present()
-        }).catch(err => {
+//   //     setTimeout(() => {
+//   //       el.dismiss()   
+//   //       this.alertCtrl.create({
+//   //         header: 'Officially Updated',
+//   //         message: 'You updated the product successfully',
+//   //         buttons: [
+//   //           {
+//   //             text: 'Ok',
+//   //             role: 'cancel'
+//   //           }
+//   //         ]
+//   //       }).then(els => {
+//   //         els.present()
+//   //       }).catch(err => {
 
-        })
-      }, 3000)
+//   //       })
+//   //     }, 3000)
        
-    }).catch(err => {
+//   //   }).catch(err => {
 
-    })
-    var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
-   
-    if(parseInt(this.registerForm.value.cellphonenumber) == parseInt(this.currentstock)) {
-        this.productReference.update({
-         Stock: parseInt(this.registerForm.value.cellphonenumber),
-         UnitPrice: this.registerForm.value.password,
-         ImageUrl: this.photoLink,
+//   //   })
+//   //   var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
+  
+//   //  if (this.checkInventoryIfnotUndefined() === undefined) 
+//   //  {
+//   //   this.afstore.collection('Inventory').doc(this.id).set({
+//   //     Category: this.category,
+//   //     Quantity: parseInt(this.registerForm.value.cellphonenumber) *  1,
+//   //     Datetime: datetime,
+//   //     read: false,
+//   //     Destination: "Admin",
+//   //     ProductName: this.registerForm.value.firstname,
+//   //     UnitPrice: this.registerForm.value.password,
+//   //     ImageUrl: this.photoLink,
+//   //     DatetimeToSort: new Date(),
+//   //     ProductId: this.id
+//   //   })
+//   //  }
+//   //  else 
+//   //  {
+//   //     this.inventoryReference.update({
+//   //       UnitPrice: this.registerForm.value.password,
+//   //       ImageUrl: this.photoLink,
+//   //       Quantity: parseInt(this.registerForm.value.cellphonenumber) *  1,
+//   //       ProductName: this.registerForm.value.firstname,
+//   //     })
+//   //  }
+
+//   //          this.productReference.update({
+//   //        Stock: parseInt(this.registerForm.value.cellphonenumber),
+//   //        UnitPrice: this.registerForm.value.password,
+//   //        ImageUrl: this.photoLink,
+//   //        GramsPerOrder: parseInt(this.registerForm.value.gramsperorder),
+//   //        Description: this.registerForm.value.description
          
-        })
-    } else {
-      if (parseInt(this.registerForm.value.cellphonenumber) > parseInt(this.currentstock)) {
-var totalstocks = parseInt(this.registerForm.value.cellphonenumber) - parseInt(this.currentstock)
+//   //       })
+   
+// //     if(parseInt(this.registerForm.value.cellphonenumber) == parseInt(this.currentstock)) {
+// //         this.productReference.update({
+// //          Stock: parseInt(this.registerForm.value.cellphonenumber),
+// //          UnitPrice: this.registerForm.value.password,
+// //          ImageUrl: this.photoLink,
+         
+// //         })
+// //     } else {
+// //       if (parseInt(this.registerForm.value.cellphonenumber) > parseInt(this.currentstock)) {
+// // var totalstocks = parseInt(this.registerForm.value.cellphonenumber) - parseInt(this.currentstock)
 
-        this.productReference.update({
-          Stock: parseInt(this.registerForm.value.cellphonenumber),
-          UnitPrice: this.registerForm.value.password,
-          ImageUrl: this.photoLink,
+// //         this.productReference.update({
+// //           Stock: parseInt(this.registerForm.value.cellphonenumber),
+// //           UnitPrice: this.registerForm.value.password,
+// //           ImageUrl: this.photoLink,
           
-         })
-              this.afstore.collection('Inventory').add({
-        Quantity: totalstocks *  1,
-        Datetime: datetime,
-        read: false,
-        Destination: "Admin",
-        ProductName: this.registerForm.value.firstname,
-        UnitPrice: this.registerForm.value.password,
-        ImageUrl: this.photoLink,
-        DatetimeToSort: new Date()
-      })
-      } else {
-        var totalstocks2 = parseInt(this.currentstock) - parseInt(this.registerForm.value.cellphonenumber)
-        this.productReference.update({
-          Stock: parseInt(this.registerForm.value.cellphonenumber),
-          UnitPrice: this.registerForm.value.password,
-          ImageUrl: this.photoLink,
+// //          })
+// //               this.afstore.collection('Inventory').add({
+// //         Quantity: totalstocks *  1,
+// //         Datetime: datetime,
+// //         read: false,
+// //         Destination: "Admin",
+// //         ProductName: this.registerForm.value.firstname,
+// //         UnitPrice: this.registerForm.value.password,
+// //         ImageUrl: this.photoLink,
+// //         DatetimeToSort: new Date()
+// //       })
+// //       } else {
+// //         var totalstocks2 = parseInt(this.currentstock) - parseInt(this.registerForm.value.cellphonenumber)
+// //         this.productReference.update({
+// //           Stock: parseInt(this.registerForm.value.cellphonenumber),
+// //           UnitPrice: this.registerForm.value.password,
+// //           ImageUrl: this.photoLink,
           
-         })
-              this.afstore.collection('Inventory').add({
-        Quantity: totalstocks2 *  -1,
-        Datetime: datetime,
-        read: false,
-        Destination: "Admin",
-        ProductName: this.registerForm.value.firstname,
-        UnitPrice: this.registerForm.value.password,
-        ImageUrl: this.photoLink,
-        DatetimeToSort: new Date()
-      })
-      }
-    }
+// //          })
+// //               this.afstore.collection('Inventory').add({
+// //         Quantity: totalstocks2 *  -1,
+// //         Datetime: datetime,
+// //         read: false,
+// //         Destination: "Admin",
+// //         ProductName: this.registerForm.value.firstname,
+// //         UnitPrice: this.registerForm.value.password,
+// //         ImageUrl: this.photoLink,
+// //         DatetimeToSort: new Date()
+// //       })
+// //       }
+// //     }
+//   }
+
+
+
+  checkInventoryIfnotUndefined() {
+    var check;
+    this.inventoryReference.valueChanges().subscribe(data => {
+
+      check = data
+    })
+
+return check
   }
 
+
+  async submit () {
+    var datetime = await moment(new Date()).format("MM-DD-YYYY hh:mm A")
+    var validation = Object.assign(this.validation())
+
+
+    if (validation.isValid === false) 
+    {
+      var errorAlert = await this.alertCtrl.create({
+        header: 'This fields must be in the correct format',
+            message: `<b>${validation.errMessage}</b>`,
+            buttons: [
+              {
+                text: 'Ok',
+                role: 'cancel'
+              }
+            ]
+      })
+      await errorAlert.present()
+    } 
+    else 
+    {
+      var alertSuccess = await this.alertCtrl.create({
+        message: 'Product added successfully!',
+                  buttons: [
+                    {
+                      text: 'Ok',
+                      role: 'cancel'
+                    }
+                  ]
+      })
+
+      await alertSuccess.present()
+      await this.productReference.update({
+        Description: this.registerForm.value.description,
+        Stock: parseInt(this.registerForm.value.gramsonhand),
+        GramsPerOrder: this.category != "Milktea" ? parseInt(this.registerForm.value.gramsperorder) : 0,
+        UnitPrice: this.category != "Milktea" ? this.registerForm.value.unitprice.toString() : "0",
+        SmallPrice: this.category == "Milktea" ? this.registerForm.value.smallprice.toString() : "0",
+        MediumPrice: this.category == "Milktea" ? this.registerForm.value.mediumprice : "0",
+        GramsPerOderSmall: this.category == "Milktea" ? parseInt(this.registerForm.value.gramsperodersmall) : 0,
+        GramsPerOderMedium: this.category == "Milktea" ? parseInt(this.registerForm.value.gramsperodermedium) : 0,
+        ImageUrl: this.photoLink,
+      })
+ 
+      await this.afstore.collection('Inventory').add({
+        Datetime: datetime,
+        Category: this.category,
+        ProductName: this.productname,
+        Quantity: parseInt(this.registerForm.value.gramsonhand),
+        UnitPrice: this.category != "Milktea" ? this.registerForm.value.unitprice.toString() : "0",
+        ImageUrl: this.photoLink,
+        GramsPerOrder: this.category != "Milktea" ? parseInt(this.registerForm.value.gramsperorder) : 0,
+        Description: this.registerForm.value.description,
+        SmallPrice: this.category == "Milktea" ? this.registerForm.value.smallprice : "0",
+        MediumPrice:  this.category == "Milktea" ? this.registerForm.value.mediumprice : "0",
+        DatetimeToSort: new Date(),
+        ProductId: this.id,
+        GramsPerOderSmall: this.category == "Milktea" ? parseInt(this.registerForm.value.gramsperodersmall) : 0,
+        GramsPerOderMedium: this.category == "Milktea" ? parseInt(this.registerForm.value.gramsperodermedium) : 0,
+      })
+    }
+
+   
+  }
+
+   validation() 
+  {
+    var firstnamevalidationiserror =  this.registerForm.controls.firstname.invalid    
+    var descriptionvalidationiserror =  this.registerForm.controls.description.invalid
+    var gramsnonhandvalidationiserror =  this.registerForm.controls.gramsonhand.invalid
+    var gramsperodervalidationiserror =  this.registerForm.controls.gramsperorder.invalid
+    var unitpricevalidationiserror =  this.registerForm.controls.unitprice.invalid
+    var smallpricevalidationiserror =  this.registerForm.controls.smallprice.invalid
+    var mediumpricevalidationiserror =  this.registerForm.controls.mediumprice.invalid
+    var gramsperodersmallvalidationiserror =  this.registerForm.controls.gramsperodersmall.invalid
+    var gramsperodermediumvalidationiserror =  this.registerForm.controls.gramsperodermedium.invalid
+
+
+    // console.log(firstnamevalidationiserror)
+    // console.log(descriptionvalidationiserror)
+    // console.log(gramsnonhandvalidationiserror)
+    // console.log(gramsperodervalidationiserror)
+    // console.log(unitpricevalidationiserror)
+    // console.log(smallpricevalidationiserror)
+    // console.log(mediumpricevalidationiserror)
+    // console.log(gramsperodersmallvalidationiserror)
+    // console.log(gramsperodermediumvalidationiserror)
+
+    if (this.category == "Milktea")
+    {
+      if (firstnamevalidationiserror === true
+        || descriptionvalidationiserror === true || gramsnonhandvalidationiserror === true
+        ||  smallpricevalidationiserror === true
+        || mediumpricevalidationiserror === true || gramsperodersmallvalidationiserror
+        || gramsperodermediumvalidationiserror)
+        {
+          this.errMsg = ''
+          this.isValid = false
+          this.errMsg +=  firstnamevalidationiserror === true ? "• Name<br>" : ""
+          this.errMsg += descriptionvalidationiserror === true ? "• Description<br>" : ""
+          this.errMsg += gramsnonhandvalidationiserror === true ? "• Grams on hand<br>" : ""
+          this.errMsg += smallpricevalidationiserror === true ? "• Small unit price<br>" : ""
+          this.errMsg +=  mediumpricevalidationiserror === true ? "• Medium unit price<br>": ""
+          this.errMsg +=  gramsperodersmallvalidationiserror === true ? "• Grams per order small<br>": ""
+          this.errMsg +=  gramsperodermediumvalidationiserror === true ? "• Grams per order medium<br>": ""
+        }
+        else 
+        {
+          this.isValid =  true
+          this.errMsg = ''
+        }
+    } 
+    else
+    {
+      if (firstnamevalidationiserror === true
+        || descriptionvalidationiserror  === true || gramsnonhandvalidationiserror === true
+        || gramsperodervalidationiserror === true || unitpricevalidationiserror === true)
+        {
+          this.errMsg = ''
+          this.isValid =  false
+          this.errMsg +=  firstnamevalidationiserror === true ? "• Name<br>" : ""
+          this.errMsg += descriptionvalidationiserror === true ? "• Description<br>" : ""
+          this.errMsg += unitpricevalidationiserror === true ? "• Unit price<br>" : ""
+          this.errMsg += gramsnonhandvalidationiserror === true ? "• Grams on hand<br>" : ""
+          this.errMsg += gramsperodervalidationiserror === true ? "• Grams per order<br>" : ""
+      
+        }
+        else 
+        {
+          this.isValid =  true
+          this.errMsg = ''
+        }
+    }
+this.validationMessageObject = {
+  isValid: this.isValid,
+  errMessage: this.errMsg
+}
+    return this.validationMessageObject
+  }
 }

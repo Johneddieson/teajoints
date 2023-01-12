@@ -1,5 +1,5 @@
 import { LocationStrategy } from '@angular/common';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, EventEmitter  } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertButton, AlertController, IonDatetime, IonModal, Platform } from '@ionic/angular';
 import { AuthServiceService } from '../auth-service.service';
@@ -31,6 +31,7 @@ export class AdminpagePage implements OnInit {
   inp_endDate: string;
   @ViewChild(IonDatetime) datetime: IonDatetime;
   @ViewChild(IonModal) modal: IonModal;
+  totalOrders: string
   constructor(private locationStrategy: LocationStrategy,
     private alertCtrl: AlertController,
     private auth: AuthServiceService,
@@ -205,5 +206,10 @@ console.log("customer name", this.customerName)
 console.log("customer email", this.customerEmail)
 console.log("date start", this.dateStart)
 console.log("date end", this.dateEnd)
+}
+
+addItem(newItem) {
+  console.log("the emit", newItem)
+  this.totalOrders = newItem
 }
 }

@@ -1,5 +1,5 @@
 import { LocationStrategy } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestoreDocument, AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { MessengerService } from '../messenger.service';
 import * as firebase from 'firebase/app'
+import { Observable } from 'rxjs/internal/Observable';
 @Component({
   selector: 'app-admincheckout',
   templateUrl: './admincheckout.page.html',
@@ -24,8 +25,12 @@ export class AdmincheckoutPage implements OnInit {
   stockRefence: AngularFirestoreCollection
   sub
   myInformation: any = {}
-  constructor(private alertCtrl: AlertController, private locationStrategy: LocationStrategy, private router: Router, private afauth: AngularFireAuth, private afstore: AngularFirestore, private msg: MessengerService) {
-
+  constructor(private alertCtrl: AlertController, private locationStrategy: LocationStrategy, 
+    private router: Router, private afauth: AngularFireAuth, private afstore: AngularFirestore, 
+    private msg: MessengerService,
+    private applicationRef: ApplicationRef,
+    private zone: NgZone,
+    private cdRef: ChangeDetectorRef,) {
     this.afauth.authState.subscribe(data => {
       if (data && data.uid) {
         this.stockRefence =   this.afstore.collection('Products')
@@ -37,36 +42,26 @@ export class AdmincheckoutPage implements OnInit {
               }
             })))
             .subscribe(Data => {
-            //sessionStorage.setItem('CurrentProducts', JSON.stringify(Data))
-    
-            this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
-          
-            const mergeById = (array1, array2) =>
-            array1.map(itm => ({
-                ...Object.assign({}, itm, {
-                 Stock: array2.find((item) => (item.id === itm.id) && item).Stock,
-                 Category: itm.Category,
-                 ImageUrl: itm.ImageUrl,
-                 ProductName: itm.ProductName,
-                 Quantity: itm.Quantity,
-                 //Stock: 11,
-                 UnitPrice: itm.UnitPrice,
-                 id: itm.id
-               })
-            }));
-       
-       
-           // const mergeById = (array1, array2) => {
-           //  // console.log("array1", array1)
-           //  // console.log("array2", array2)
-       
-           // }
-            var results = mergeById(this.getCartDetails, Data)
-            sessionStorage.removeItem('cart')
-            this.getCartDetails = sessionStorage.setItem('cart', JSON.stringify(results))
-           this.CartDetails()
-
+              this.msg.cartSubject.subscribe(d => {
+                this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
+                const mergeById = (array1, array2) =>
+                array1.map(itm => ({
+                    ...Object.assign({}, itm, {
+                     Stock: array2.find((item) => (item.id === itm.id) && item).Stock,
+                     Category: itm.Category,
+                     ImageUrl: itm.ImageUrl,
+                     ProductName: itm.ProductName,
+                     Quantity: itm.Quantity,
+                     UnitPrice: itm.UnitPrice,
+                     id: itm.id
+                   })
+                }));
            
+                var results = mergeById(this.getCartDetails, Data)
+                sessionStorage.removeItem('cart')
+                this.getCartDetails = sessionStorage.setItem('cart', JSON.stringify(results))
+               this.CartDetails()
+              })  
           })
     
 
@@ -75,44 +70,31 @@ export class AdmincheckoutPage implements OnInit {
           this.myInformation = data
 
         })
+        
       }
     })
    }
 
   ngOnInit() {
-    
-    this.CartDetails()
-    this.loadCart()
-  
+    // this.router.events.subscribe(() => {
+    //   this.zone.run(() => {
+    //     setTimeout(() => {
+    //       this.applicationRef.tick()
+    //       this.CartDetails()
+    //       this.loadCart()
+        
+    //     }, 0)
+    //   })
+    // })
+    this.msg.cartSubject.subscribe(data => {
+      this.CartDetails()
+      this.loadCart()
+    })
   }
   
   CartDetails() {
     if (sessionStorage.getItem('cart')) {
       this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
-      //  this.getCurrentProductDetails = JSON.parse(sessionStorage.getItem('CurrentProducts'))
-   
-    //  const mergeById = (array1, array2) =>
-    //  array1.map(itm => ({
-    //      ...Object.assign({}, itm, {
-    //       CurrentStock: array2.find((item) => (item.id === itm.id) && item).Stock,
-    //       Category: itm.Category,
-    //       ImageUrl: itm.ImageUrl,
-    //       ProductName: itm.ProductName,
-    //       Quantity: itm.Quantity,
-    //       Stock: itm.Stock,
-    //       UnitPrice: itm.UnitPrice,
-    //       id: itm.id
-    //     })
-    //  }));
-
-
-    // // const mergeById = (array1, array2) => {
-    // //  // console.log("array1", array1)
-    // //  // console.log("array2", array2)
-
-    // // }
-    //  var results = mergeById(this.getCartDetails, this.getCurrentProductDetails)
-    //  console.log("dambel", results)
     }
   }
   inc(id, quantity) {
@@ -144,7 +126,6 @@ export class AdmincheckoutPage implements OnInit {
   loadCart() {
     if (sessionStorage.getItem('cart')) {
       this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
-
       this.total = this.getCartDetails.reduce((acc, val) => {
         return acc + (val.UnitPrice * val.Quantity)
       }, 0)

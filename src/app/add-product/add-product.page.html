@@ -26,16 +26,7 @@
             <ion-select-option value="Extras">Extras</ion-select-option>
           </ion-select>
         </ion-item>
-        <br />
-        <ion-item counter="true" [hidden]="!hideSizeDropdown">
-          <ion-label position="floating">Size</ion-label>
-          <ion-select formControlName="size" value="SM">
-            <ion-select-option  value="SM">Small</ion-select-option>
-            <ion-select-option  value="MD">Medium</ion-select-option>
-           
-          </ion-select>
-        </ion-item>
-        <br />
+       <br>
         <ion-item counter="true">
           <ion-label position="floating">Name</ion-label>
           <ion-input maxlength="20" formControlName="firstname"></ion-input>
@@ -48,46 +39,123 @@
              {{registerForm.controls.firstname.errors.invalidMsg}}
            </ion-text>
          </div>
-             <ion-text color="danger" *ngIf="registerForm.get('firstname').hasError('minlength') && registerForm.get('firstname').touched">
-          Product Name must be minimum 5 characters long
+             
+       
+
+         
+
+         <ion-item counter="true">
+          <ion-label position="floating">Description</ion-label>
+          <ion-textarea maxlength="800" formControlName="description"></ion-textarea>
+        </ion-item>
+        <ion-text type="text" color="danger" *ngIf="registerForm.get('description').hasError('required') && registerForm.get('description').touched">
+          Description shouldn't be empty 
          </ion-text>
-         <br />
-        <ion-item id="custom-item" counter="true">
+         <ion-text color="danger" *ngIf="registerForm.get('description').hasError('minlength') && registerForm.get('description').touched">
+          Description must be minimum 10 characters long
+         </ion-text>
+        <ion-item id="custom-item" counter="true" [hidden]="hideSizeDropdown">
           <ion-label position="floating">Unit Price</ion-label>
-          <ion-input maxlength="6"  type="tel" formControlName="password"></ion-input>
+          <ion-input maxlength="6"  type="tel" formControlName="unitprice"></ion-input>
         </ion-item>
 
-        <ion-text color="danger" *ngIf="registerForm.get('password').hasError('required') && registerForm.get('password').touched">
+        <ion-text [hidden]="hideSizeDropdown" color="danger" *ngIf="registerForm.get('unitprice').hasError('required') && registerForm.get('unitprice').touched">
           Price of product shouldn't be empty
          </ion-text> 
-         <div *ngIf="!registerForm.controls.password.valid && (registerForm.controls.password.dirty ||registerForm.controls.password.touched)" class="error">
-          <ion-text color="danger" *ngIf="registerForm.controls.password.errors.invalidMsg">
-            {{registerForm.controls.password.errors.invalidMsg}}
+         <div [hidden]="hideSizeDropdown" *ngIf="!registerForm.controls.unitprice.valid && (registerForm.controls.unitprice.dirty ||registerForm.controls.unitprice.touched)" class="error">
+          <ion-text color="danger" *ngIf="registerForm.controls.unitprice.errors.invalidMsg">
+            {{registerForm.controls.unitprice.errors.invalidMsg}}
           </ion-text>
           </div>
-          <br />
+       
         <ion-item id="custom-item" counter="true">
-          <ion-label position="floating">Stock On Hand</ion-label>
-          <ion-input maxlength="6" type="tel" formControlName="cellphonenumber"></ion-input>
+          <ion-label position="floating">Grams On Hand</ion-label>
+          <ion-input maxlength="6" type="tel" formControlName="gramsnonhand"></ion-input>
         </ion-item>
-        <ion-text color="danger" *ngIf="registerForm.get('cellphonenumber').hasError('required') && registerForm.get('cellphonenumber').touched">
+        <ion-text color="danger" *ngIf="registerForm.get('gramsnonhand').hasError('required') && registerForm.get('gramsnonhand').touched">
           Stock of product shouldn't be empty 
          </ion-text>
-          <div *ngIf="!registerForm.controls.cellphonenumber.valid && (registerForm.controls.cellphonenumber.dirty ||registerForm.controls.cellphonenumber.touched)" class="error">
-          <ion-text color="danger" *ngIf="registerForm.controls.cellphonenumber.errors.invalidMsg">
-            {{registerForm.controls.cellphonenumber.errors.invalidMsg}}
+          <div *ngIf="!registerForm.controls.gramsnonhand.valid && (registerForm.controls.gramsnonhand.dirty ||registerForm.controls.gramsnonhand.touched)" class="error">
+          <ion-text color="danger" *ngIf="registerForm.controls.gramsnonhand.errors.invalidMsg">
+            {{registerForm.controls.gramsnonhand.errors.invalidMsg}}
           </ion-text>
         </div>
-     
-        <button type="submit" hidden #btn></button>
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">  
-          <ion-fab-button (click)="btn.click()" [disabled]="registerForm.invalid" color="success">  
-            <ion-icon name="add"></ion-icon>  
-          </ion-fab-button>  
-        </ion-fab>  
 
+        <ion-item id="custom-item" counter="true" [hidden]="hideSizeDropdown">
+          <ion-label position="floating">Grams Per Order</ion-label>
+          <ion-input maxlength="6" type="tel" formControlName="gramsperoder"></ion-input>
+        </ion-item>
+        <ion-text [hidden]="hideSizeDropdown" color="danger" *ngIf="registerForm.get('gramsperoder').hasError('required') && registerForm.get('gramsperoder').touched">
+          Grams per order shouldn't be empty 
+         </ion-text>
+          <div [hidden]="hideSizeDropdown" *ngIf="!registerForm.controls.gramsperoder.valid && (registerForm.controls.gramsperoder.dirty ||registerForm.controls.gramsperoder.touched)" class="error">
+          <ion-text color="danger" *ngIf="registerForm.controls.gramsperoder.errors.invalidMsg">
+            {{registerForm.controls.gramsperoder.errors.invalidMsg}}
+          </ion-text>
+        </div>
+       
+        <ion-item counter="true" [hidden]="!hideSizeDropdown">
+          <ion-label position="floating">Small Price</ion-label>
+          <ion-input maxlength="6"  type="tel" formControlName="smallprice"></ion-input>
+        </ion-item>
+        <ion-text [hidden]="!hideSizeDropdown" color="danger" *ngIf="registerForm.get('smallprice').hasError('required') && registerForm.get('smallprice').touched">
+          SmallPrice of product shouldn't be empty
+         </ion-text> 
+         <div [hidden]="!hideSizeDropdown" *ngIf="!registerForm.controls.smallprice.valid && (registerForm.controls.smallprice.dirty ||registerForm.controls.smallprice.touched)" class="error">
+          <ion-text color="danger" *ngIf="registerForm.controls.smallprice.errors.invalidMsg">
+            {{registerForm.controls.smallprice.errors.invalidMsg}}
+          </ion-text>
+          </div>
+       
+         <ion-item counter="true" [hidden]="!hideSizeDropdown">
+          <ion-label position="floating">Medium Price</ion-label>
+          <ion-input maxlength="6"  type="tel" formControlName="mediumprice"></ion-input>
+        </ion-item>
+
+        <ion-text [hidden]="!hideSizeDropdown" color="danger" *ngIf="registerForm.get('mediumprice').hasError('required') && registerForm.get('mediumprice').touched">
+          Medium Price of product shouldn't be empty
+         </ion-text> 
+         <div [hidden]="!hideSizeDropdown" *ngIf="!registerForm.controls.mediumprice.valid && (registerForm.controls.mediumprice.dirty ||registerForm.controls.mediumprice.touched)" class="error">
+          <ion-text color="danger" *ngIf="registerForm.controls.mediumprice.errors.invalidMsg">
+            {{registerForm.controls.mediumprice.errors.invalidMsg}}
+          </ion-text>
+          </div>
+
+          <ion-item counter="true" [hidden]="!hideSizeDropdown">
+            <ion-label position="floating">Grams Per Order Small</ion-label>
+            <ion-input maxlength="6"  type="tel" formControlName="gramsperodersmall"></ion-input>
+          </ion-item>
+  
+          <ion-text [hidden]="!hideSizeDropdown" color="danger" *ngIf="registerForm.get('gramsperodersmall').hasError('required') && registerForm.get('gramsperodersmall').touched">
+            Grams per oder small shouldn't be empty
+           </ion-text> 
+           <div [hidden]="!hideSizeDropdown" *ngIf="!registerForm.controls.gramsperodersmall.valid && (registerForm.controls.gramsperodersmall.dirty ||registerForm.controls.gramsperodersmall.touched)" class="error">
+            <ion-text color="danger" *ngIf="registerForm.controls.gramsperodersmall.errors.invalidMsg">
+              {{registerForm.controls.gramsperodersmall.errors.invalidMsg}}
+            </ion-text>
+            </div>
+
+            <ion-item counter="true" [hidden]="!hideSizeDropdown">
+              <ion-label position="floating">Grams Per Order Medium</ion-label>
+              <ion-input maxlength="6"  type="tel" formControlName="gramsperodermedium"></ion-input>
+            </ion-item>
+    
+            <ion-text [hidden]="!hideSizeDropdown" color="danger" *ngIf="registerForm.get('gramsperodermedium').hasError('required') && registerForm.get('gramsperodermedium').touched">
+              Grams per oder small shouldn't be empty
+             </ion-text> 
+             <div [hidden]="!hideSizeDropdown" *ngIf="!registerForm.controls.gramsperodermedium.valid && (registerForm.controls.gramsperodermedium.dirty ||registerForm.controls.gramsperodermedium.touched)" class="error">
+              <ion-text color="danger" *ngIf="registerForm.controls.gramsperodermedium.errors.invalidMsg">
+                {{registerForm.controls.gramsperodermedium.errors.invalidMsg}}
+              </ion-text>
+              </div>
+      
     </form>
-   
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">  
+      <!-- [disabled]="registerForm.invalid" -->
+      <ion-fab-button (click)="submit()" color="success">  
+        <ion-icon name="add"></ion-icon>  
+      </ion-fab-button>  
+    </ion-fab>  
   </ion-content>  
   
 
