@@ -124,6 +124,10 @@ ion-back-button {
 }
 
 ion-content {
+
+    
+
+    
     #btn {
         padding: 10px 20px;
         color: #fff;
@@ -209,3 +213,12 @@ ion-content {
     }
 
 }
+
+.example-modal {
+    align-items: center;
+    justify-content: center; 
+    &::part(content){
+      width: 80%;
+      height: 50%; 
+    }
+  }

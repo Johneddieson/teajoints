@@ -240,6 +240,8 @@ gramsperodermedium: new FormControl('', [
     //00fb1c6ab7c377f68517
     
     //this for my github account 760e7038539ea9dd5176
+
+    //pukikinginamo@gmail.com account
     data.append('UPLOADCARE_PUB_KEY', 'd215c12fb1b590263b07')
     this.http.post('https://upload.uploadcare.com/base/', data).subscribe((events: any) => {
       var json = {events}
@@ -253,123 +255,6 @@ gramsperodermedium: new FormControl('', [
     this.withPhoto = true
     })
   }
-//   submit() {
-//     //   this.loadingCtrl.create({
-//   //     message: 'Updating Product'
-//   //   }).then(el => {
-//   //     el.present()
-
-      
-    
-      
-//   //     setTimeout(() => {
-//   //       el.dismiss()   
-//   //       this.alertCtrl.create({
-//   //         header: 'Officially Updated',
-//   //         message: 'You updated the product successfully',
-//   //         buttons: [
-//   //           {
-//   //             text: 'Ok',
-//   //             role: 'cancel'
-//   //           }
-//   //         ]
-//   //       }).then(els => {
-//   //         els.present()
-//   //       }).catch(err => {
-
-//   //       })
-//   //     }, 3000)
-       
-//   //   }).catch(err => {
-
-//   //   })
-//   //   var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
-  
-//   //  if (this.checkInventoryIfnotUndefined() === undefined) 
-//   //  {
-//   //   this.afstore.collection('Inventory').doc(this.id).set({
-//   //     Category: this.category,
-//   //     Quantity: parseInt(this.registerForm.value.cellphonenumber) *  1,
-//   //     Datetime: datetime,
-//   //     read: false,
-//   //     Destination: "Admin",
-//   //     ProductName: this.registerForm.value.firstname,
-//   //     UnitPrice: this.registerForm.value.password,
-//   //     ImageUrl: this.photoLink,
-//   //     DatetimeToSort: new Date(),
-//   //     ProductId: this.id
-//   //   })
-//   //  }
-//   //  else 
-//   //  {
-//   //     this.inventoryReference.update({
-//   //       UnitPrice: this.registerForm.value.password,
-//   //       ImageUrl: this.photoLink,
-//   //       Quantity: parseInt(this.registerForm.value.cellphonenumber) *  1,
-//   //       ProductName: this.registerForm.value.firstname,
-//   //     })
-//   //  }
-
-//   //          this.productReference.update({
-//   //        Stock: parseInt(this.registerForm.value.cellphonenumber),
-//   //        UnitPrice: this.registerForm.value.password,
-//   //        ImageUrl: this.photoLink,
-//   //        GramsPerOrder: parseInt(this.registerForm.value.gramsperorder),
-//   //        Description: this.registerForm.value.description
-         
-//   //       })
-   
-// //     if(parseInt(this.registerForm.value.cellphonenumber) == parseInt(this.currentstock)) {
-// //         this.productReference.update({
-// //          Stock: parseInt(this.registerForm.value.cellphonenumber),
-// //          UnitPrice: this.registerForm.value.password,
-// //          ImageUrl: this.photoLink,
-         
-// //         })
-// //     } else {
-// //       if (parseInt(this.registerForm.value.cellphonenumber) > parseInt(this.currentstock)) {
-// // var totalstocks = parseInt(this.registerForm.value.cellphonenumber) - parseInt(this.currentstock)
-
-// //         this.productReference.update({
-// //           Stock: parseInt(this.registerForm.value.cellphonenumber),
-// //           UnitPrice: this.registerForm.value.password,
-// //           ImageUrl: this.photoLink,
-          
-// //          })
-// //               this.afstore.collection('Inventory').add({
-// //         Quantity: totalstocks *  1,
-// //         Datetime: datetime,
-// //         read: false,
-// //         Destination: "Admin",
-// //         ProductName: this.registerForm.value.firstname,
-// //         UnitPrice: this.registerForm.value.password,
-// //         ImageUrl: this.photoLink,
-// //         DatetimeToSort: new Date()
-// //       })
-// //       } else {
-// //         var totalstocks2 = parseInt(this.currentstock) - parseInt(this.registerForm.value.cellphonenumber)
-// //         this.productReference.update({
-// //           Stock: parseInt(this.registerForm.value.cellphonenumber),
-// //           UnitPrice: this.registerForm.value.password,
-// //           ImageUrl: this.photoLink,
-          
-// //          })
-// //               this.afstore.collection('Inventory').add({
-// //         Quantity: totalstocks2 *  -1,
-// //         Datetime: datetime,
-// //         read: false,
-// //         Destination: "Admin",
-// //         ProductName: this.registerForm.value.firstname,
-// //         UnitPrice: this.registerForm.value.password,
-// //         ImageUrl: this.photoLink,
-// //         DatetimeToSort: new Date()
-// //       })
-// //       }
-// //     }
-//   }
-
-
-
   checkInventoryIfnotUndefined() {
     var check;
     this.inventoryReference.valueChanges().subscribe(data => {

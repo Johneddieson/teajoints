@@ -3,9 +3,37 @@
     <ion-menu-button menu="main-menu"></ion-menu-button>
     <ion-title>View Products</ion-title>
   </ion-buttons>
+  <ion-buttons slot="end">
+    <ion-icon name="search-outline" style="cursor: pointer; zoom:2.0;" id="open-modalsearching"></ion-icon>
+  </ion-buttons>
+
 </ion-toolbar>
 
 <ion-content>
+  <ion-modal trigger="open-modalsearching" mode="sm" [backdropDismiss]="false"
+  class="example-modal">
+    <ng-template>
+      <ion-content id="modal-content">
+        <ion-item>
+          <ion-label>Product Category :</ion-label>
+          <ion-input [(ngModel)]="productCategory" (ionChange)="handleChangeSearch($event)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Product Name :</ion-label>
+          <ion-input [(ngModel)]="productName" (ionChange)="handleChangeSearch($event)"></ion-input>
+        </ion-item>
+        <ion-item counter="true">
+          <ion-label>Product Grams On Hand :</ion-label>
+          <ion-input  [(ngModel)]="productOnHand"  (ionChange)="handleChangeSearch($event)"></ion-input>
+        </ion-item> 
+        <ion-item lines="none">
+         <ion-buttons slot="end">
+          <ion-button color="danger" (click)="close()">Close</ion-button>
+         </ion-buttons>
+        </ion-item> 
+      </ion-content>
+    </ng-template>
+  </ion-modal>
   <div class="small-container cart-page">
     <table>
       <tr>
@@ -18,7 +46,7 @@
           <div class="cart-info">
            <img src="{{data.ImageUrl}}">
             <div>
-              <h3>{{data.ProductName}}</h3>
+              <h3>{{data.ProductName}} ({{data.Category}})</h3>
               <p *ngIf="data.Category != 'Milktea'"> 
                 <small>Price: {{data.UnitPrice | currency: '₱'}}</small>
               <br><a (click)="DeleteProduct(data)">Remove</a>

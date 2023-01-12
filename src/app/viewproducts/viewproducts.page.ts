@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { FormBuilder } from '@angular/forms';
-import { LoadingController, AlertController } from '@ionic/angular';
+import { LoadingController, AlertController, IonModal } from '@ionic/angular';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,7 +20,11 @@ export class ViewproductsPage implements OnInit {
   public id: string
   dropdown = false;
   category = "";
+  productCategory = ""
+  productName = ""
+  productOnHand = "";
   @ViewChild('productbtn', { read: ElementRef }) productbtn: ElementRef;
+  @ViewChild(IonModal) modal: IonModal;
   constructor(public http: HttpClient, public loadingCtrl: LoadingController, public alertCtrl: AlertController,
     private afstore: AngularFirestore,
     private afauth: AngularFireAuth,
@@ -35,7 +39,7 @@ export class ViewproductsPage implements OnInit {
   }
   getAllProducts() {
     
-    this.productReference = !this.category ? this.afstore.collection('Products') : this.afstore.collection('Products', ref => ref.where("Category", "==", this.category))
+    this.productReference = this.afstore.collection('Products')
          
   this.sub = this.productReference.snapshotChanges().pipe(
     map(actions => actions.map(a => {
@@ -55,6 +59,21 @@ export class ViewproductsPage implements OnInit {
       return 0
     })
     this.products = data
+
+    if (this.productCategory != "")
+    {
+      data = data.filter(f => f.Category.toLowerCase().includes(this.productCategory.toLowerCase()))
+    }
+    if (this.productName != "")
+    {
+      data = data.filter(f => f.ProductName.toLowerCase().includes(this.productName.toLowerCase()))
+    }
+    if (this.productOnHand != "") 
+    {
+      data = data.filter(f => f.Stock.toString() == this.productOnHand)
+    }
+    this.products = data
+
   })
   }
   async loadProducts() {
@@ -170,7 +189,7 @@ export class ViewproductsPage implements OnInit {
             //   ImageUrl: data.ImageUrl
             // })
             this.afstore.doc(`Products/${data.id}`).delete()
-            this.afstore.doc(`Inventory/${data.id}`).delete()
+            //this.afstore.doc(`Inventory/${data.id}`).delete()
           }
         },
         {
@@ -202,5 +221,19 @@ export class ViewproductsPage implements OnInit {
     }
 
   }
+  close() {
+    //this.datetime.cancel(true);
+    this.modal.dismiss()
+    // this.customerName = this.customerName
+    // this.customerEmail = this.customerEmail
+    // this.dateStart = this.dateStart
+    // this.dateEnd = this.dateEnd
+    
+}
+
+handleChangeSearch(event: any) 
+{
+  this.getAllProducts()
+}
 
 }

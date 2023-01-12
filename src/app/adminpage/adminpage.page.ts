@@ -209,7 +209,6 @@ console.log("date end", this.dateEnd)
 }
 
 addItem(newItem) {
-  console.log("the emit", newItem)
   this.totalOrders = newItem
 }
 }
