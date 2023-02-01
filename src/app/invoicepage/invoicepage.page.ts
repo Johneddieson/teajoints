@@ -47,7 +47,7 @@ export class InvoicepagePage implements OnInit {
     private alertCtrl: AlertController,
     private http: HttpClient,
     private loadingController: LoadingController) {
-this.afauth.authState.subscribe(user => {
+this.afauth.authState.subscribe(async user => {
   if (user.uid && user) {
     this.name = this.actRoute.snapshot.paramMap.get('name')
     this.id = this.actRoute.snapshot.paramMap.get('id')
@@ -87,11 +87,7 @@ return {
     
      
     })
-  } 
-})
-   }
-  async ngOnInit() {
-    if (this.type != 'Online')
+    if (this.type == 'POS')
     {
       var loading = await this.loadingController.create
       ({
@@ -104,6 +100,11 @@ return {
       await loading.dismiss()
       }, 3800);
     }
+  } 
+})
+   }
+  async ngOnInit() {
+
     // if (this.type != undefined || this.type != null || this.type != '' || this.type != 'Online')
     // {
     //   this.convertToPDF()
