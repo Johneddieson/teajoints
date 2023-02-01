@@ -85,25 +85,25 @@ return {
       this.invoiceDate = moment(new Date()).format("MM-DD-YYYY hh:mm A")
       this.dateOrdered2 = moment(data.Datetime).format("MM-DD-YYYY")
     
-      if (this.type != 'Online')
-      {
-        var loading = await this.loadingController.create
-        ({
-          message: 'Downloading invoice...',
-          spinner: 'bubbles'
-        });
-        await loading.present()
-        setTimeout(async () => {
-        await this.convertToPDF()
-        await loading.dismiss()
-        }, 3800);
-      }
+     
     })
   } 
 })
    }
-  ngOnInit() {
-    
+  async ngOnInit() {
+    if (this.type != 'Online')
+    {
+      var loading = await this.loadingController.create
+      ({
+        message: 'Downloading invoice...',
+        spinner: 'bubbles'
+      });
+      await loading.present()
+      setTimeout(async () => {
+      await this.convertToPDF()
+      await loading.dismiss()
+      }, 3800);
+    }
     // if (this.type != undefined || this.type != null || this.type != '' || this.type != 'Online')
     // {
     //   this.convertToPDF()
