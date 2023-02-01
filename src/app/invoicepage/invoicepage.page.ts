@@ -1,10 +1,10 @@
 import { CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ApplicationRef, Component, NgZone, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestoreDocument, AngularFirestoreCollection, AngularFirestore } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import * as moment from 'moment';
@@ -38,17 +38,20 @@ export class InvoicepagePage implements OnInit {
   dateOrdered;
   dateOrdered2;
   invoiceDate;
-  constructor(private actRoute: ActivatedRoute,
+  paymentMethod;
+  type;
+  constructor(private applicationRef: ApplicationRef, private zone: NgZone, private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private router: Router,
     private currencyPipe: CurrencyPipe,
     private alertCtrl: AlertController,
-    private http: HttpClient) {
+    private http: HttpClient,
+    private loadingController: LoadingController) {
 this.afauth.authState.subscribe(user => {
   if (user.uid && user) {
     this.name = this.actRoute.snapshot.paramMap.get('name')
     this.id = this.actRoute.snapshot.paramMap.get('id')
-
+    this.type = this.actRoute.snapshot.paramMap.get('type')
     
     this.orderDetails = this.name == 'orders' ? this.afstore.collection('Orders').doc(this.id) : this.afstore.collection('History').doc(this.id)
 
@@ -63,8 +66,8 @@ return {
   ...actions.payload.data() as any
 }
 
-    })).subscribe(data => {
-        console.log("haha", data)
+    })).subscribe(async data => {
+        //console.log("haha", data)
       this.orders = data.OrderDetails;
       this.data = data
       this.total =  data.TotalAmount;
@@ -77,32 +80,63 @@ return {
       this.phonenumber = data.BillingPhonenumber.toString().toUpperCase() == "WALK-IN" ? "Walk-In" : "0" + data.BillingPhonenumber
       this.email = data.Billingemail
       this.deliveryfee = data.Billingemail.toUpperCase() != "WALK-IN" ? 30 : 0
-      
+      this.paymentMethod = data.PaymentMethod
       this.dateOrdered = moment(data.Datetime).format("MM-DD-YYYY hh:mm A")
       this.invoiceDate = moment(new Date()).format("MM-DD-YYYY hh:mm A")
       this.dateOrdered2 = moment(data.Datetime).format("MM-DD-YYYY")
+    
+      if (this.type != 'Online')
+      {
+        var loading = await this.loadingController.create
+        ({
+          message: 'Downloading invoice...',
+          spinner: 'bubbles'
+        });
+        await loading.present()
+        setTimeout(async () => {
+        await this.convertToPDF()
+        await loading.dismiss()
+        }, 3800);
+      }
     })
   } 
 })
    }
   ngOnInit() {
+    
+    // if (this.type != undefined || this.type != null || this.type != '' || this.type != 'Online')
+    // {
+    //   this.convertToPDF()
+    //   alert("magpriprint to")
+    // }
+ 
+    // router.events.subscribe(() => {
+    //   zone.run(() => {
+    //     setTimeout(() => {
+    //       this.applicationRef.tick()
+    //       if (this.type != undefined || this.type != null || this.type != '' || this.type != 'Online')
+    //       {
+    //         this.convertToPDF()
+    //       }
+    //     }, 0)  
+    //   })
+    // })
   }
   public convertToPDF()
   {
   html2canvas(document.getElementById("invoice")!).then(canvas => {
   const contentDataURL = canvas.toDataURL('image/png')
-  let pdf = new jsPDF('l', 'mm', 'a4'); 
+  let pdf = new jsPDF('l', 'mm', 'a6'); 
   var width = pdf.internal.pageSize.getWidth();
   //var height = canvas.height * width / canvas.width;
-  //console.log("the height", height)
-  pdf.addImage(contentDataURL, 'PNG', 10, 10, width, 209.90)
-  
+  //pdf.addImage(contentDataURL, 'PNG', 10, 10, width, 220.90)
+  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 100.90)
    pdf.addPage()
 
   const contentDataURL2 = canvas.toDataURL('image/png')
   var width2 = pdf.internal.pageSize.getWidth();
   //var height2 = canvas.height * width2 / canvas.width;
-  pdf.addImage(contentDataURL2, 'PNG', 10, 10, width2, 209.90)
+  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 100.90)
   
   
   pdf.addPage()
@@ -110,7 +144,7 @@ return {
   const contentDataURL3 = canvas.toDataURL('image/png')
   var width3 = pdf.internal.pageSize.getWidth();
   //var height3 = canvas.height * width3 / canvas.width;
-  pdf.addImage(contentDataURL3, 'PNG', 10, 10, width3, 209.90)
+  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 100.90)
   var fullname = this.firstname + " " + this.lastname
   // pdf.save('output.pdf');
   pdf.save(`${fullname} - ${this.dateOrdered2}`); 

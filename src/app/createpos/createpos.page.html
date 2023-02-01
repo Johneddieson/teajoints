@@ -55,15 +55,42 @@
   </ion-toolbar>
 <ion-content>
   <section class="shop container">
-    <h2 class="section-title">Shop Products</h2>
+    <h2 class="section-title">PRODUCTS</h2>
     <div class="shop-content">
       <div class="product-box" *ngFor="let data of productList">
         <img src="{{data.ImageUrl}}" alt="" class="product-img">
         <h2 class="product-title">{{data.ProductName}}</h2>
-        <span class="price">{{data.UnitPrice | currency: '₱'}}</span>
+        
+        <!-- If Not Milktea -->
+        <div *ngIf="data.Category != 'Milktea'">
+          <span class="price">{{data.UnitPrice | currency: '₱'}}</span>
         <br>
-        <span class="price">{{data.Stock}} remaining</span>
-        <span class="price"><h5><span (click)="Decrease(data)" class="minus"> - </span>{{data.Quantity}}<span (click)="Increase(data)" class="plus"> + </span></h5></span>
+        <span class="price">{{parseToFloat(data.Stock / data.GramsPerOrder)}} remaining</span>
+        <br>
+        <span *ngIf="data.ProductName == 'Fries' || data.ProductName == 'Chicken Fingers'">Flavors</span>          
+      </div>
+
+
+        <!-- If Milktea -->
+        <div *ngIf="data.Category == 'Milktea'">
+          <span class="price">Small : {{data.SmallPrice | currency: '₱'}}</span>
+          <br>
+          <span class="price">Medium : {{data.MediumPrice | currency: '₱'}}</span>  
+          <br>
+          <span class="price">{{parseToFloat(data.Stock / data.GramsPerOderSmall)}} remaining (Small)</span>
+          <br>
+          <span class="price">{{parseToFloat(data.Stock / data.GramsPerOderMedium)}} remaining (Medium)</span>
+          <!-- <br>
+            <ion-checkbox slot="start"></ion-checkbox> <ion-label>Small</ion-label>
+          <br>
+            <ion-checkbox slot="start"></ion-checkbox> <ion-label>Medium</ion-label> -->
+        </div>
+
+        <span class="price">
+          <h5>
+            <span (click)="Decrease(data)" class="minus" button> - </span>{{data.Quantity}}<span (click)="Increase(data)" class="plus" button> + </span>
+          </h5>
+      </span>
         <i (click)="AddtoCart(data)"><ion-icon name="cart" class="add-cart"></ion-icon></i>
       </div>
     </div>

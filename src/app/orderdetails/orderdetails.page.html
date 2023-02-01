@@ -4,14 +4,24 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button color="primary" (click)="customerInfo()"><ion-icon name="information-circle-outline"
-          slot="icon-only"></ion-icon></ion-button>
-      <ion-button color="success" (click)="approveOrder()" [hidden]="status != 'Open'"><ion-icon
-          name="checkmark-circle-outline" slot="icon-only"></ion-icon></ion-button>
-      <ion-button color="danger" (click)="cancelOrder()" [hidden]="status != 'Open'"><ion-icon
-          name="close-circle-outline" slot="icon-only"></ion-icon></ion-button>
-    
-          <ion-button color="success" (click)="exportPdf()" [hidden]="status == 'Open' || status == 'Cancelled'"><ion-icon
+      <ion-button color="primary" (click)="customerInfo()">
+        <ion-icon name="information-circle-outline"
+          slot="icon-only">
+        </ion-icon>
+      </ion-button>
+      <ion-button color="success" (click)="changeStatus()" [hidden]="status == 'Delivered' || status == 'Rejected'">
+        <!-- <ion-icon
+          name="checkmark-circle-outline" slot="icon-only">
+        </ion-icon> -->
+        <img class="approveIcon" />
+        </ion-button>
+      <ion-button color="danger" (click)="cancelOrder()" [hidden]="status == 'Approved' || status == 'Delivered' || status == 'Rejected' || status == 'Preparing' || status == 'To Deliver'">
+        <ion-icon
+          name="close-circle-outline" slot="icon-only">
+        </ion-icon>
+      </ion-button>
+          <!-- [hidden]="status == 'Open' || status == 'Cancelled'" -->
+          <ion-button color="success" (click)="exportPdf()"><ion-icon
             name="print-outline" slot="icon-only"></ion-icon></ion-button>
         </ion-buttons>
   </ion-toolbar>

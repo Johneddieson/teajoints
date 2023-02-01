@@ -2,15 +2,19 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button menu="main-menu"></ion-menu-button>
-      <ion-title>Inventory</ion-title>
+      <ion-title>Stock On Hand</ion-title>
     </ion-buttons>
-    <!-- <ion-searchbar  [debounce]="1000" show-clear-button="always" clear-icon="trash-bin" 
-    placeholder="Fullname & Productname" (ionChange)="handleChange($event)"></ion-searchbar> -->
-
+  
     <ion-buttons slot="end">
-      <ion-icon name="search-outline" style="cursor: pointer; zoom:2.0;" id="open-modal3"></ion-icon>
+     <ion-button (click)="prev()">
+      <ion-icon name="chevron-back-outline" style="cursor: pointer; zoom:2.0;"></ion-icon>
+     </ion-button>
+     <ion-button (click)="next()">
+      <ion-icon name="chevron-forward-outline" style="cursor: pointer; zoom:2.0;"></ion-icon>
+     </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  
   <ion-modal trigger="open-modal3" mode="md" [backdropDismiss]="false">
     <ng-template>
       <ion-content>
@@ -39,7 +43,7 @@
       </ion-content>
     </ng-template>
   </ion-modal>
- <ion-content class="content">
+ <!-- <ion-content class="content">
   <ion-card>
     <ion-item  *ngFor="let data of inventoryList" lines="none" color="dark">
       <ion-avatar slot="start">
@@ -51,6 +55,17 @@
         <p>{{data.Datetime}}</p>
       </ion-label>
     </ion-item>
-   
   </ion-card>
-</ion-content>   
+</ion-content>    -->
+
+
+<ion-content [fullscreen]="true" class="content">
+<ion-slides [options]="option" class="ion-margin-top" #slides>
+  <ion-slide *ngFor="let data of categoryList">
+    <ion-card>
+      <img src="{{data.Image}}" style="cursor: pointer; "  (click)="gotoThisCategory(data.name)"/>
+      <h1 style="color: aliceblue; font-size: 3.9rem; font-weight: 900;">{{data.name}}</h1>
+    </ion-card>
+  </ion-slide>   
+</ion-slides>
+</ion-content>

@@ -1,3 +1,4 @@
+import { AdmincheckoutPage } from './../admincheckout/admincheckout.page';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,6 +17,7 @@ import { CreateposPage } from './createpos.page';
     CreateposPageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [CreateposPage]
+  declarations: [CreateposPage],
+  providers: [AdmincheckoutPage]
 })
 export class CreateposPageModule {}

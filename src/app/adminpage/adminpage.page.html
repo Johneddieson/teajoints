@@ -9,9 +9,6 @@
   <ion-buttons slot="end">
     <ion-icon name="search-outline" style="cursor: pointer; zoom:2.0;" id="open-modal"></ion-icon>
   </ion-buttons>
-  <!-- <ion-searchbar id="pangsearch" [debounce]="1000" show-clear-button="always" clear-icon="trash-bin"
-    placeholder="Fullname & Email" (ionChange)="handleChange($event)">
-  </ion-searchbar> -->
 </ion-toolbar>
 
 
@@ -41,73 +38,8 @@
           <ion-button color="danger" (click)="close()">Close</ion-button>
          </ion-buttons>
         </ion-item> 
-          <!-- <ion-label>Start Date</ion-label>
-          <ion-input type="date" data-date-format="DD MMMM YYYY"></ion-input> -->
-          <!-- <ion-datetime *ngIf="showPicker"
-          size="cover" #datetime (ionChange)="dateChanged(datetime.value)" 
-          [value]="dateValue" (ionCancel)="showPicker = false;">
-        <ion-buttons slot="buttons">
-          <ion-button (click)="close()">Dismiss</ion-button>
-          <ion-button (click)="select()" color="primary">Select</ion-button>
-        </ion-buttons>
-        </ion-datetime>  -->
-        <!-- <ion-buttons slot="buttons">
-          <ion-button (click)="close()">Dismiss</ion-button>
-          <ion-button (click)="select()" color="primary">Select</ion-button>
-        </ion-buttons> -->
-    
       </ion-content>
     </ng-template>
   </ion-modal>
   <app-admintab1  [categoryId]="queryinput" [customerEmail]="inp_customerEmail" [startDate]="inp_startDate" [endDate]="inp_endDate" (totalPendingOrders)="addItem($event)"></app-admintab1>
 </ion-content>
-
-<!-- 
-<ion-content>
-  <div id="content">
-    <h2 style="text-align: center;">Html To PDF in Angular Application</h2>
-    <br><br>
-    <table class="table" id="contentToConvert">
-      <tbody>
-        <tr>
-          <th>Company</th>
-          <th>Contact</th>
-          <th>Country</th>
-        </tr>
-        <tr>
-          <td>Alfreds Futterkiste</td>
-          <td>Maria Anders</td>
-          <td>Germany</td>
-        </tr>
-        <tr>
-          <td>Centro comercial Moctezuma</td>
-          <td>Francisco Chang</td>
-          <td>Mexico</td>
-        </tr>
-        <tr>
-          <td>Ernst Handel</td>
-          <td>Roland Mendel</td>
-          <td>Austria</td>
-        </tr>
-        <tr>
-          <td>Island Trading</td>
-          <td>Helen Bennett</td>
-          <td>UK</td>
-        </tr>
-        <tr>
-          <td>Laughing Bacchus Winecellars</td>
-          <td>Yoshi Tannamuri</td>
-          <td>Canada</td>
-        </tr>
-        <tr>
-          <td>Magazzini Alimentari Riuniti</td>
-          <td>Giovanni Rovelli</td>
-          <td>Italy</td>
-        </tr>
-      </tbody>
-    </table>
-  </div><br>
-  <div style="text-align: center;">
-    <input type="button" class="btn btn-danger" value="Convert" (click)="convertToPDF()" />
-  </div>
-</ion-content> -->

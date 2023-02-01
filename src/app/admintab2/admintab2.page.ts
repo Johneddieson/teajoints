@@ -98,7 +98,7 @@ handleChangeStatus(event) {
                   BillingPhonenumber: i.BillingPhonenumber,
                   Billingemail: i.Billingemail,
                   Datetime: i.Datetime,
-                  Status: i.Status == "Closed" ? "Approved" : "Rejected",
+                  Status: i.Status,
                   TotalAmount: i.TotalAmount,
                   id: i.historyid,
                   DatetimeToSort: moment(i.Datetime).toDate(),

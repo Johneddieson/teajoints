@@ -116,10 +116,15 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'invoicepage/:id/:name',
+    path: 'invoicepage/:id/:name/:type',
     loadChildren: () => import('./invoicepage/invoicepage.module').then( m => m.InvoicepagePageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'category/:name',
+    loadChildren: () => import('./categoryproducts/categoryproducts.module').then( m => m.CategoryproductsPageModule)
+  },
+
  
 ];
 @NgModule({

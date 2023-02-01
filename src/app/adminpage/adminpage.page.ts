@@ -29,6 +29,8 @@ export class AdminpagePage implements OnInit {
   inp_customerEmail: string
   inp_startDate: string;
   inp_endDate: string;
+  latitude;
+  longitude;
   @ViewChild(IonDatetime) datetime: IonDatetime;
   @ViewChild(IonModal) modal: IonModal;
   totalOrders: string
@@ -64,7 +66,7 @@ setToday() {
 
 
   ngOnInit() {
-  
+  //this.getWathPosition()
     // history.pushState(null, null, location.href);
     // this.locationStrategy.onPopState(() => {
     //   history.pushState(null, null, location.href);
@@ -211,4 +213,16 @@ console.log("date end", this.dateEnd)
 addItem(newItem) {
   this.totalOrders = newItem
 }
+
+
+// getWathPosition()
+// {
+//   navigator.geolocation.watchPosition(this.showLoc)
+// }
+
+// showLoc(pos)
+// {
+//   console.log("latitude", pos.coords.latitude)
+//   console.log("longitude", pos.coords.longitude)
+// }
 }

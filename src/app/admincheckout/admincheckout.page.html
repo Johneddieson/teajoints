@@ -46,10 +46,20 @@
           <td>Total Amount</td>
           <td>{{(total) | currency: '₱'}}</td>
         </tr>
+          <tr>
+            <td>Payment Method</td>
+            <td>
+                <ion-select #paymentMethod>
+                  <ion-select-option value="Cash">Cash</ion-select-option>
+                  <ion-select-option value="G Cash">G Cash</ion-select-option>
+                </ion-select>
+            </td>
+          </tr>
+        
         <tr>
           <td></td>
           <td>
-            <ion-button *ngIf="total > 0" color="light" (click)="OrderNow()">Confirm Order</ion-button>
+            <ion-button *ngIf="total > 0" color="light" (click)="OrderNow(paymentMethod)">Confirm Order</ion-button>
 
           </td>
         </tr>

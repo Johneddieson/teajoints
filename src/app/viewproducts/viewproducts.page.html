@@ -38,7 +38,7 @@
     <table>
       <tr>
         <th>Product Name</th>
-        <th>Grams On Hand</th>
+        <!-- <th>Grams On Hand</th> -->
         <th></th>
       </tr>
       <tr *ngFor="let data of products">
@@ -61,7 +61,7 @@
             </div>
           </div>
         </td>
-        <td><input type="text" value="{{data.Stock}}" disabled style="text-align: right;"></td>
+        <!-- <td><input type="text" value="{{data.Stock}}" disabled style="text-align: right;"></td> -->
         <td>
           <span style="float: right; ">
           <button id="btn" (click)="EditProduct(data)"> Edit</button>

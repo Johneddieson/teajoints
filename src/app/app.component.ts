@@ -1,16 +1,18 @@
 import { Subject } from 'rxjs';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Component } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, MenuController } from '@ionic/angular'
 import { AuthServiceService } from './auth-service.service';
+import { AdmincheckoutPage } from './admincheckout/admincheckout.page';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  
   isAdmin: boolean = false
   private angularFireStoreDocument: AngularFirestoreDocument
   getCartDetails: any = []
@@ -21,8 +23,8 @@ export class AppComponent {
   meReference: AngularFirestoreDocument
   stockRefence: AngularFirestoreCollection
   myInformation: any = {}
-sub;
-fullname: any = ""
+  sub;
+  fullname: any = ""
   constructor(private menuCtrl: MenuController, private router: Router,
     private alertCtrl: AlertController,
     private auth: AuthServiceService, private angularFireAuth: AngularFireAuth,
@@ -106,6 +108,7 @@ fullname: any = ""
   navigateToEditInfo() {
     this.router.navigateByUrl('/editinfo')
     this.menuCtrl.close();
+    
   }
 
  async openGcashModal() {

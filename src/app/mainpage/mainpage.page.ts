@@ -50,18 +50,17 @@ category = "";
         return 0
       })
       this.products = data
-        var mappings = this.products.map( function(f) {return f.ImageUrl})
-        var i = 0;
-       var len = mappings.length
-        //console.log("this products", this.products)
-    
-       setInterval(() => {
-        if (i > len-1) {
-         i = 0;
-       }
-       this.productbtn.nativeElement.src = mappings[i]
-       i++;
-      }, 3000);
+      //   var mappings = this.products.map( function(f) {return f.ImageUrl})
+      //   var i = 0;
+      //  var len = mappings.length
+       
+      //  setInterval(() => {
+      //   if (i > len-1) {
+      //    i = 0;
+      //  }
+      //  this.productbtn.nativeElement.src = mappings[i]
+      //  i++;
+      // }, 3000);
       })
    }
  async  SearchCategory() {

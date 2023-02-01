@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="primary">
+<ion-title style="text-transform: capitalize;">{{categoryName}}</ion-title>
+<ion-buttons slot="start">
+  <ion-button routerLink="/inventory">
+    <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+  </ion-button>
+</ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let data of products">
+      <ion-avatar slot="start">
+        <img src="{{data.ImageUrl}}"  />
+      </ion-avatar>
+      <ion-label>
+        
+        <p style="font-weight: 900;">{{data.ProductName}}</p>
+      </ion-label>
+      
+      <ion-badge slot="end" style="font-weight: 900; color: black;" color="light">{{data.Stock}} grams</ion-badge>
+    </ion-item>
+
+  </ion-list>
+</ion-content>

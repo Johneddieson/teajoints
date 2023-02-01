@@ -111,7 +111,7 @@ get endDate(): string {
               ...a.payload.doc.data() as any
             }
           }))).subscribe(data => {
-            data = data.filter(f => f.Status != "Cancelled")
+            data = data.filter(f => f.Status != "Rejected")
             data = data.map((i, index) => {
               return Object.assign({
                 BillingAddress1: i.BillingAddress1,
@@ -267,7 +267,9 @@ this.currentProductStockReference = this.afstore.collection('Products')
                 if (filterGreaterThanStock.length > 0) {
     
                   alert(`Insufficient Stock: \n  ${filterGreaterThanStock.map(function (e) { return `${e.ProductName} > ${e.Stock} current stock \n` }).join('\n')}`);
-                } else {
+                } 
+                else 
+                {
                   var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
     
                   //Update order to Closed

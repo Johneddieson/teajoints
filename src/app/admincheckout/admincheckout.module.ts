@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AdmincheckoutPageRoutingModule } from './admincheckout-routing.module';
 
 import { AdmincheckoutPage } from './admincheckout.page';
+import { CreateposPage } from '../createpos/createpos.page';
 
 @NgModule({
   imports: [

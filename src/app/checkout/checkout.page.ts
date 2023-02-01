@@ -21,6 +21,7 @@ export class CheckoutPage implements OnInit {
   meReference: AngularFirestoreDocument
   sub
   myInformation: any = {}
+  PaymentMethod: string = ''
   constructor(private alertCtrl: AlertController, private locationStrategy: LocationStrategy, private router: Router, private afauth: AngularFireAuth, private afstore: AngularFirestore, private msg: MessengerService) {
 
     this.afauth.authState.subscribe(data => {
@@ -143,7 +144,23 @@ cartItemFunc() {
 gotohome() {
   this.router.navigate(['tabs'])
 }
-OrderNow() {
+async OrderNow() {
+if (this.PaymentMethod == '' || this.PaymentMethod == undefined 
+|| this.PaymentMethod == null)
+{
+  var paymentMethodRequiredMessage = await this.alertCtrl.create({
+    message: 'Payment method is required',
+    buttons: [
+      {
+        text: 'Ok',
+        role: 'cancel'
+      }
+    ]
+  })
+  await paymentMethodRequiredMessage.present()
+}
+else 
+{
   this.alertCtrl.create({
     message: 'Are you sure you want to finalize your order?',
     buttons: [
@@ -162,7 +179,8 @@ OrderNow() {
           }).then(els => {
             if (!this.myInformation.FirstName || !this.myInformation.LastName
               || !this.myInformation.Address1 || !this.myInformation.Address2 || 
-              !this.myInformation.PhoneNumber) {
+              !this.myInformation.PhoneNumber) 
+              {
                 this.alertCtrl.create({
                   message: 'Please fill up about your details first.',
                   buttons: [
@@ -177,7 +195,9 @@ OrderNow() {
                   els2.present()
                  
                 })
-              } else {
+              } 
+              else 
+              {
                 els.present()
                 var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
                 this.total = this.total + 30;
@@ -193,13 +213,13 @@ OrderNow() {
               Status: 'Pending',
               Datetime: datetime,
               TotalAmount: parseFloat(this.total.toString()).toFixed(2),
-              DatetimeToSort: new Date()
+              DatetimeToSort: new Date(),
+              PaymentMethod: this.PaymentMethod
             }).then(el => {
+              this.removeall()    
             }).catch(err => {
               alert(err)
-            })
-            this.removeall()
-            
+            }) 
           }
           })
         }
@@ -212,6 +232,7 @@ OrderNow() {
   }).then(el => {
     el.present()
   })
+}
 }
 
 }

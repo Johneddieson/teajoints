@@ -16,6 +16,7 @@ import { CurrencyPipe } from '@angular/common';
 import { AdminpagePage } from './adminpage/adminpage.page';
 import { Admintab1Page } from './admintab1/admintab1.page';
 import { AdmincheckoutPage } from './admincheckout/admincheckout.page';
+import { CreateposPage } from './createpos/createpos.page';
 @NgModule({
   
   entryComponents: [],

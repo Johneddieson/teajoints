@@ -356,15 +356,15 @@ return check
 
     if (this.category == "Milktea")
     {
-      if (firstnamevalidationiserror === true
-        || descriptionvalidationiserror === true || gramsnonhandvalidationiserror === true
+      if (
+         descriptionvalidationiserror === true || gramsnonhandvalidationiserror === true
         ||  smallpricevalidationiserror === true
         || mediumpricevalidationiserror === true || gramsperodersmallvalidationiserror
         || gramsperodermediumvalidationiserror)
         {
           this.errMsg = ''
           this.isValid = false
-          this.errMsg +=  firstnamevalidationiserror === true ? "• Name<br>" : ""
+          //this.errMsg +=  firstnamevalidationiserror === true ? "• Name<br>" : ""
           this.errMsg += descriptionvalidationiserror === true ? "• Description<br>" : ""
           this.errMsg += gramsnonhandvalidationiserror === true ? "• Grams on hand<br>" : ""
           this.errMsg += smallpricevalidationiserror === true ? "• Small unit price<br>" : ""
@@ -380,13 +380,13 @@ return check
     } 
     else
     {
-      if (firstnamevalidationiserror === true
-        || descriptionvalidationiserror  === true || gramsnonhandvalidationiserror === true
+      if (
+        descriptionvalidationiserror  === true || gramsnonhandvalidationiserror === true
         || gramsperodervalidationiserror === true || unitpricevalidationiserror === true)
         {
           this.errMsg = ''
           this.isValid =  false
-          this.errMsg +=  firstnamevalidationiserror === true ? "• Name<br>" : ""
+          //this.errMsg +=  firstnamevalidationiserror === true ? "• Name<br>" : ""
           this.errMsg += descriptionvalidationiserror === true ? "• Description<br>" : ""
           this.errMsg += unitpricevalidationiserror === true ? "• Unit price<br>" : ""
           this.errMsg += gramsnonhandvalidationiserror === true ? "• Grams on hand<br>" : ""
