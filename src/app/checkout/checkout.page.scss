@@ -87,7 +87,15 @@
 ion-back-button {
         display: block;
     }
+    ion-toolbar {
+        --background: #e5989b;
+    }
+    ion-button {
+        --background: #ffb4a2;
+    }
 ion-content {
+    --background: #6d6875;
+
     .cart-page {
         margin: 16px auto;
         border: 12vmax;
@@ -105,8 +113,9 @@ th {
     text-align: left;
     padding: 5px;
     color: #fff;
-    background: #ff523b;
+    //background: #ff523b;
     font-weight: normal;
+    background: #e5989b;
 }
 td {
     padding: 10px 5px;

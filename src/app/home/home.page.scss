@@ -1,4 +1,19 @@
+ion-toolbar {
+    --background: #e5989b;
+}
+ion-fab-button {
+    --background: #ffb4a2;
+}
+ion-button {
+    
+    --background: #ffb4a2;
+}
+ion-button:hover {
+    --background: black;
+}
 ion-content {
+ 
+    --background: #6d6875;
     .minus {
             font-weight: 600;
             padding: 5px;

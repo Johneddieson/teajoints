@@ -20,8 +20,14 @@
 ion-back-button {
     display: block;
 }
-
+ion-toolbar {
+    --background: #e5989b;
+}
+ion-fab-button {
+    --background: #ffb4a2;
+}
 ion-content {
+    --background: #6d6875;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -34,13 +40,14 @@ ion-content {
         justify-content: center;
         align-items: center;
         padding: 10px;
-        background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        //background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        background: #6d6875;
     }
 
     .container {
         max-width: 700px;
         width: 100%;
-        background: #fff;
+        background: #6d6875;
         padding: 25px 30px;
         border-radius: 5px;
 
@@ -59,7 +66,8 @@ ion-content {
         bottom: 0;
         height: 3px;
         width: 30px;
-        background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        //background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        background: #6d6875;
     }
 
     .container form .user-details {
@@ -91,11 +99,13 @@ ion-content {
         border-bottom-width: 2px;
         transition: all 0.3s ease;
     }
+    
 
     .user-details .input-box input:focus,
     .user-details,
     input-box input:valid {
-        border-color: #9b59b6;
+        //border-color: #9b59b6;
+        border-color: #6d6875;
     }
 
     form .gender-details .gender-title {
@@ -138,7 +148,8 @@ ion-content {
         font-size: 18px;
         border-radius: 5px;
         letter-spacing: 1px;
-        background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        //background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        background: #ffb4a2;
     }
 
     form .button input:hover {

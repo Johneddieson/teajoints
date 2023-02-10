@@ -1,7 +1,15 @@
 ion-back-button {
     display: block;
 }
-
+ion-fab-button {
+    --background: #ffb4a2;
+}
+ion-toolbar {
+    --background: #e5989b;
+}
+ion-content {
+    --background: #6d6875;
+}
 #invoice{
     padding: 30px;
 }

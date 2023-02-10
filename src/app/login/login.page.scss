@@ -2,9 +2,12 @@
 
 .haha {
   cursor: pointer;
+  color: blue;
 }
 
-
+.haha:hover {
+  color: #000000;
+}
 
 
 // ion-content {
@@ -225,7 +228,7 @@ ion-content {
 .action-button {
   text-align: center;
   .login-button {
-    --background: #f9b801;
+    --background: #FFB4A2;
     width: 100%;
     font-weight: bold;
   }

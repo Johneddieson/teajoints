@@ -33,7 +33,7 @@
     <ion-button (click)="Edit()">Edit</ion-button>
   </div>
 </ion-content> -->
-<ion-toolbar color="light">
+<ion-toolbar>
   <ion-buttons  slot="start">
  <ion-back-button></ion-back-button>
   </ion-buttons>
@@ -48,27 +48,27 @@
         <div class="user-details">
           <div class="input-box">
             <span class="details">First Name</span>
-            <input [(ngModel)]="firstname" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your firstname">
+            <input [disabled]="!isEdit" [(ngModel)]="firstname" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your firstname">
           </div>
           <div class="input-box">
             <span class="details">Last Name</span>
-            <input [(ngModel)]="lastname" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your lastname">
+            <input [disabled]="!isEdit" [(ngModel)]="lastname" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your lastname">
           </div>
           <div class="input-box">
             <span class="details">Email</span>
-            <input [(ngModel)]="email" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your email" disabled>
+            <input [disabled]="!isEdit" [(ngModel)]="email" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your email" disabled>
           </div>
           <div class="input-box">
             <span class="details">Phone Number</span>
-            <input [(ngModel)]="phonenumber" [ngModelOptions]="{standalone: true}" type="number" placeholder="Enter your number">
+            <input [disabled]="!isEdit" [(ngModel)]="phonenumber" [ngModelOptions]="{standalone: true}" type="number" placeholder="Enter your number">
           </div>
           <div class="input-box">
             <span class="details">Address 1</span>
-            <input [(ngModel)]="address1" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address1">
+            <input disabled [(ngModel)]="address1" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address1">
           </div>
           <div class="input-box">
             <span class="details">Address 2</span>
-            <input [(ngModel)]="address2" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address2">
+            <input disabled [(ngModel)]="address2" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address2">
           </div>
         </div>
         <div class="gender-details" hidden>
@@ -96,4 +96,11 @@
       </form>
     </div>
   </body>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!isEdit" (click)="getCurrentLocation()">  
+    <ion-fab-button>  
+      <ion-icon  name="location-outline"></ion-icon>  
+    </ion-fab-button>  
+  </ion-fab>
+
 </ion-content>

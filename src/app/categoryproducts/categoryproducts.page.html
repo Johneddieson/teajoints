@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
 <ion-title style="text-transform: capitalize;">{{categoryName}}</ion-title>
 <ion-buttons slot="start">
   <ion-button routerLink="/inventory">
@@ -17,7 +17,7 @@
       </ion-avatar>
       <ion-label>
         
-        <p style="font-weight: 900;">{{data.ProductName}}</p>
+        <p style="font-weight: 900; color: whitesmoke;">{{data.ProductName}}</p>
       </ion-label>
       
       <ion-badge slot="end" style="font-weight: 900; color: black;" color="light">{{data.Stock}} grams</ion-badge>

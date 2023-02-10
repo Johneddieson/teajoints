@@ -1,7 +1,7 @@
 
 
 <!-- old ui -->
-<ion-toolbar color="primary">
+<ion-toolbar>
   <ion-buttons slot="start">
     <ion-menu-button menu="main-menu"></ion-menu-button>
     <ion-title>Shop</ion-title>
@@ -41,14 +41,14 @@
         </div>
 
         <div class="cart" (click)="ShowProductDescription(data)">
-          <ion-button color="light">Description</ion-button>
+          <ion-button>Description</ion-button>
         </div>
       </div>
     </div>
   </section>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">  
-    <ion-fab-button color="primary" (click)="SearchCategory()">  
+    <ion-fab-button (click)="SearchCategory()">  
       <ion-icon  name="search-outline"></ion-icon>  
     </ion-fab-button>  
   </ion-fab> 

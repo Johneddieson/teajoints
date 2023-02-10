@@ -216,7 +216,11 @@ else
               DatetimeToSort: new Date(),
               PaymentMethod: this.PaymentMethod
             }).then(el => {
-              this.removeall()    
+              this.removeall() 
+              this.meReference.update({
+                Address1: '',
+                Address2: ''
+              })
             }).catch(err => {
               alert(err)
             }) 

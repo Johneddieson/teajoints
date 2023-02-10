@@ -25,6 +25,7 @@ export class AppComponent {
   myInformation: any = {}
   sub;
   fullname: any = ""
+  mesub;
   constructor(private menuCtrl: MenuController, private router: Router,
     private alertCtrl: AlertController,
     private auth: AuthServiceService, private angularFireAuth: AngularFireAuth,
@@ -33,6 +34,8 @@ export class AppComponent {
           if (data && data.uid) {
             if (data.displayName == 'admin') {
               this.isAdmin = true
+              this.angularFireStoreDocument = this.angularFireStore.collection('users').doc(`${data.uid}`)
+           
             } else {
              this.isAdmin = false
               this.angularFireStoreDocument = this.angularFireStore.collection('users').doc(`${data.uid}`)
@@ -83,8 +86,11 @@ export class AppComponent {
         {
           text: 'Yes',
           handler: () => {
+            this.angularFireStoreDocument.update({
+              Address1: '',
+              Address2: ''
+            })
             this.auth.SignOut()
-
             this.menuCtrl.close();
           }
         },
@@ -106,7 +112,7 @@ export class AppComponent {
   }
 
   navigateToEditInfo() {
-    this.router.navigateByUrl('/editinfo')
+    this.router.navigateByUrl('/editinfo/edit')
     this.menuCtrl.close();
     
   }

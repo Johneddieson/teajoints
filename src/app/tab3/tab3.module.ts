@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -7,6 +8,7 @@ import { Tab3Page } from './tab3.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
 import { Tab3PageRoutingModule } from './tab3-routing.module';
+import { MessengerService } from '../messenger.service';
 
 @NgModule({
   imports: [
@@ -16,7 +18,9 @@ import { Tab3PageRoutingModule } from './tab3-routing.module';
     ExploreContainerComponentModule,
     RouterModule.forChild([{ path: '', component: Tab3Page }]),
     Tab3PageRoutingModule,
+    HttpClientModule
   ],
-  declarations: [Tab3Page]
+  declarations: [Tab3Page],
+  providers: [MessengerService]
 })
 export class Tab3PageModule {}

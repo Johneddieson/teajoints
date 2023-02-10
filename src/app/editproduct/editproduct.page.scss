@@ -47,6 +47,9 @@
 ion-back-button {
     display: block;
 }
+ion-toolbar {
+    --background: #e5989b;
+}
 .toolbar {
     height: 84px;
     --background: #69A03A;
@@ -82,8 +85,9 @@ ion-button {
 
 
 ion-content {
-    --background:  url('../../assets/icon/teajointslogo.jpg') no-repeat center center / cover; 
-    --background-size: cover;
+   // --background:  url('../../assets/icon/teajointslogo.jpg') no-repeat center center / cover; 
+   --background: #6d6875;
+   --background-size: cover;
     // --box-sizing: border-box;
     // --font-family: arial;
     // --color: #333;

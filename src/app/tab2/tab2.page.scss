@@ -1,7 +1,20 @@
-ion-content{
-    --background : #F0F4FD;
+// ion-content{
+//     --background : #F0F4FD;
   
+//     p{
+//      font-weight: 300;
+//     }
+//   }
+
+
+ion-toolbar {
+  --background: #e5989b;
+
+
     p{
      font-weight: 300;
     }
-  }
+}
+ion-content {
+  --background: #6d6875;
+}

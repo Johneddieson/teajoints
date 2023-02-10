@@ -151,6 +151,16 @@
 //     }
 // }
 
+ion-toolbar {
+    --background: #e5989b;
+}
+
+ion-content {
+    --background: #6d6875;
+}
+ion-fab-button {
+    --background: #ffb4a2;
+}
 
     .minus {
             font-weight: 600;
@@ -279,7 +289,8 @@ section {
 position: absolute;
 bottom: 0;
 right: 0;
-background: var(--text-color);
+//background: var(--text-color);
+ background: #ffb4a2;
 color: var(--bg-color);
 padding: 10px;
 cursor: pointer;

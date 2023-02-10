@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="light">
+  <ion-toolbar>
     <ion-buttons  slot="start">
    <!-- <ion-back-button></ion-back-button> -->
     </ion-buttons>
@@ -59,7 +59,7 @@
         <tr>
           <td></td>
           <td>
-            <ion-button *ngIf="total > 0" color="light" (click)="OrderNow(paymentMethod)">Confirm Order</ion-button>
+            <ion-button *ngIf="total > 0" (click)="OrderNow(paymentMethod)">Confirm Order</ion-button>
 
           </td>
         </tr>

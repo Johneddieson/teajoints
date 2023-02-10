@@ -1,3 +1,4 @@
+import { MessengerService } from './messenger.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -35,7 +36,7 @@ import { CreateposPage } from './createpos/createpos.page';
   HttpClientModule,],
   declarations: [AppComponent,
     AdmincheckoutPage],
-  providers: [CurrencyPipe, AuthForLoginSignupGuard, AuthGuard, AuthServiceService,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [MessengerService, CurrencyPipe, AuthForLoginSignupGuard, AuthGuard, AuthServiceService,{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   
   bootstrap: [AppComponent],
 })

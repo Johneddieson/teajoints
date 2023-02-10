@@ -334,8 +334,9 @@ this.loadCart()
   
   }
   checkout() {
-  this.router.navigateByUrl('/checkout')
-  }
+  //this.router.navigateByUrl('/checkout')
+  this.router.navigateByUrl('/editinfo/forcheckout')  
+}
 
   hideDropdown(event) {
     const xTouch = (event.clientX)

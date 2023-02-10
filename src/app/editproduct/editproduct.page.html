@@ -6,7 +6,7 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-content class="padding" color="light" fullscreen>  
+  <ion-content fullscreen>  
     <form [formGroup]="registerForm"  (ngSubmit)="submit()" novalidate>
         <img src="{{photoLink}}" *ngIf="photoLink != ''" class="camera"/>
         <ion-input class="uploadfile"  type="file" #inputFile (change)="fileChanged($event)" accept="image/*"></ion-input>

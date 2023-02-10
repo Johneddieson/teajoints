@@ -1,3 +1,6 @@
+ion-content {
+    --background: #6d6875;
+}
 .card-background-page {
     ion-card {
         position: relative;
@@ -25,9 +28,10 @@ ion-back-button {
     display: block;
  }
  ion-footer {
-     --background: #3880ff;
-    ion-row {
-        background: #3880ff;
+     //--background: #3880ff;
+     --background: #e5989b;
+     ion-row {
+        background: #e5989b;
         color: white;
         ion-col {
             &:last-child {
@@ -45,4 +49,6 @@ ion-back-button {
     width: 1.5rem;
     //height: 100%;
 }
-
+ion-toolbar {
+    --background: #e5989b;
+}

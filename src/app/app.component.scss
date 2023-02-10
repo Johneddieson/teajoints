@@ -1,6 +1,9 @@
 ion-item {
     cursor: pointer;   
-    
+}
+ion-list {
+
+    --background: #6d6875;
 }
 
 ion-title {
@@ -8,3 +11,6 @@ ion-title {
     font-weight: bolder;
 }
 
+ion-toolbar {
+    --background: #e5989b;
+}
