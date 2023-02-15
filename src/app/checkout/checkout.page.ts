@@ -187,7 +187,7 @@ else
                     {
                       text: 'Ok',
                      handler: () => {
-                      this.router.navigateByUrl('/editinfo')
+                      this.router.navigateByUrl('/editinfo/edit')
                      } 
                     }
                   ]

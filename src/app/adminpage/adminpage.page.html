@@ -32,6 +32,16 @@
           <ion-label>End Date :</ion-label>
           <ion-input type="date" [(ngModel)]="dateEnd" (ionChange)="handleChangeEndDate($event)"></ion-input>
         </ion-item>  
+        <ion-item counter="true">
+          <ion-label>Status :</ion-label>
+          <ion-select placeholder="Select Status" [(ngModel)]="statusoforder" (ionChange)="handleChangeStatus($event)">
+            <ion-select-option value="">--- SHOW ALL ---</ion-select-option>
+            <ion-select-option value="Pending">Pending</ion-select-option>
+            <ion-select-option value="Approved">Approved</ion-select-option>
+            <ion-select-option value="Preparing">Preparing</ion-select-option>
+            <ion-select-option value="To Deliver">To Deliver</ion-select-option>
+          </ion-select>
+        </ion-item>
 
         <ion-item lines="none">
          <ion-buttons slot="end">
@@ -41,5 +51,11 @@
       </ion-content>
     </ng-template>
   </ion-modal>
-  <app-admintab1  [categoryId]="queryinput" [customerEmail]="inp_customerEmail" [startDate]="inp_startDate" [endDate]="inp_endDate" (totalPendingOrders)="addItem($event)"></app-admintab1>
+  <app-admintab1  [categoryId]="queryinput" 
+  [customerEmail]="inp_customerEmail" 
+  [startDate]="inp_startDate" 
+  [endDate]="inp_endDate" 
+  (totalPendingOrders)="addItem($event)" 
+  [statusOfOrders]="status">
+</app-admintab1>
 </ion-content>

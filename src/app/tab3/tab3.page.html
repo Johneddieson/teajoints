@@ -64,11 +64,11 @@
           </div>
           <div class="input-box">
             <span class="details">Address 1</span>
-            <input disabled [(ngModel)]="address1" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address1">
+            <input [disabled]="isDisabled" [(ngModel)]="address1" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address1">
           </div>
           <div class="input-box">
             <span class="details">Address 2</span>
-            <input disabled [(ngModel)]="address2" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address2">
+            <input [disabled]="isDisabled" [(ngModel)]="address2" [ngModelOptions]="{standalone: true}" type="text" placeholder="Enter your address2">
           </div>
         </div>
         <div class="gender-details" hidden>

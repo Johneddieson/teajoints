@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
@@ -44,7 +44,8 @@ approveIcon;
     private router: Router,
     private currencyPipe: CurrencyPipe,
     private alertCtrl: AlertController,
-    private http: HttpClient) {
+    private http: HttpClient,
+    private loadingCtrl: LoadingController) {
 this.afauth.authState.subscribe(user => {
   if (user.uid && user) {
     console.log("wew", user)
@@ -86,7 +87,23 @@ return {
   } 
 })
   this.approveIcon = 'https://ucarecdn.com/9b6261de-3215-4fd3-b88a-4ef1013e94a9/6BF09351-8372-47C7-8E52-4E7675332C86.jpeg'
-   }
+   
+  // this.afstore.collection('Products').snapshotChanges()
+  // .pipe(map(actions => actions.map(a => {
+  //   return {
+  //     id: a.payload.doc.id,
+  //     ...a.payload.doc.data() as any
+  //   }
+  // })))
+  // .subscribe(data => {
+  //   data.forEach(fe => {
+  //     this.afstore.doc(`Products/${fe.id}`).update({
+  //       Stock: 1000
+  //     })
+  //   })
+  // })
+
+}
    public convertToPDF()
    {
    html2canvas(document.getElementById("invoice")!).then(canvas => {
@@ -261,7 +278,7 @@ return {
 
 async changeStatus()
 {
-  var  data = this.data
+  var data = this.data
   
   if (data.Status == 'Pending')
   {
@@ -354,6 +371,28 @@ async changeStatus()
               })
               await ErrorAlert;
           })
+          var ApprovedStatusLoadingController = await this.loadingCtrl.create
+          ({
+            spinner: 'bubbles',
+            message: 'Approving status please wait...'
+          })
+          await ApprovedStatusLoadingController.present();
+
+          setTimeout(async () => {
+            await ApprovedStatusLoadingController.dismiss();
+            var alertControllerApprovedStatusSuccess = await this.alertCtrl.create
+            ({
+              message: 'This order approved successfully!',
+              buttons: 
+              [
+                {
+                  text: 'Close',
+                  role: 'cancel'
+                }
+              ]
+            })
+            await alertControllerApprovedStatusSuccess.present();
+          }, 3000);
         }
       },
       {
@@ -406,7 +445,28 @@ async changeStatus()
                })
                await errAlert.present() 
             })
-
+            var PreparingStatusLoadingController = await this.loadingCtrl.create
+            ({
+              spinner: 'bubbles',
+              message: 'Preparing status please wait...'
+            })
+            await PreparingStatusLoadingController.present();
+  
+            setTimeout(async () => {
+              await PreparingStatusLoadingController.dismiss();
+              var alertControllerPreparingStatusSuccess = await this.alertCtrl.create
+              ({
+                message: 'This order is now preparing.',
+                buttons: 
+                [
+                  {
+                    text: 'Close',
+                    role: 'cancel'
+                  }
+                ]
+              })
+              await alertControllerPreparingStatusSuccess.present();
+            }, 3000);
           }
         },
         {
@@ -459,6 +519,28 @@ async changeStatus()
                })
                await errAlert.present() 
             })
+            var PreparingStatusLoadingController = await this.loadingCtrl.create
+            ({
+              spinner: 'bubbles',
+              message: 'To Deliver status please wait...'
+            })
+            await PreparingStatusLoadingController.present();
+  
+            setTimeout(async () => {
+              await PreparingStatusLoadingController.dismiss();
+              var alertControllerPreparingStatusSuccess = await this.alertCtrl.create
+              ({
+                message: 'This order is to deliver',
+                buttons: 
+                [
+                  {
+                    text: 'Close',
+                    role: 'cancel'
+                  }
+                ]
+              })
+              await alertControllerPreparingStatusSuccess.present();
+            }, 3000);
           }
         },
         {
@@ -513,6 +595,28 @@ async changeStatus()
                })
                await errAlert.present() 
             })
+            var ToDeliverStatusLoadingController = await this.loadingCtrl.create
+            ({
+              spinner: 'bubbles',
+              message: 'Delivered status please wait...'
+            })
+            await ToDeliverStatusLoadingController.present();
+  
+            setTimeout(async () => {
+              await ToDeliverStatusLoadingController.dismiss();
+              var alertControllerToDeliverStatusSuccess = await this.alertCtrl.create
+              ({
+                message: 'This order has been delivered',
+                buttons: 
+                [
+                  {
+                    text: 'Close',
+                    role: 'cancel'
+                  }
+                ]
+              })
+              await alertControllerToDeliverStatusSuccess.present();
+            }, 3000);
           }
         },
         {
@@ -536,6 +640,28 @@ async changeStatus()
         ]
     })
     await deliveredAlert.present()
+    var DeliveredStatusLoadingController = await this.loadingCtrl.create
+    ({
+      spinner: 'bubbles',
+      message: 'Delivered status please wait...'
+    })
+    await DeliveredStatusLoadingController.present();
+
+    setTimeout(async () => {
+      await DeliveredStatusLoadingController.dismiss();
+      var alertControllerDeliveredStatusSuccess = await this.alertCtrl.create
+      ({
+        message: 'This order has been delivered.',
+        buttons: 
+        [
+          {
+            text: 'Close',
+            role: 'cancel'
+          }
+        ]
+      })
+      await alertControllerDeliveredStatusSuccess.present();
+    }, 3000);
   }
 }
 

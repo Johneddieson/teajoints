@@ -23,9 +23,10 @@ address1;
 address2;
 phonenumber;
 email;
-isDisabled = false;
+isDisabled = true;
 isEdit = false
 name;
+
   constructor(private actRoute: ActivatedRoute, private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController, private router: Router,
@@ -96,41 +97,42 @@ async ngOnInit() {
  async Edit() {
     if (this.name == 'edit')
     {
+      var cartArray = JSON.parse(sessionStorage.getItem('cart'));
       
-      console.log("get cart", this.getCartDetails)
-      this.loadingCtrl.create({
-        message: 'Editing Please Wait...'
-      }).then(loading => {
-        loading.present()
-        this.alertCtrl.create({
-          message: 'You edited your information successfully',
-          buttons: [
-            {
-              text: 'Ok',
-              role: 'cancel'
-            }
-          ]
-        }).then(alert => {
-  
-       setTimeout(() => {
-        loading.dismiss()
-        alert.present()
-        this.meReference.update({
-          FirstName: this.firstname,
-          LastName: this.lastname,
-          Address1: this.address1,
-          Address2: this.address2,
-          PhoneNumber: this.phonenumber
-        })
-       }, 3000)
-        }).catch(alerterr => {
-  
-        })
-       
-      }).catch(loadingerr => {
-  
+      var loadingCtrl = await this.loadingCtrl.create
+      ({
+        message: 'Editing Please Wait...',
+        spinner: 'bubbles'
       })
-    }
+      await loadingCtrl.present();
+      var alertSuccess = await this.alertCtrl.create
+      ({
+        message: 'You edited your information successfully',
+        buttons: 
+        [
+          {
+            text: 'Ok',
+            role: 'cancel'
+          }
+        ]
+      })
+      setTimeout(async () => {
+        await loadingCtrl.dismiss();
+            this.meReference.update({
+              FirstName: this.firstname,
+              LastName: this.lastname,
+              Address1: this.address1,
+              Address2: this.address2,
+              PhoneNumber: this.phonenumber,
+            }).then(async success => {
+              await alertSuccess.present();
+              if (cartArray.length > 0) 
+              {
+                this.router.navigateByUrl('/checkout'); 
+              }  
+            })
+      }, 2000);
+      }
     else 
     {
       if (this.address1 === '' || this.address2 == '')
@@ -195,17 +197,33 @@ async ngOnInit() {
     })
     await loading.present()
  navigator.geolocation.getCurrentPosition((success) => {
- 
+ //console.log("bobo", success)
   this.msg.myLoc(success.coords.latitude, success.coords.longitude).subscribe(async data  => 
     {
       //this is my current address
       var myaddress = data.Response.View[0].Result[0].Location.Address
       var myaddress2 = data.Response.View[0].Result[1].Location.Address
-        this.address1 = `${myaddress.HouseNumber} ${myaddress.Street} ${myaddress.District} ${myaddress.City} ${myaddress.County}, ${myaddress.Label}`
-        this.address2 = `${myaddress2.HouseNumber} ${myaddress2.Street} ${myaddress2.District} ${myaddress2.City} ${myaddress2.County}, ${myaddress2.Label}`
-  
+     // console.log("tang ina address ko to", myaddress)
+        //this.address1 = `${myaddress.HouseNumber} ${myaddress.Street} ${myaddress.District} ${myaddress.City} ${myaddress.County}, ${myaddress.Label}`
+        //this.address2 = `${myaddress2.HouseNumber} ${myaddress2.Street} ${myaddress2.District} ${myaddress2.City} ${myaddress2.County}, ${myaddress2.Label}`
+        this.address1 = `${myaddress.Street} ${myaddress.District} ${myaddress.Label}`
+        this.address2 = `${myaddress.Street} ${myaddress2.District} ${myaddress2.Label}`
         await loading.dismiss()
-    })
+    
+        var alertIfAddressIsWrong = await this.alertCtrl.create
+        ({
+          message: `If your current location doesn't correct, you can edit it manually.`,
+          buttons: 
+          [
+            {
+              text: 'Ok',
+              role: 'cancel'              
+            }
+          ]          
+        })
+        await alertIfAddressIsWrong.present();
+        this.isDisabled = false
+      })
 })
   }
 }

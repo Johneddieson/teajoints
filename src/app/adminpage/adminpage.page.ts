@@ -29,8 +29,10 @@ export class AdminpagePage implements OnInit {
   inp_customerEmail: string
   inp_startDate: string;
   inp_endDate: string;
-  latitude;
+ latitude;
   longitude;
+  status: string;
+  statusoforder: string
   @ViewChild(IonDatetime) datetime: IonDatetime;
   @ViewChild(IonModal) modal: IonModal;
   totalOrders: string
@@ -176,6 +178,11 @@ handleChangeEndDate(event) {
   const query = event.target.value.toLowerCase();
   this.inp_endDate = query == undefined ? "" : query
 }
+handleChangeStatus(event) { 
+  const query = event.target.value.toLowerCase();
+ console.log("the query", query)
+  this.status = query == undefined ? "": query   
+}
 dateChanged(value) {
 this.dateValue = value;
 this.formattedString = format(parseISO(value), 'HH:mm, MMM d, yyyy');
@@ -190,11 +197,7 @@ this.customerName = this.customerName
 this.customerEmail = this.customerEmail
 this.dateStart = this.dateStart
 this.dateEnd = this.dateEnd
-
-console.log("customer name", this.customerName)
-console.log("customer email", this.customerEmail)
-console.log("date start", this.dateStart)
-console.log("date end", this.dateEnd)
+this.statusoforder = this.statusoforder
 }
 close() {
 //this.datetime.cancel(true);
@@ -203,26 +206,10 @@ this.customerName = this.customerName
 this.customerEmail = this.customerEmail
 this.dateStart = this.dateStart
 this.dateEnd = this.dateEnd
-
-console.log("customer name", this.customerName)
-console.log("customer email", this.customerEmail)
-console.log("date start", this.dateStart)
-console.log("date end", this.dateEnd)
+this.statusoforder = this.statusoforder
 }
 
 addItem(newItem) {
   this.totalOrders = newItem
 }
-
-
-// getWathPosition()
-// {
-//   navigator.geolocation.watchPosition(this.showLoc)
-// }
-
-// showLoc(pos)
-// {
-//   console.log("latitude", pos.coords.latitude)
-//   console.log("longitude", pos.coords.longitude)
-// }
 }

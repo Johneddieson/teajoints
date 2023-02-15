@@ -20,6 +20,7 @@ export class Admintab1Page implements OnInit {
   inp_startDate = "";
   inp_endDate = "";
   count = ''
+  status = ''
   @ViewChild(IonAccordionGroup) accordionGroup: IonAccordionGroup;
   @Input() set categoryId(value: string) {
     this.myquery = value == undefined ? "" : value
@@ -33,6 +34,10 @@ export class Admintab1Page implements OnInit {
    @Input() set endDate(value: string) {
      this.inp_endDate = value == undefined ? "" : value
    }
+   @Input() set statusOfOrders(value: string) {
+    this.status = value == undefined ? "" : value
+  }
+   
    @Output() totalPendingOrders = new EventEmitter();
   changes = ""
   productReference: AngularFirestoreCollection
@@ -98,6 +103,9 @@ get startDate(): string {
 get endDate(): string {
   return this.inp_endDate;
 }
+get statusOfOrders(): string {
+  return this.status;
+}
   ngOnChanges(changes: SimpleChanges) {
     this.afauth.authState.subscribe(data => {
       if (data && data.uid) {
@@ -131,7 +139,11 @@ get endDate(): string {
               })
             })
             data = data.sort((a, b) => Number(b.DatetimeToSort) - Number(a.DatetimeToSort))
-     
+              //console.log("status of orders", this.statusOfOrders)
+            if (this.statusOfOrders != "")
+            {
+              data = data.filter(f => f.Status.toLowerCase() == this.statusOfOrders)
+            }
               if (this.categoryId != "") 
             {
               data = data.filter(f => f.BillingFullName.toLowerCase().includes(this.categoryId))
@@ -146,8 +158,6 @@ get endDate(): string {
               var enddate = this.inp_endDate + " 23:59"
               data = data.filter(f => moment(moment(f.Datetime).format("MM-DD-YYYY hh:mm A")).toDate() >= moment(startdate).toDate() &&  moment(moment(f.Datetime).format("MM-DD-YYYY hh:mm A")).toDate() <= moment(enddate).toDate())
             }
-            //console.log("the data", data)
-            //console.log("converted date", data.map(function(i)  {var datetime = moment(i.Datetime).format("DD-MM-YYYY hh:mm A"); return moment(datetime).toDate()})) 
             this.allPendingOrders = data
             this.totalPendingOrders.emit(this.allPendingOrders.length.toString())
           })
