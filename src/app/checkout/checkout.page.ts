@@ -177,8 +177,7 @@ else
               }
             ]
           }).then(els => {
-            if (!this.myInformation.FirstName || !this.myInformation.LastName
-              || !this.myInformation.Address1 || !this.myInformation.Address2 || 
+            if (!this.myInformation.FirstName || !this.myInformation.LastName || 
               !this.myInformation.PhoneNumber) 
               {
                 this.alertCtrl.create({
@@ -187,7 +186,7 @@ else
                     {
                       text: 'Ok',
                      handler: () => {
-                      this.router.navigateByUrl('/editinfo/edit')
+                      this.router.navigateByUrl('/editinfo')
                      } 
                     }
                   ]
@@ -206,7 +205,7 @@ else
               BillingFirstname: this.myInformation.FirstName,
               BillingLastname: this.myInformation.LastName,
               BillingAddress1: this.myInformation.Address1,
-              BillingAddress2: this.myInformation.Address2,
+              BillingAddress2: '',
               BillingPhonenumber: this.myInformation.PhoneNumber,
               Billingemail: this.myInformation.Email,
               BillingIndexId: this.myInformation.Uid,
@@ -239,4 +238,9 @@ else
 }
 }
 
+async tanga()
+{
+  var wew = JSON.parse(sessionStorage.getItem('cart'))
+  console.log("wew", wew)
+}
 }

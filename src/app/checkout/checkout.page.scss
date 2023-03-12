@@ -160,4 +160,18 @@ th:last-child {
     text-align: right;
 }
 
+.remove {
+    cursor: pointer;
+       background-color: rgba(225, 22, 22, 0.887);
+   }
+.remove:active {
+    background-color: rgba(221, 237, 50, 0.887);
+}
+.add {
+    cursor: pointer;
+       background-color: rgba(66, 226, 42, 0.887);
+   }
+.add:active {
+    background-color: rgba(50, 75, 237, 0.887);
+}
 }

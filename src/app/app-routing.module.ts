@@ -111,7 +111,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'editinfo/:name',
+    path: 'editinfo',
     loadChildren: () => import('./tab3/tab3.module').then(m => m.Tab3PageModule),
     canActivate: [AuthGuard]
   },

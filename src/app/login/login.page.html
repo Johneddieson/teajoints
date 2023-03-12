@@ -61,7 +61,9 @@
    </div>
 
    <div class="action-button ion-padding" *ngIf="!ishide">
-    <ion-button size="large" class="login-button" (click)="LogIn(email, password)">Login</ion-button>
+    <ion-button size="large" class="login-button" (click)="LogIn()">Login</ion-button>
+    <!-- <ion-button *ngIf="emailVerified == false && user != undefined" size="large" class="login-button" (click)="reload()">Reload Page</ion-button>
+    <ion-button *ngIf="emailVerified == true && user != undefined" size="large" class="login-button" (click)="LogIn(email, password)">Go shopping!</ion-button> -->
     <p>Forgot password? Click <span class="haha" (click)="ResetPassword()">here!</span></p>
     <!-- <ion-button class="signup-button" size="large" fill="outline" routerLink="/signup">Signup</ion-button> -->
    </div>

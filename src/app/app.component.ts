@@ -31,7 +31,7 @@ export class AppComponent {
     private auth: AuthServiceService, private angularFireAuth: AngularFireAuth,
     private angularFireStore: AngularFirestore) {
         this.angularFireAuth.authState.subscribe(data => {
-          if (data && data.uid) {
+          if (data) {
             if (data.displayName == 'admin') {
               this.isAdmin = true
               this.angularFireStoreDocument = this.angularFireStore.collection('users').doc(`${data.uid}`)
@@ -79,29 +79,54 @@ export class AppComponent {
     this.menuCtrl.close();
   }
 
-  navigateLogout() {
-    this.alertCtrl.create({
-      message: 'Are you sure you want to logout?',
-      buttons: [
+ async navigateLogout() {
+   
+  var alertForLogout = await this.alertCtrl.create
+  ({
+    message: 'Are you sure you want to logout?',
+    buttons: 
+    [
+      {
+        text: 'Yes',
+        handler: () => 
         {
-          text: 'Yes',
-          handler: () => {
-            this.angularFireStoreDocument.update({
-              Address1: '',
-              Address2: ''
-            })
-            this.auth.SignOut()
-            this.menuCtrl.close();
-          }
-        },
-        {
-          text: 'No',
-          role: "cancel"
+                  this.angularFireStoreDocument.update({
+                    Address1: '',
+                    Address2: ''
+                  })
+                  this.auth.SignOut()
+                  this.menuCtrl.close();
         }
-      ]
-    }).then(el => {
-      el.present()
-    })
+      },
+      {
+        text: 'No',
+        role: 'cancel'
+      }
+    ]
+  })
+  await alertForLogout.present();
+  // this.alertCtrl.create({
+    //   message: 'Are you sure you want to logout?',
+    //   buttons: [
+    //     {
+    //       text: 'Yes',
+    //       handler: () => {
+    //         this.angularFireStoreDocument.update({
+    //           Address1: '',
+    //           Address2: ''
+    //         })
+    //         this.auth.SignOut()
+    //         this.menuCtrl.close();
+    //       }
+    //     },
+    //     {
+    //       text: 'No',
+    //       role: "cancel"
+    //     }
+    //   ]
+    // }).then(el => {
+    //   el.present()
+    // })
 
 
   }
@@ -112,7 +137,7 @@ export class AppComponent {
   }
 
   navigateToEditInfo() {
-    this.router.navigateByUrl('/editinfo/edit')
+    this.router.navigateByUrl('/editinfo')
     this.menuCtrl.close();
     
   }

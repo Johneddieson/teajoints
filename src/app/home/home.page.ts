@@ -50,9 +50,10 @@ private unsubscriber : Subject<void> = new Subject<void>();
         })
       })
     this.afauth.authState.subscribe(user => {
-
+      //console.log("user information", user)
       if (user && user.uid) {
-    this.getAllProducts()
+    var wew = user.emailVerified
+        this.getAllProducts()
 
     this.notificationsReference = this.afstore.collection(`users/${user.uid}/notifications`)
 
@@ -334,8 +335,7 @@ this.loadCart()
   
   }
   checkout() {
-  //this.router.navigateByUrl('/checkout')
-  this.router.navigateByUrl('/editinfo/forcheckout')  
+  this.router.navigateByUrl('/checkout')
 }
 
   hideDropdown(event) {

@@ -41,11 +41,6 @@ name;
             this.firstname = data.FirstName
             this.lastname = data.LastName
             this.email = data.Email
-            // if ((!this.firstname || this.firstname == undefined) && (!this.lastname || this.lastname == undefined)) {
-            //   this.isDisabled = !this.isDisabled
-            // } else {
-            //   this.isDisabled = this.isDisabled
-            // }
             this.address1 = data.Address1
             this.address2 = data.Address2
             this.phonenumber = `${data.PhoneNumber}`
@@ -72,122 +67,133 @@ name;
     })
   }
 async ngOnInit() {
-  if (this.name == 'edit')
-  {
-    this.isEdit = true
-  }
-  else 
-  {
-    this.isEdit = false
-    var alertCtrl = await this.alertCtrl.create
-    ({
-      header: 'Warning!',
-      message: 'Kindly strictly check your location if correct, Once your are done finalizing your location, after confirming your order, dont move to the location where you located until your order is delivered thanks!.',
-      buttons: 
-      [
-        {
-          text: 'Ok!',
-          role: 'cancel'
-        }
-      ]
-    })
-    await alertCtrl.present();
-  }
 }
- async Edit() {
-    if (this.name == 'edit')
-    {
-      var cartArray = JSON.parse(sessionStorage.getItem('cart'));
+//  async Edit() {
+//     if (this.name == 'edit')
+//     {
+//       var cartArray = JSON.parse(sessionStorage.getItem('cart'));
       
-      var loadingCtrl = await this.loadingCtrl.create
-      ({
-        message: 'Editing Please Wait...',
-        spinner: 'bubbles'
-      })
-      await loadingCtrl.present();
-      var alertSuccess = await this.alertCtrl.create
-      ({
-        message: 'You edited your information successfully',
-        buttons: 
-        [
-          {
-            text: 'Ok',
-            role: 'cancel'
-          }
-        ]
-      })
-      setTimeout(async () => {
-        await loadingCtrl.dismiss();
+//       var loadingCtrl = await this.loadingCtrl.create
+//       ({
+//         message: 'Editing Please Wait...',
+//         spinner: 'bubbles'
+//       })
+//       await loadingCtrl.present();
+//       var alertSuccess = await this.alertCtrl.create
+//       ({
+//         message: 'You edited your information successfully',
+//         buttons: 
+//         [
+//           {
+//             text: 'Ok',
+//             role: 'cancel'
+//           }
+//         ]
+//       })
+//       setTimeout(async () => {
+//         await loadingCtrl.dismiss();
+//             this.meReference.update({
+//               FirstName: this.firstname,
+//               LastName: this.lastname,
+//               Address1: this.address1,
+//               Address2: this.address2,
+//               PhoneNumber: this.phonenumber,
+//             }).then(async success => {
+//               await alertSuccess.present();
+//               if (cartArray.length > 0) 
+//               {
+//                 this.router.navigateByUrl('/checkout'); 
+//               }  
+//             })
+//       }, 2000);
+//       }
+//     else 
+//     {
+//       if (this.address1 === '' || this.address2 == '')
+//       {
+//           var errAlert = await this.alertCtrl.create
+//           ({
+//             message: `Address 1 and 2 should'nt be empty`,
+//             buttons: [
+//               {
+//                 text: 'Ok',
+//                 role: 'cancel'
+//               }
+//             ]
+//           })
+//           await errAlert.present()
+//       }
+//       else
+//       {
+//         this.loadingCtrl.create({
+//           message: 'Editing Please Wait...'
+//         }).then(loading => {
+//           loading.present()
+//           this.alertCtrl.create({
+//             message: 'You edited your information successfully',
+//             buttons: [
+//               {
+//                 text: 'Ok',
+//                 role: 'cancel'
+//               }
+//             ]
+//           }).then(alert => {
+    
+//          setTimeout(() => {
+//           loading.dismiss()
+//           alert.present()
+//           this.meReference.update({
+//             FirstName: this.firstname,
+//             LastName: this.lastname,
+//             Address1: this.address1,
+//             Address2: this.address2,
+//             PhoneNumber: this.phonenumber
+//           })
+//           this.router.navigateByUrl('/checkout')
+//          }, 3000)
+//           }).catch(alerterr => {
+    
+//           })
+         
+//         }).catch(loadingerr => {
+    
+//         })
+//       }
+//     }
+//   }
+
+  async Edit()
+  {
+var loadingController = await this.loadingCtrl.create
+({
+  message: 'Editing please wait...',
+  spinner: 'dots'
+})
+await loadingController.present();
+        var alertSuccess = await this.alertCtrl.create
+        ({
+          message: 'Changes has been saved.',
+          buttons: 
+          [
+            {
+              text: 'Ok',
+              role: 'cancel'
+            }
+          ]
+        })
+          setTimeout(async () => {
+        await loadingController.dismiss();
             this.meReference.update({
               FirstName: this.firstname,
               LastName: this.lastname,
-              Address1: this.address1,
-              Address2: this.address2,
+              Address1: '',
+              Address2: '',
               PhoneNumber: this.phonenumber,
             }).then(async success => {
-              await alertSuccess.present();
-              if (cartArray.length > 0) 
-              {
-                this.router.navigateByUrl('/checkout'); 
-              }  
+              await alertSuccess.present();  
             })
       }, 2000);
-      }
-    else 
-    {
-      if (this.address1 === '' || this.address2 == '')
-      {
-          var errAlert = await this.alertCtrl.create
-          ({
-            message: `Address 1 and 2 should'nt be empty`,
-            buttons: [
-              {
-                text: 'Ok',
-                role: 'cancel'
-              }
-            ]
-          })
-          await errAlert.present()
-      }
-      else
-      {
-        this.loadingCtrl.create({
-          message: 'Editing Please Wait...'
-        }).then(loading => {
-          loading.present()
-          this.alertCtrl.create({
-            message: 'You edited your information successfully',
-            buttons: [
-              {
-                text: 'Ok',
-                role: 'cancel'
-              }
-            ]
-          }).then(alert => {
-    
-         setTimeout(() => {
-          loading.dismiss()
-          alert.present()
-          this.meReference.update({
-            FirstName: this.firstname,
-            LastName: this.lastname,
-            Address1: this.address1,
-            Address2: this.address2,
-            PhoneNumber: this.phonenumber
-          })
-          this.router.navigateByUrl('/checkout')
-         }, 3000)
-          }).catch(alerterr => {
-    
-          })
-         
-        }).catch(loadingerr => {
-    
-        })
-      }
-    }
   }
-
   async getCurrentLocation()
   {
     var loading =  await this.loadingCtrl.create

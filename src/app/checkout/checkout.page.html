@@ -22,13 +22,27 @@
            <img src="{{data.ImageUrl}}">
             <div>
               <p>{{data.ProductName}} <br> <small>Price: {{data.UnitPrice | currency: '₱'}}</small>
-              <br><a (click)="singleDelete(data)">Remove</a>
+              <br>
+              <a (click)="singleDelete(data)">Remove</a>
+              <br>
+               
+              <ion-buttons>
+                <ion-button (click)="dec(data.id, data.Quantity)">
+                  <ion-icon slot="icon-only" name="remove-outline"></ion-icon>
+                </ion-button>
+                <ion-button (click)="inc(data.id, data.Quantity)">
+                  <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+                </ion-button>
+              </ion-buttons>
               </p>
             </div>
           </div>
         </td>
-        <td><input type="text" value="{{data.Quantity}}" disabled></td>
-        <td>{{(data.Quantity * data.UnitPrice) | currency: '₱'}}</td>
+        
+        <td>
+          <input type="text" disabled value="{{data.Quantity}}">
+        </td>
+        <td> {{(data.Quantity * data.UnitPrice) | currency: '₱'}}</td>
       </tr>    
     </table>
     <div class="total-price" *ngIf="total > 0">
@@ -61,7 +75,10 @@
         <tr>
           <td></td>
           <td>
-            <ion-button *ngIf="total > 0" (click)="OrderNow()">Confirm Order</ion-button>
+            <!-- tanga() -->
+            <ion-button *ngIf="total > 0" (click)="tanga()">Confirm Order</ion-button>
+
+            <!-- <ion-button *ngIf="total > 0" (click)="OrderNow()">Confirm Order</ion-button> -->
 
           </td>
         </tr>
