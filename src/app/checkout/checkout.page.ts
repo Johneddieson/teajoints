@@ -31,30 +31,26 @@ export class CheckoutPage implements OnInit {
           this.myInformation = data
 
 
-          this.afstore.collection('Orders').snapshotChanges().pipe(
-            map(actions => actions.map(a => {
-              return {
-                id: a.payload.doc.id,
-                ...a.payload.doc.data() as any
-              }
-            }))
-          ).subscribe(data2 => {
+          // this.afstore.collection('Orders').snapshotChanges().pipe(
+          //   map(actions => actions.map(a => {
+          //     return {
+          //       id: a.payload.doc.id,
+          //       ...a.payload.doc.data() as any
+          //     }
+          //   }))
+          // ).subscribe(data2 => {
            
-            this.getOrders = data2
-            console.log("orders", this.getOrders)
-            var dashboard = this.getOrders 
-            dashboard = dashboard.map((i, index) => {
-              console.log("orders", i)
-              return Object.assign({}, i, {
+          //   this.getOrders = data2
+          //   console.log("orders", this.getOrders)
+          //   var dashboard = this.getOrders 
+          //   dashboard = dashboard.map((i, index) => {
+          //     console.log("orders", i)
+          //     return Object.assign({}, i, {
                 
-              })
+          //     })
          
-            })
-            // data2.forEach(fe => {
-            //   this.getOrders = fe.OrderDetails
-            // console.log("orders", this.getOrders)
-            // })
-          })
+          //   })
+          // })
         })
       }
     })
@@ -67,6 +63,23 @@ export class CheckoutPage implements OnInit {
   CartDetails() {
     if (sessionStorage.getItem('cart')) {
       this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
+    
+       this.getCartDetails.map((i, index) => 
+      {
+        
+        i.Materials.map((iMat, index) => 
+        {
+          if (i.Category == "Milktea")
+          {
+            iMat.gramsperorder = i.ProductName.toLowerCase().includes('small') ? iMat.gramsperordersmall : iMat.gramsperordermedium 
+          }
+          else 
+          {
+            iMat.gramsperorder = iMat.gramsperorder
+          }
+        })
+      })
+      //console.log("product Details", this.getCartDetails)
     }
   }
   inc(id, quantity) {
@@ -197,6 +210,7 @@ else
               } 
               else 
               {
+                this.CartDetails()
                 els.present()
                 var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
                 this.total = this.total + 30;

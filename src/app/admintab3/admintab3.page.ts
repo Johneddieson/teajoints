@@ -25,6 +25,7 @@ nameofProduct: string = ""
 dateStart: string = ""
 dateEnd: string = ""
 categoryList: any[] = []
+materialList: any[] = []
 @ViewChild(IonModal) modal: IonModal;
 @ViewChild('slides') slides: IonSlides;
 option = 
@@ -41,9 +42,34 @@ option =
     private router: Router,
     public loadingController: LoadingController) {
     //this.retrieveInventoryList();
-    
+      this.retrieveMaterials()
      }
- 
+
+      retrieveMaterials()
+     {
+      this.afstore.collection('Materials', ref => ref.orderBy('Itemname')).snapshotChanges()
+      .pipe(map(actions => actions.map(a => 
+        {
+          return {
+            id: a.payload.doc.id,
+            ...a.payload.doc.data() as any
+          }
+        })))
+        .subscribe(data => 
+          {
+            if (this.fullName != '')
+            {
+              data = data.filter(f => f.Itemname.toLowerCase().includes(this.fullName.toLowerCase()))
+            } 
+            this.materialList = data
+          })
+     }
+     searchMaterial(event)
+     {
+      const query = event.target.value;
+      this.retrieveMaterials();
+     }
+
      handleChange(event) {
       const query = event.target.value.toLowerCase();
       this.onchangeQueryEvent = query
@@ -52,8 +78,8 @@ option =
      }
 
   ngOnInit() {
-    this.retrieveProducts()
-  }
+    //this.retrieveProducts()
+   }
   handleFullNameChange(event)
   {
     this.retrieveInventoryList()
@@ -195,4 +221,62 @@ option =
     {
       await this.router.navigateByUrl(`/category/${name}`)
     }
+
+    async editMaterial(data: any)
+    {
+      var alertController = await this.alertCtrl.create
+      ({
+        header: data.Itemname.toUpperCase(),
+        inputs : 
+        [
+          {
+            name: 'Grams',
+            type: 'text',
+            label: 'Grams On Hand',
+            value: data.Stock.toString(),            
+          }
+        ],
+        buttons: 
+        [
+          {
+            text: 'Update',
+            handler: (datavalue) => 
+            {
+              if (this.containsOnlyNumbers(datavalue.Grams) == false)
+              {
+                  alert("Grams on hand accepts only numbers")
+              }
+              else 
+              {
+                this.afstore.doc(`Materials/${data.id}`)
+                .update
+                ({
+                  Stock: parseInt(datavalue.Grams)
+                }).then((success) => 
+                {
+                  
+                }).catch((err) => 
+                {
+                  alert(JSON.stringify(err))
+                })
+              }
+            }
+          },
+          {
+            text: 'Close',
+            role: 'cancel'
+          }
+        ]        
+      })
+      await alertController.present();
+    }
+
+    containsOnlyNumbers(str) {
+      return /^(?:-(?:[1-9](?:\d{0,2}(?:,\d{3})+|\d*))|(?:0|(?:[1-9](?:\d{0,2}(?:,\d{3})+|\d*))))(?:.\d+|)$/.test(str);
+    }
+    // bobo()
+    // {
+    //   var wew = /^(?:-(?:[1-9](?:\d{0,2}(?:,\d{3})+|\d*))|(?:0|(?:[1-9](?:\d{0,2}(?:,\d{3})+|\d*))))(?:.\d+|)$/.test('12121');
+    //   console.log("bobo", wew)
+    // }
 }

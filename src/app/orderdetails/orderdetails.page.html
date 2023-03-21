@@ -30,7 +30,33 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="card-background-page" padding>
-  <ion-card *ngFor="let data of orders">
+  <ion-modal  mode="sm" [backdropDismiss]="false"
+  class="example-modal">
+    <ng-template>
+      <ion-content color="light">
+        
+        
+        <ion-item *ngFor="let mat of dataMaterials">
+          
+          <ion-label text-wrap>{{mat.itemName}} :</ion-label>
+          <ion-input value="{{mat.Quantity}}"
+          placeholder="Enter grams per order" type="number"
+          ></ion-input>
+
+      </ion-item>
+
+    
+        <ion-item lines="none">
+         <ion-buttons slot="end">
+          <ion-button color="danger" (click)="close()">Close</ion-button>
+
+          <ion-button color="success">Save Changes</ion-button>
+         </ion-buttons>
+        </ion-item> 
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <ion-card *ngFor="let data of orders" style="cursor: pointer;" (click)="getMaterialOfProducts(data)">
     <img [src]="data.ImageUrl" style="max-width: 35%; height: auto;" />
     <ion-card-header>
       <ion-card-title>{{data.Category}}</ion-card-title>

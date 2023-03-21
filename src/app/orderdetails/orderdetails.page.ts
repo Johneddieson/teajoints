@@ -1,15 +1,16 @@
 import { CurrencyPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, IonModal, LoadingController } from '@ionic/angular';
 import * as firebase from 'firebase';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
+import * as _ from 'lodash';
 @Component({
   selector: 'app-orderdetails',
   templateUrl: './orderdetails.page.html',
@@ -18,6 +19,7 @@ import html2canvas from 'html2canvas';
 export class OrderdetailsPage implements OnInit {
 id;
 orderDetails: AngularFirestoreDocument
+matRef: AngularFirestoreDocument
 orders : any[] = []
 currentStock: any[] = []
 sub
@@ -39,6 +41,11 @@ dateOrdered;
 invoiceDate;
 paymentMethod;
 approveIcon;
+outofStock = false
+getProductId = []
+currentStockofMaterial: string = ''
+public dataMaterials = []
+@ViewChild(IonModal) modal: IonModal;
   constructor(private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private router: Router,
@@ -48,7 +55,7 @@ approveIcon;
     private loadingCtrl: LoadingController) {
 this.afauth.authState.subscribe(user => {
   if (user.uid && user) {
-    console.log("wew", user)
+   // console.log("wew", user)
     this.name = this.actRoute.snapshot.paramMap.get('name')
     this.id = this.actRoute.snapshot.paramMap.get('id')
 
@@ -88,7 +95,7 @@ return {
 })
   this.approveIcon = 'https://ucarecdn.com/9b6261de-3215-4fd3-b88a-4ef1013e94a9/6BF09351-8372-47C7-8E52-4E7675332C86.jpeg'
    
-  // this.afstore.collection('Products').snapshotChanges()
+  // this.afstore.collection('Materials').snapshotChanges()
   // .pipe(map(actions => actions.map(a => {
   //   return {
   //     id: a.payload.doc.id,
@@ -97,8 +104,8 @@ return {
   // })))
   // .subscribe(data => {
   //   data.forEach(fe => {
-  //     this.afstore.doc(`Products/${fe.id}`).update({
-  //       Stock: 1000
+  //     this.afstore.doc(`Materials/${fe.id}`).update({
+  //       Stock: 20000
   //     })
   //   })
   // })
@@ -275,14 +282,35 @@ return {
   //     }
 
 
-
+updateStocks(itemId, Quantity, gramsperorder)
+{
+   //this.decreaseStocks()
+  var total = parseFloat(Quantity) * parseFloat(gramsperorder) 
+  this.afstore.doc(`Materials/${itemId}`).update({
+    Stock: firebase.default.firestore.FieldValue.increment(-total),
+  }).then(el => {
+  }).catch(err => {
+    //console.log("error edit stock", err)
+  })
+}
+updateStocks2(itemId, Quantity, gramsperorder)
+{
+  var total = parseFloat(Quantity) * parseFloat(gramsperorder) 
+  this.afstore.doc(`Materials/${itemId}`).update({
+    Stock: firebase.default.firestore.FieldValue.increment(total),
+  }).then(el => {
+    //console.log("success edit stock", el)
+  }).catch(err => {
+    //console.log("error edit stock", err)
+  })
+}
 async changeStatus()
 {
   var data = this.data
   
   if (data.Status == 'Pending')
   {
-     var approveAlert = await this.alertCtrl.create({
+   var approveAlert = await this.alertCtrl.create({
     header: 'Confirmation',
     message: 'Are you sure you want to approve this order?',
     buttons: [
@@ -307,40 +335,10 @@ async changeStatus()
             remarks: "Your order has been approved",
             DatetimeToSort: new Date()
           })
-          var decrease = await data.OrderDetails.map((i, index) => {
-            return Object.assign({}, i, {
-              TotalGramsOrder: i.GramsPerOrder * i.Quantity 
-            })
-          })
-
-          //Decreasing Stocks
-          decrease.forEach(fe => {
-            this.afstore.doc(`Products/${fe.id}`).update({
-              Stock: firebase.default.firestore.FieldValue.increment(-fe.TotalGramsOrder)
-            })
-          })
-
-          //Inventory Saving
-
-          decrease.forEach(fe => {
-            this.afstore.collection('Inventory').add({
-              Datetime: datetime,
-              Category: fe.Category,
-              ProductName: fe.ProductName,
-              Quantity: parseInt(fe.TotalGramsOrder) * -1,
-              UnitPrice: fe.UnitPrice,
-              ImageUrl: fe.ImageUrl,
-              GramsPerOrder: fe.GramsPerOrder,
-              Description: fe.Description,
-              SmallPrice: fe.SmallPrice,
-              MediumPrice:  fe.MediumPrice,
-              DatetimeToSort: new Date(),
-              ProductId: fe.id,
-              GramsPerOderSmall: fe.GramsPerOderSmall,
-              GramsPerOderMedium: fe.GramsPerOderMedium,
-            })
-          })
-
+        //Decrease Stock
+          this.decreaseStock()
+        
+         
           //History Saving
           this.afstore.collection('History').add({
             BillingAddress1: data.BillingAddress1,
@@ -665,17 +663,33 @@ async changeStatus()
   }
 }
 
+getMaterials()
+{
+   this.getProductId = this.orders
 
+    this.getProductId.map((i, index) => 
+   {
+    i.Materials.map(fe => 
+      {
+    fe.Quantity = i.Quantity   
+        
+  })
+   })
+}
 
+decreaseStock()
+{
+  this.getMaterials()
+  var getmaterial = this.getProductId.map(function (e) {return e.Materials})
+       
+  var ew = _.flatten(getmaterial)
 
-
-
-
-
-
-
-
-
+ 
+   ew.forEach(fe => 
+    {
+        this.updateStocks(fe.itemId, fe.Quantity, fe.gramsperorder)
+    })
+}
 
       cancelOrder() {
         var  data = this.data
@@ -838,4 +852,22 @@ async changeStatus()
         this.router.navigateByUrl(`/invoicepage/${this.id}/${paramName}/Online`)
  
       }
+
+      getMaterialOfProducts(Data)
+      {
+        this.dataMaterials = []
+        Data = Data.Materials.map((i, index) => 
+        {
+          return Object.assign({}, i, 
+            {
+              Quantity: Data.Quantity
+            })
+        })
+        //console.log("the data", Data)
+        this.dataMaterials = Data
+        this.modal.present(); 
+      }
+      close() {
+        this.modal.dismiss(); 
+    }
 }

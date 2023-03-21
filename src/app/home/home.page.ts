@@ -361,6 +361,12 @@ this.loadCart()
 
       async AddtoCart(data) 
       {
+        if (data.Materials.length <= 0)
+        {
+          alert("This product has no condiments.")
+        }
+        else 
+        {
       var cartData = sessionStorage.getItem('cart');
       let storageDataGet: any = [];
       
@@ -736,11 +742,24 @@ this.loadCart()
       }
       this.loadCart();
       //this.cartItemFunc(); 
+    }
       }    
 
       AddtoCartObject(data: any, size: any, flavor: any) 
       {
+        var concatenatedArrays;
+        if (flavor != null || flavor != '' || flavor != undefined)
+        {
+          var flavorMaterial = data.Materials.filter(f => f.itemName.toLowerCase().includes(flavor.toLowerCase()))
+           var oilMaterial = data.Materials.filter(f => f.itemName.toLowerCase().includes('oil'))
+          concatenatedArrays = flavorMaterial.concat(oilMaterial)
+        }
+        else 
+        {
+          concatenatedArrays = data.Materials 
+        }   
         var ordernotmilkteaAndfries = Object.assign({}, data, {
+              Materials: concatenatedArrays,
                Category: data.Category,
                Description: data.Description,
                GramsPerOrder: data.Category != 'Milktea' || data.Category == 'Snacks' ?  data.GramsPerOrder 
@@ -756,6 +775,7 @@ this.loadCart()
                : size == 'Small' ? data.SmallPrice : data.MediumPrice,
                id: data.id
        })
+       //console.log("addtocartobjectmethod", ordernotmilkteaAndfries)
        return ordernotmilkteaAndfries
       }
 

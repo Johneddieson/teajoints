@@ -5,17 +5,17 @@
       <ion-title>Stock On Hand</ion-title>
     </ion-buttons>
   
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
      <ion-button (click)="prev()">
       <ion-icon name="chevron-back-outline" style="cursor: pointer; zoom:2.0;"></ion-icon>
      </ion-button>
      <ion-button (click)="next()">
       <ion-icon name="chevron-forward-outline" style="cursor: pointer; zoom:2.0;"></ion-icon>
      </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
   
-  <ion-modal trigger="open-modal3" mode="md" [backdropDismiss]="false">
+  <!-- <ion-modal trigger="open-modal3" mode="md" [backdropDismiss]="false">
     <ng-template>
       <ion-content>
         <ion-item>
@@ -43,22 +43,6 @@
       </ion-content>
     </ng-template>
   </ion-modal>
- <!-- <ion-content class="content">
-  <ion-card>
-    <ion-item  *ngFor="let data of inventoryList" lines="none" color="dark">
-      <ion-avatar slot="start">
-        <img [src]="data.ImageUrl"/>
-      </ion-avatar>
-      <ion-label>
-        <h2 text-capitalize>{{data.ProductName}} ({{data.Quantity}})</h2>
-        <p>{{data.Destination}}</p>
-        <p>{{data.Datetime}}</p>
-      </ion-label>
-    </ion-item>
-  </ion-card>
-</ion-content>    -->
-
-
 <ion-content [fullscreen]="true" class="content">
 <ion-slides [options]="option" class="ion-margin-top" #slides>
   <ion-slide *ngFor="let data of categoryList">
@@ -68,4 +52,37 @@
     </ion-card>
   </ion-slide>   
 </ion-slides>
+</ion-content> -->
+
+
+<ion-content>
+  <main class="table">
+    <section class="table__header">
+        <h1>‎</h1>
+        <div class="input-group">
+            <input type="search" placeholder="Search Item..." [(ngModel)]="fullName"  (keyup)="searchMaterial($event)">
+        </div>
+    </section>
+    <section class="table__body">
+        <table>
+            <thead>
+                <tr>
+                    <th> Itemname</th>
+                    <th> Grams Onhand</th>
+                    <!-- <th> Action</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of materialList" (click)="editMaterial(data)">
+                    <td>
+                      {{data.Itemname}}
+                    </td>
+                    <td style="text-align: justify;"> {{data.Stock}} </td>
+                    <!-- <td> <ion-button>Edit</ion-button> </td> -->
+                </tr>
+             </tbody>
+        </table>
+    </section>
+</main>
 </ion-content>
+

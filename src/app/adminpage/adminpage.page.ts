@@ -52,7 +52,18 @@ export class AdminpagePage implements OnInit {
     private plt: Platform,
     private router: Router,
     private afstore: AngularFirestore
-  ) {}
+  ) 
+  {
+    // this.afstore.collection('Materials')
+    // .valueChanges()
+    // .subscribe(data => 
+    //   {
+    //     var thedata = data as any
+    //     var wew = thedata.map(function (e) {return e.Itemname})
+    //     wew =  wew.filter(f => f == 'Honey')
+    //     console.log("tanga tanga", wew)
+    //   })
+  }
 
   setToday() {
     this.formattedString = format(
@@ -81,121 +92,62 @@ export class AdminpagePage implements OnInit {
 
   ngOnInit() 
   {
-    alert('tanga')
-    let objarray  = 
-    [
-      {
-        Category: 'Pares',
-        Itemname: 'Pares',
-        Ingredients: 
-        [
-        {
-          Itemname: 'Beef',
-          Gramsperorder: 70,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Onion',
-          Gramsperorder: 10,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Garlic',
-          Gramsperorder: 10,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Ginger',
-          Gramsperorder: 10,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Soy Sauce',
-          Gramsperorder: 28,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Knorr Beef Cube',
-          Gramsperorder: 5,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Sugar',
-          Gramsperorder: 5,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Pepper',
-          Gramsperorder: 5,
-          Stock: 0,
-        },
-        ] 
-      },
-
-      {
-        Category: 'Pares',
-        Itemname: 'Pares with Rice',
-        Ingredients: 
-        [
-        {
-          Itemname: 'Beef',
-          Gramsperorder: 70,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Onion',
-          Gramsperorder: 10,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Garlic',
-          Gramsperorder: 10,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Ginger',
-          Gramsperorder: 10,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Soy Sauce',
-          Gramsperorder: 28,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Knorr Beef Cube',
-          Gramsperorder: 5,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Sugar',
-          Gramsperorder: 5,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Pepper',
-          Gramsperorder: 5,
-          Stock: 0,
-        },
-        {
-          Itemname: 'Rice',
-          Gramsperorder: 200,
-          Stock: 0,
-        },
-        ] 
-      },
-    ]
-    this.afstore.collection('Materials')
-    .add
-    ({
-      Category: 'Pares',
-      Items: objarray
-    }).then(success => 
-      {
-        console.log("success adding material", success)
-      }).catch(err => {
-        console.log("err adding material", err)
-      })
+    // let objarray  = 
+    //     [
+    //       {
+    //         Itemname: 'Miki Noodles',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Chicken Breast',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Carrots',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Oyster Sauce',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Bihon Noodles',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Sotanghon Noodles',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Cabbage',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Patis',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Knorr Chicken Cube',
+    //         Stock: 0,
+    //       },
+    //       {
+    //         Itemname: 'Cornstarch',
+    //         Stock: 0,
+    //       },
+    //     ]
+   
+   
+    // objarray.forEach(fe => 
+    //   {
+    //     this.afstore.collection('Materials')
+    //     .add
+    //     (fe).then(success => 
+    //       {
+    //         console.log("success adding material", success)
+    //       }).catch(err => {
+    //         console.log("err adding material", err)
+    //       })
+    //   })
   }
   
   
