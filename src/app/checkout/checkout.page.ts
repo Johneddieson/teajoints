@@ -1,9 +1,10 @@
+import { loadingController } from '@ionic/core';
 import { LocationStrategy } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { MessengerService } from '../messenger.service';
 import * as firebase from 'firebase/app'
 import { map } from 'rxjs/operators';
@@ -22,7 +23,8 @@ export class CheckoutPage implements OnInit {
   sub
   myInformation: any = {}
   PaymentMethod: string = ''
-  constructor(private alertCtrl: AlertController, private locationStrategy: LocationStrategy, private router: Router, private afauth: AngularFireAuth, private afstore: AngularFirestore, private msg: MessengerService) {
+  
+  constructor(private loadingController: LoadingController, private alertCtrl: AlertController, private locationStrategy: LocationStrategy, private router: Router, private afauth: AngularFireAuth, private afstore: AngularFirestore, private msg: MessengerService) {
 
     this.afauth.authState.subscribe(data => {
       if (data && data.uid) {
@@ -172,6 +174,22 @@ if (this.PaymentMethod == '' || this.PaymentMethod == undefined
   })
   await paymentMethodRequiredMessage.present()
 }
+else if (!this.myInformation.FirstName || !this.myInformation.LastName || 
+  !this.myInformation.PhoneNumber) 
+  {
+   var fillupdetailfirstalert = await  this.alertCtrl.create({
+      message: 'Please fill up about your details first.',
+      buttons: [
+        {
+          text: 'Ok',
+         handler: () => {
+          this.router.navigateByUrl('/editinfo')
+         } 
+        }
+      ]
+    })
+    await fillupdetailfirstalert.present();
+  }
 else 
 {
   //await this.writeCommentAlert()
@@ -239,86 +257,150 @@ async writeCommentAlert()
   })
   await writecommentAlert.present()
 }
+// async orderNowFunction(comments: string)
+// {
+//  //Order Now Function
+//   this.alertCtrl.create({
+//     message: 'Are you sure you want to finalize your order?',
+//     buttons: [
+//       {
+//         text: 'Ok',
+//         handler: () => {
+          
+//           this.alertCtrl.create({
+//             message: 'Ordered Successfully!',
+//             buttons: [
+//               {
+//                 text: 'Ok',
+//                 role: 'cancel'
+//               }
+//             ]
+//           }).then(els => {
+//             if (!this.myInformation.FirstName || !this.myInformation.LastName || 
+//               !this.myInformation.PhoneNumber) 
+//               {
+//                 this.alertCtrl.create({
+//                   message: 'Please fill up about your details first.',
+//                   buttons: [
+//                     {
+//                       text: 'Ok',
+//                      handler: () => {
+//                       this.router.navigateByUrl('/editinfo')
+//                      } 
+//                     }
+//                   ]
+//                 }).then(els2 => {
+//                   els2.present()
+                 
+//                 })
+//               } 
+//               else 
+//               {
+//                 this.CartDetails()
+//                 els.present()
+//                 var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
+//                 this.total = this.total + 30;
+//             this.afstore.collection('Orders').add({
+//               OrderDetails: this.getCartDetails,
+//               BillingFirstname: this.myInformation.FirstName,
+//               BillingLastname: this.myInformation.LastName,
+//               BillingAddress1: this.myInformation.Address1,
+//               BillingAddress2: '',
+//               BillingPhonenumber: this.myInformation.PhoneNumber,
+//               Billingemail: this.myInformation.Email,
+//               BillingIndexId: this.myInformation.Uid,
+//               Status: 'Pending',
+//               Datetime: datetime,
+//               TotalAmount: parseFloat(this.total.toString()).toFixed(2),
+//               DatetimeToSort: new Date(),
+//               PaymentMethod: this.PaymentMethod,
+//               Comments: comments,
+//               //IsPaid: false
+//             }).then(el => {
+//               this.removeall() 
+//               this.meReference.update({
+//                 Address1: '',
+//                 Address2: ''
+//               })
+//             }).catch(err => {
+//               alert(err)
+//             }) 
+//           }
+//           })
+//         }
+//       },
+//       {
+//         text: 'Cancel',
+//         role: 'cancel'
+//       }
+//     ]
+//   }).then(el => {
+//     el.present()
+//   })
+//   //End of Order Now Function 
+// }
+
 async orderNowFunction(comments: string)
 {
- //Order Now Function
-  this.alertCtrl.create({
+  var finalizeAlert = await this.alertCtrl.create
+  ({
     message: 'Are you sure you want to finalize your order?',
-    buttons: [
+    buttons: 
+    [
       {
-        text: 'Ok',
-        handler: () => {
+        text: 'Yes',
+        handler: async () => 
+        {
           
-          this.alertCtrl.create({
-            message: 'Ordered Successfully!',
-            buttons: [
-              {
-                text: 'Ok',
-                role: 'cancel'
-              }
-            ]
-          }).then(els => {
-            if (!this.myInformation.FirstName || !this.myInformation.LastName || 
-              !this.myInformation.PhoneNumber) 
-              {
-                this.alertCtrl.create({
-                  message: 'Please fill up about your details first.',
-                  buttons: [
-                    {
-                      text: 'Ok',
-                     handler: () => {
-                      this.router.navigateByUrl('/editinfo')
-                     } 
-                    }
-                  ]
-                }).then(els2 => {
-                  els2.present()
-                 
-                })
-              } 
-              else 
-              {
-                this.CartDetails()
-                els.present()
-                var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
-                this.total = this.total + 30;
-            this.afstore.collection('Orders').add({
-              OrderDetails: this.getCartDetails,
-              BillingFirstname: this.myInformation.FirstName,
-              BillingLastname: this.myInformation.LastName,
-              BillingAddress1: this.myInformation.Address1,
-              BillingAddress2: '',
-              BillingPhonenumber: this.myInformation.PhoneNumber,
-              Billingemail: this.myInformation.Email,
-              BillingIndexId: this.myInformation.Uid,
-              Status: 'Pending',
-              Datetime: datetime,
-              TotalAmount: parseFloat(this.total.toString()).toFixed(2),
-              DatetimeToSort: new Date(),
-              PaymentMethod: this.PaymentMethod,
-              Comments: comments,
-              IsPaid: false
-            }).then(el => {
-              this.removeall() 
-              this.meReference.update({
-                Address1: '',
-                Address2: ''
-              })
-            }).catch(err => {
-              alert(err)
-            }) 
-          }
+
+          var loading = await this.loadingController.create
+          ({
+            message: 'Please wait...',
+            spinner: 'bubbles'
           })
+          await loading.present();
+          this.CartDetails()
+          this.savingfunction(comments)
         }
       },
       {
-        text: 'Cancel',
+        text:'No',
         role: 'cancel'
       }
     ]
-  }).then(el => {
-    el.present()
   })
-  //End of Order Now Function 
+  await finalizeAlert.present()
+}
+savingfunction(comments)
+{
+  var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
+  this.total = this.total + 30;
+this.afstore.collection('Orders').add({
+OrderDetails: this.getCartDetails,
+BillingFirstname: this.myInformation.FirstName,
+BillingLastname: this.myInformation.LastName,
+BillingAddress1: this.myInformation.Address1,
+BillingAddress2: '',
+BillingPhonenumber: this.myInformation.PhoneNumber,
+Billingemail: this.myInformation.Email,
+BillingIndexId: this.myInformation.Uid,
+Status: 'Pending',
+Datetime: datetime,
+TotalAmount: parseFloat(this.total.toString()).toFixed(2),
+DatetimeToSort: new Date(),
+PaymentMethod: this.PaymentMethod,
+Comments: comments,
+//IsPaid: false
+}).then(el => {
+  this.loadingController.dismiss()
+this.removeall() 
+this.meReference.update({
+  Address1: '',
+  Address2: ''
+})
+}).catch(err => {
+alert(err)
+this.loadingController.dismiss();
+})
 }
 }

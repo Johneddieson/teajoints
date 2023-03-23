@@ -64,10 +64,10 @@
         <!-- If Not Milktea -->
         <div *ngIf="data.Category != 'Milktea'">
           <span class="price">{{data.UnitPrice | currency: '₱'}}</span>
-        <br>
+        <!-- <br>
         <span class="price">{{parseToFloat(data.Stock / data.GramsPerOrder)}} remaining</span>
         <br>
-        <span *ngIf="data.ProductName == 'Fries' || data.ProductName == 'Chicken Fingers'">Flavors</span>          
+        <span *ngIf="data.ProductName == 'Fries' || data.ProductName == 'Chicken Fingers'">Flavors</span>           -->
       </div>
 
 
@@ -76,10 +76,10 @@
           <span class="price">Small : {{data.SmallPrice | currency: '₱'}}</span>
           <br>
           <span class="price">Medium : {{data.MediumPrice | currency: '₱'}}</span>  
-          <br>
+          <!-- <br>
           <span class="price">{{parseToFloat(data.Stock / data.GramsPerOderSmall)}} remaining (Small)</span>
           <br>
-          <span class="price">{{parseToFloat(data.Stock / data.GramsPerOderMedium)}} remaining (Medium)</span>
+          <span class="price">{{parseToFloat(data.Stock / data.GramsPerOderMedium)}} remaining (Medium)</span> -->
           <!-- <br>
             <ion-checkbox slot="start"></ion-checkbox> <ion-label>Small</ion-label>
           <br>

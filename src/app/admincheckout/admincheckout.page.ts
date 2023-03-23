@@ -10,6 +10,7 @@ import { MessengerService } from '../messenger.service';
 import * as firebase from 'firebase/app'
 import { Observable } from 'rxjs/internal/Observable';
 import { CreateposPage } from '../createpos/createpos.page';
+import * as _ from 'lodash';
 @Component({
   selector: 'app-admincheckout',
   templateUrl: './admincheckout.page.html',
@@ -133,6 +134,22 @@ export class AdmincheckoutPage implements OnInit {
   CartDetails() {
     if (sessionStorage.getItem('cart')) {
       this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
+    
+      this.getCartDetails.map((i, index) => 
+      {
+        
+        i.Materials.map((iMat, index) => 
+        {
+          if (i.Category == "Milktea")
+          {
+            iMat.gramsperorder = i.ProductName.toLowerCase().includes('small') ? iMat.gramsperordersmall : iMat.gramsperordermedium 
+          }
+          else 
+          {
+            iMat.gramsperorder = iMat.gramsperorder
+          }
+        })
+      })
     }
   }
 
@@ -142,6 +159,10 @@ export class AdmincheckoutPage implements OnInit {
 
 
         this.getCartDetails[i].Quantity = quantity + 1
+        this.getCartDetails[i].Materials.map((materials, index) => 
+          {
+            materials.Quantity = quantity + 1
+          })
       }
     }
 
@@ -157,7 +178,11 @@ export class AdmincheckoutPage implements OnInit {
 
         if (quantity != 1)
           this.getCartDetails[i].Quantity = quantity - 1
-      }
+          this.getCartDetails[i].Materials.map((materials, index) => 
+          {
+            materials.Quantity = quantity - 1
+          })
+        }
     }
 
     sessionStorage.setItem('cart', JSON.stringify(this.getCartDetails))
@@ -167,6 +192,21 @@ export class AdmincheckoutPage implements OnInit {
   loadCart() {
     if (sessionStorage.getItem('cart')) {
       this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
+      this.getCartDetails.map((i, index) => 
+      {
+        
+        i.Materials.map((iMat, index) => 
+        {
+          if (i.Category == "Milktea")
+          {
+            iMat.gramsperorder = i.ProductName.toLowerCase().includes('small') ? iMat.gramsperordersmall : iMat.gramsperordermedium 
+          }
+          else 
+          {
+            iMat.gramsperorder = iMat.gramsperorder
+          }
+        })
+      })   
       this.total = this.getCartDetails.reduce((acc, val) => {
         return acc + (val.UnitPrice * val.Quantity)
       }, 0)
@@ -371,9 +411,236 @@ gotohome() {
 // }
 
 
-async OrderNow(paymentMethod: any) 
+// async OrderNow(paymentMethod: any) 
+// {
+//   if (paymentMethod.value == undefined || paymentMethod.value == '' 
+//   || paymentMethod.value == null)
+// {
+//   var paymentMethodRequired = await this.alertCtrl.create({
+//     message: 'Payment method is required',
+//     buttons: [
+//       {
+//         text: 'Ok',
+//         role: 'cancel'
+//       }
+//     ]
+//   })
+
+//   await paymentMethodRequired.present()
+// }
+// else 
+// {
+//  var alertConfirmation = await this.alertCtrl.create({
+//   header: 'Confirmation',
+//   message: 'Are you sure you want to save this order?',
+//   buttons: [
+//     {
+//       text: 'Yes',
+//       handler: async () => 
+//       {
+//         // this.stockRefence =   this.afstore.collection('Products')
+//         // this.stockRefence.get()
+//         // .pipe(map(actions => {
+//         // return actions.docs.map((doc) => {
+//         //     return {
+//         //       id: doc.id,
+//         //       ...doc.data() as any
+//         //     }
+//         //   })
+//         // })
+//         // ).subscribe(async data => {
+//         //   var currentProducts = await data
+//         //   const mergedCurrentProductsAndOrderedProducts = (orderedProducts, currentProducts) =>  
+//         //   orderedProducts.map(itm => ({ 
+//         //     ...Object.assign({}, itm, {
+//         //       CurrentProductStock: currentProducts.find((item) => (item.id === itm.id) && item).Stock,
+//         //       //TotalGramsOrder: itm.GramsPerOrder * itm.Quantity     
+//         //       TotalGramsOrder: itm.Category == 'Milktea'
+//         //       ?
+//         //       orderedProducts.reduce((accumulator, object) => {
+//         //           let sumGrams =  object.GramsPerOrder * object.Quantity
+//         //           return accumulator + object.GramsPerOrder * object.Quantity
+//         //         return object
+//         //         }, 0) 
+//         //       : itm.GramsPerOrder * itm.Quantity,
+//         //     })
+//         //   }))
+//         //   var results = mergedCurrentProductsAndOrderedProducts(this.getCartDetails, currentProducts)
+//         // })
+      
+      
+//         var customerNameModal = await this.alertCtrl.create({
+//                       header: 'Customer Name',
+//                       inputs: [
+//                         {
+//                           name: 'Name',
+//                           placeholder: 'Customer Name',
+//                           type: 'text'
+//                         }
+//                       ],
+//                      buttons: [
+//                       {
+//                         text: 'Ok',
+//                         handler: async (data) => 
+//                         {
+//                           if (!data.Name || data.Name == undefined ||  data.Name == null)
+//                           {
+//                             alert("Name of customer is required")
+//                           }
+//                           else 
+//                           {
+
+//                               //success order alert
+//                               var successAlert = await this.alertCtrl.create({
+//                                 message: 'Saved order successfully!',
+//                                 buttons: [
+//                                   {
+//                                     text: 'Ok',
+//                                     handler: async() => 
+//                                     {
+                                            
+
+//                                              //Orders Saving Walk In
+//                                         var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
+//                                         this.afstore.collection('Orders').add({
+//                                           OrderDetails: this.getCartDetails,
+//                                           BillingFirstname: data.Name,
+//                                           BillingLastname: "Walk-In",
+//                                           BillingAddress1: "Walk-In",
+//                                           BillingAddress2: "Walk-In",
+//                                           BillingPhonenumber: "Walk-In",
+//                                           Billingemail: "Walk-In",
+//                                           BillingIndexId: "",
+//                                           Status: 'Delivered',
+//                                           Datetime: datetime,
+//                                           TotalAmount: parseFloat(this.total.toString()).toFixed(2),
+//                                           DatetimeToSort: new Date(),
+//                                           PaymentMethod: paymentMethod.value
+//                                         }).then(async el => {
+                                          
+//                                                     var decrease = await this.getCartDetails.map((i, index) => {
+//                                                       return Object.assign({}, i, {
+//                                                         TotalGramsOrder: i.GramsPerOrder * i.Quantity 
+//                                                       })
+//                                                     })
+//                                                      await decrease.forEach(fe => {
+//                                                         //Decrease Stock of Product
+//                                                         this.afstore
+//                                                           .doc(
+//                                                             `Products/${fe.id}`
+//                                                           )
+//                                                           .update({
+//                                                             Stock:
+//                                                               firebase.default.firestore.FieldValue.increment(
+//                                                                 -fe.TotalGramsOrder
+//                                                               ),
+//                                                           });
+
+//                                                         //Inventory Movement
+//                                                                     this.afstore.collection('Inventory').add({
+//                                                                       Datetime: datetime,
+//                                                                       Category: fe.Category,
+//                                                                       ProductName: fe.ProductName,
+//                                                                       Quantity: parseInt(fe.TotalGramsOrder) * -1,
+//                                                                       UnitPrice: fe.UnitPrice,
+//                                                                       ImageUrl: fe.ImageUrl,
+//                                                                       GramsPerOrder: fe.GramsPerOrder,
+//                                                                       Description: fe.Description,
+//                                                                       SmallPrice: fe.SmallPrice,
+//                                                                       MediumPrice:  fe.MediumPrice,
+//                                                                       DatetimeToSort: new Date(),
+//                                                                       ProductId: fe.id,
+//                                                                       GramsPerOderSmall: fe.GramsPerOderSmall,
+//                                                                       GramsPerOderMedium: fe.GramsPerOderMedium,
+//                                                                     })
+//                                                       })
+
+                                                    
+//                                           //History Saving
+//                                           this.afstore
+//                                           .collection('History')
+//                                           .add({
+//                                             BillingAddress1: 'Walk-In',
+//                                             BillingAddress2: 'Walk-In',
+//                                             BillingFirstname: data.Name,
+//                                             BillingIndexId: '',
+//                                             BillingLastname: 'Walk-In',
+//                                             BillingPhonenumber: 'Walk-In',
+//                                             Billingemail: 'Walk-In',
+//                                             Datetime: datetime,
+//                                             Status: 'Delivered',
+//                                             TotalAmount: parseFloat(
+//                                               this.total.toString()
+//                                             ).toFixed(2),
+//                                             id: el.id,
+//                                             OrderDetails: this.getCartDetails,
+//                                             read: false,
+//                                             DatetimeToSort: new Date(),
+//                                             PaymentMethod: paymentMethod.value
+//                                           }).then(async history => 
+//                                             { 
+//                                                 var loading = await this.loadingController.create
+//                                                 ({
+//                                                   message: 'Redirecting to invoice...',
+//                                                   spinner: 'bubbles'
+//                                                 })
+//                                                 await loading.present();
+                                                
+//                                                 setTimeout(async () => {
+//                                                   await loading.dismiss()
+//                                                   this.router.navigateByUrl(`/invoicepage/${history.id}/history/POS`)  
+//                                                 }, 3000);
+//                                                 //reset the cart
+//                                                 this.removeall();
+//                                                 this.loadCart();
+//                                                 await this.menuCtrl.close('cart')
+//                                               })
+//                                         }).catch(async err => {
+//                                           var errorAlert = await this.alertCtrl.create({
+//                                             message: JSON.stringify(err),
+//                                             buttons: [
+//                                               {
+//                                                 text: 'Ok',
+//                                                 role: 'cancel'
+//                                               }
+//                                             ]
+//                                           })
+//                                           await errorAlert.present()
+//                                         })
+//                                     }
+//                                   }
+//                                 ]
+//                               })
+
+
+//                               //call the success alert modal
+//                               await successAlert.present()
+//                           }
+//                         }
+//                       },
+//                       {
+//                         text: 'Cancel',
+//                         role: 'cancel'
+//                       }
+//                      ]   
+
+//         });
+//         await customerNameModal.present()
+//       }
+//     },
+//     {
+//       text: 'No',
+//       role: 'cancel'
+//     }
+//   ]    
+//   })
+//   await alertConfirmation.present()
+// }
+// }
+
+async OrderNow(paymentMethod: any)
 {
-  if (paymentMethod.value == undefined || paymentMethod.value == '' 
+    if (paymentMethod.value == undefined || paymentMethod.value == '' 
   || paymentMethod.value == null)
 {
   var paymentMethodRequired = await this.alertCtrl.create({
@@ -390,81 +657,65 @@ async OrderNow(paymentMethod: any)
 }
 else 
 {
- var alertConfirmation = await this.alertCtrl.create({
-  header: 'Confirmation',
-  message: 'Are you sure you want to save this order?',
-  buttons: [
-    {
-      text: 'Yes',
-      handler: async () => 
+  var alertControllerFornameAndComments = await this.alertCtrl.create
+  ({
+    header: 'Please enter customer name and any other comments',
+    inputs: 
+    [
       {
-        // this.stockRefence =   this.afstore.collection('Products')
-        // this.stockRefence.get()
-        // .pipe(map(actions => {
-        // return actions.docs.map((doc) => {
-        //     return {
-        //       id: doc.id,
-        //       ...doc.data() as any
-        //     }
-        //   })
-        // })
-        // ).subscribe(async data => {
-        //   var currentProducts = await data
-        //   const mergedCurrentProductsAndOrderedProducts = (orderedProducts, currentProducts) =>  
-        //   orderedProducts.map(itm => ({ 
-        //     ...Object.assign({}, itm, {
-        //       CurrentProductStock: currentProducts.find((item) => (item.id === itm.id) && item).Stock,
-        //       //TotalGramsOrder: itm.GramsPerOrder * itm.Quantity     
-        //       TotalGramsOrder: itm.Category == 'Milktea'
-        //       ?
-        //       orderedProducts.reduce((accumulator, object) => {
-        //           let sumGrams =  object.GramsPerOrder * object.Quantity
-        //           return accumulator + object.GramsPerOrder * object.Quantity
-        //         return object
-        //         }, 0) 
-        //       : itm.GramsPerOrder * itm.Quantity,
-        //     })
-        //   }))
-        //   var results = mergedCurrentProductsAndOrderedProducts(this.getCartDetails, currentProducts)
-        // })
-      
-      
-        var customerNameModal = await this.alertCtrl.create({
-                      header: 'Customer Name',
-                      inputs: [
-                        {
-                          name: 'Name',
-                          placeholder: 'Customer Name',
-                          type: 'text'
-                        }
-                      ],
-                     buttons: [
-                      {
-                        text: 'Ok',
-                        handler: async (data) => 
-                        {
-                          if (!data.Name || data.Name == undefined ||  data.Name == null)
-                          {
-                            alert("Name of customer is required")
-                          }
-                          else 
-                          {
+        type: 'text',
+        name: 'Customer',
+        label: 'Customer Name',
+        placeholder: 'Enter Customer Name'
+      },
+      {
+        type: 'textarea',
+        name: 'Comments',
+        label: 'Comments',
+        placeholder: 'Enter Comments... Leave It Blank If None'
+      }
+    ],
+    buttons: 
+    [
+      {
+        text: 'Submit',
+        handler: async (data) => 
+        {
+          if (data.Customer == '' || data.Customer == null || data.Customer == undefined)
+          {
+            alert("Customer name is required")
+          }
+          else 
+          {
+              //alert("saved")
+              //console.log("cart", this.getCartDetails)
+              var loading = await this.loadingController.create
+              ({
+                message: 'Please wait...',
+                spinner: 'crescent'
+              })
+              await loading.present();
+              this.OrderFunction(data.Customer, data.Comments, paymentMethod.value)
 
-                              //success order alert
-                              var successAlert = await this.alertCtrl.create({
-                                message: 'Saved order successfully!',
-                                buttons: [
-                                  {
-                                    text: 'Ok',
-                                    handler: async() => 
-                                    {
-                                            
-
-                                             //Orders Saving Walk In
-                                        var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
-                                        this.afstore.collection('Orders').add({
-                                          OrderDetails: this.getCartDetails,
-                                          BillingFirstname: data.Name,
+            }
+        }
+      },
+      {
+        text: 'Close',
+        role: 'cancel'
+      }
+    ]
+  })
+  await alertControllerFornameAndComments.present();
+  //console.log("cart details", this.getCartDetails)
+}
+}
+async OrderFunction(Name, Comments, paymentMethod)
+{
+            var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
+            this.afstore.collection('Orders').add({
+                                                       OrderDetails: this.getCartDetails,
+                                          BillingFirstname: Name,
                                           BillingLastname: "Walk-In",
                                           BillingAddress1: "Walk-In",
                                           BillingAddress2: "Walk-In",
@@ -475,127 +726,92 @@ else
                                           Datetime: datetime,
                                           TotalAmount: parseFloat(this.total.toString()).toFixed(2),
                                           DatetimeToSort: new Date(),
-                                          PaymentMethod: paymentMethod.value
-                                        }).then(async el => {
-                                          
-                                                    var decrease = await this.getCartDetails.map((i, index) => {
-                                                      return Object.assign({}, i, {
-                                                        TotalGramsOrder: i.GramsPerOrder * i.Quantity 
-                                                      })
-                                                    })
-                                                     await decrease.forEach(fe => {
-                                                        //Decrease Stock of Product
-                                                        this.afstore
-                                                          .doc(
-                                                            `Products/${fe.id}`
-                                                          )
-                                                          .update({
-                                                            Stock:
-                                                              firebase.default.firestore.FieldValue.increment(
-                                                                -fe.TotalGramsOrder
-                                                              ),
-                                                          });
+                                          PaymentMethod: paymentMethod,
+                                          Comments: Comments
+            }).then(async el => {
+          //Decrease Function
+                this.decreaseStock()
+              //History Saving
+              await this.loadingController.dismiss()
+          this.afstore.collection('History').add({
+            BillingAddress1: "Walk-In",
+            BillingAddress2: "Walk-In",
+            BillingFirstname: Name,
+            BillingIndexId: "",
+            BillingLastname: "Walk-In",
+            BillingPhonenumber: "Walk-In",
+            Billingemail: "Walk-In",
+            Datetime: datetime,
+            Status: "Delivered",
+            TotalAmount: parseFloat(this.total.toString()).toFixed(2),
+            id: el.id,
+            OrderDetails: this.getCartDetails,
+            read: false,
+            DatetimeToSort: new Date(),
+            Comments: Comments,
+            PaymentMethod: paymentMethod,
+          }).then(async (history) => 
+          {
 
-                                                        //Inventory Movement
-                                                                    this.afstore.collection('Inventory').add({
-                                                                      Datetime: datetime,
-                                                                      Category: fe.Category,
-                                                                      ProductName: fe.ProductName,
-                                                                      Quantity: parseInt(fe.TotalGramsOrder) * -1,
-                                                                      UnitPrice: fe.UnitPrice,
-                                                                      ImageUrl: fe.ImageUrl,
-                                                                      GramsPerOrder: fe.GramsPerOrder,
-                                                                      Description: fe.Description,
-                                                                      SmallPrice: fe.SmallPrice,
-                                                                      MediumPrice:  fe.MediumPrice,
-                                                                      DatetimeToSort: new Date(),
-                                                                      ProductId: fe.id,
-                                                                      GramsPerOderSmall: fe.GramsPerOderSmall,
-                                                                      GramsPerOderMedium: fe.GramsPerOderMedium,
-                                                                    })
-                                                      })
+            var loading = await this.loadingController.create
+            ({
+              message: 'Redirecting to Invoice Page...',
+              spinner: 'dots'
+            })
+            await loading.present();
+            setTimeout(async () => {
+              await this.menuCtrl.close('cart')
+              await loading.dismiss();              
+              this.router.navigateByUrl(`/invoicepage/${history.id}/history/POS`)  
+            }, 3000);
+            //reset the cart
+            this.removeall();
+            this.loadCart();
+          })
+          
+            }).catch(err => {
+            })
+}
+async decreaseStock()
+{
+  
+  //this.getMaterials()
+  var getmaterial = this.getCartDetails.map(function (e) {return e.Materials})
+       
+  var ew = _.flatten(getmaterial)
 
-                                                    
-                                          //History Saving
-                                          this.afstore
-                                          .collection('History')
-                                          .add({
-                                            BillingAddress1: 'Walk-In',
-                                            BillingAddress2: 'Walk-In',
-                                            BillingFirstname: data.Name,
-                                            BillingIndexId: '',
-                                            BillingLastname: 'Walk-In',
-                                            BillingPhonenumber: 'Walk-In',
-                                            Billingemail: 'Walk-In',
-                                            Datetime: datetime,
-                                            Status: 'Delivered',
-                                            TotalAmount: parseFloat(
-                                              this.total.toString()
-                                            ).toFixed(2),
-                                            id: el.id,
-                                            OrderDetails: this.getCartDetails,
-                                            read: false,
-                                            DatetimeToSort: new Date(),
-                                            PaymentMethod: paymentMethod.value
-                                          }).then(async history => 
-                                            { 
-                                                var loading = await this.loadingController.create
-                                                ({
-                                                  message: 'Redirecting to invoice...',
-                                                  spinner: 'bubbles'
-                                                })
-                                                await loading.present();
-                                                
-                                                setTimeout(async () => {
-                                                  await loading.dismiss()
-                                                  this.router.navigateByUrl(`/invoicepage/${history.id}/history/POS`)  
-                                                }, 3000);
-                                                //reset the cart
-                                                this.removeall();
-                                                this.loadCart();
-                                                await this.menuCtrl.close('cart')
-                                              })
-                                        }).catch(async err => {
-                                          var errorAlert = await this.alertCtrl.create({
-                                            message: JSON.stringify(err),
-                                            buttons: [
-                                              {
-                                                text: 'Ok',
-                                                role: 'cancel'
-                                              }
-                                            ]
-                                          })
-                                          await errorAlert.present()
-                                        })
-                                    }
-                                  }
-                                ]
-                              })
-
-
-                              //call the success alert modal
-                              await successAlert.present()
-                          }
-                        }
-                      },
-                      {
-                        text: 'Cancel',
-                        role: 'cancel'
-                      }
-                     ]   
-
-        });
-        await customerNameModal.present()
-      }
-    },
+  var count = 0
+  var materialsLength = ew.length
+   ew.forEach(fe => 
     {
-      text: 'No',
-      role: 'cancel'
-    }
-  ]    
+      count = count + 1
+        this.updateStocks(fe.itemId, fe.Quantity, fe.gramsperorder, count, materialsLength)
+    })
+}
+async updateStocks(itemId, Quantity, gramsperorder, count, materialsLength)
+{
+  var total = parseFloat(Quantity) * parseFloat(gramsperorder) 
+  this.afstore.doc(`Materials/${itemId}`).update({
+    Stock: firebase.default.firestore.FieldValue.increment(-total),
+  }).then(el => {
+  }).catch(err => {
+    //console.log("error edit stock", err)
   })
-  await alertConfirmation.present()
+  
+  // if (count == materialsLength)
+  // {
+  //   //console.log("tama na")
+  //   await this.loadingController.dismiss();
+  // } else 
+  // {
+  //   //still loading
+  // var total = parseFloat(Quantity) * parseFloat(gramsperorder) 
+  // this.afstore.doc(`Materials/${itemId}`).update({
+  //   Stock: firebase.default.firestore.FieldValue.increment(-total),
+  // }).then(el => {
+  // }).catch(err => {
+  //   //console.log("error edit stock", err)
+  // })
+  // }
 }
-}
-
 }

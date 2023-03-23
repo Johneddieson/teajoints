@@ -21,8 +21,18 @@
            <img src="{{data.ImageUrl}}">
             <div>
               <p>{{data.ProductName}} <br> <small>Price: {{data.UnitPrice | currency: '₱'}}</small>
-              <br><a (click)="singleDelete(data)">Remove</a>
-              </p>
+              <br>
+              <a (click)="singleDelete(data)">Remove</a>
+              <br>
+              <ion-buttons>
+                <ion-button (click)="dec(data.id, data.Quantity)">
+                  <ion-icon slot="icon-only" name="remove-outline"></ion-icon>
+                </ion-button>
+                <ion-button (click)="inc(data.id, data.Quantity)">
+                  <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+                </ion-button>
+              </ion-buttons>  
+            </p>
             </div>
           </div>
         </td>

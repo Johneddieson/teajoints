@@ -125,7 +125,7 @@ export class CreateposPage implements OnInit {
       loading.dismiss();
     }, 300);
   }
-  ngOnInit(): void {
+  async ngOnInit() {
     // this.router.events.subscribe(() => {
     //   this.zone.run(() => {
     //     setTimeout(() => {
@@ -357,6 +357,11 @@ export class CreateposPage implements OnInit {
 
  async AddtoCart(data) 
   {
+    if (data.Materials.length <= 0)
+    {
+      alert("This product has no condiments.")
+    }
+    else {
   var cartData = sessionStorage.getItem('cart');
   let storageDataGet: any = [];
   
@@ -728,11 +733,31 @@ export class CreateposPage implements OnInit {
   }
   this.loadCart();
   this.msg.cartSubject.next(this.admincheckout.ngOnInit())
+}
   }
 
   AddtoCartObject(data: any, size: any, flavor: any) 
   {
+    var concatenatedArrays;
+        if (flavor.startsWith("B") || flavor.startsWith("S") || flavor.startsWith("C"))
+        {
+          var flavorMaterial = data.Materials.filter(f => f.itemName.toLowerCase().includes(flavor.toLowerCase()))
+           var oilMaterial = data.Materials.filter(f => f.itemName.toLowerCase().includes('oil'))
+          concatenatedArrays = flavorMaterial.concat(oilMaterial)
+          //console.log("fries and chicken fingers")
+        }
+        else 
+        {
+          //console.log("not fries and chicken fingers")
+          concatenatedArrays = data.Materials 
+        }
+        concatenatedArrays.map((i, index) => 
+        {
+          i.Quantity = data.Quantity
+        })
+
     var ordernotmilkteaAndfries = Object.assign({}, data, {
+      Materials: concatenatedArrays,
            Category: data.Category,
            Description: data.Description,
            GramsPerOrder: data.Category != 'Milktea' || data.Category == 'Snacks' ?  data.GramsPerOrder 

@@ -40,6 +40,7 @@ export class InvoicepagePage implements OnInit {
   invoiceDate;
   paymentMethod;
   type;
+  comments;
   constructor(private applicationRef: ApplicationRef, private zone: NgZone, private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private router: Router,
@@ -84,22 +85,23 @@ return {
       this.dateOrdered = moment(data.Datetime).format("MM-DD-YYYY hh:mm A")
       this.invoiceDate = moment(new Date()).format("MM-DD-YYYY hh:mm A")
       this.dateOrdered2 = moment(data.Datetime).format("MM-DD-YYYY")
-    
+      console.log("the ata", data)
+      this.comments = data.Comments
      
     })
-    if (this.type == 'POS')
-    {
-      var loading = await this.loadingController.create
-      ({
-        message: 'Downloading invoice...',
-        spinner: 'bubbles'
-      });
-      await loading.present()
-      setTimeout(async () => {
-      await this.convertToPDF()
-      await loading.dismiss()
-      }, 3800);
-    }
+    // if (this.type == 'POS')
+    // {
+    //   var loading = await this.loadingController.create
+    //   ({
+    //     message: 'Downloading invoice...',
+    //     spinner: 'bubbles'
+    //   });
+    //   await loading.present()
+    //   setTimeout(async () => {
+    //   await this.convertToPDF()
+    //   await loading.dismiss()
+    //   }, 3800);
+    // }
   } 
 })
    }
@@ -125,19 +127,19 @@ return {
   }
   public convertToPDF()
   {
-  html2canvas(document.getElementById("invoice")!).then(canvas => {
+  html2canvas(document.getElementById("invoice-box")!).then(canvas => {
   const contentDataURL = canvas.toDataURL('image/png')
   let pdf = new jsPDF('l', 'mm', 'a6'); 
   var width = pdf.internal.pageSize.getWidth();
   //var height = canvas.height * width / canvas.width;
   //pdf.addImage(contentDataURL, 'PNG', 10, 10, width, 220.90)
-  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 100.90)
+  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 86.90)
    pdf.addPage()
 
   const contentDataURL2 = canvas.toDataURL('image/png')
   var width2 = pdf.internal.pageSize.getWidth();
   //var height2 = canvas.height * width2 / canvas.width;
-  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 100.90)
+  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 86.90)
   
   
   pdf.addPage()
@@ -145,7 +147,7 @@ return {
   const contentDataURL3 = canvas.toDataURL('image/png')
   var width3 = pdf.internal.pageSize.getWidth();
   //var height3 = canvas.height * width3 / canvas.width;
-  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 100.90)
+  pdf.addImage(contentDataURL, 'PNG', 10, 10, 129.90, 86.90)
   var fullname = this.firstname + " " + this.lastname
   // pdf.save('output.pdf');
   pdf.save(`${fullname} - ${this.dateOrdered2}`); 
