@@ -45,6 +45,7 @@ outofStock = false
 getProductId = []
 currentStockofMaterial: string = ''
 public dataMaterials = []
+comments: string = ''
 @ViewChild(IonModal) modal: IonModal;
   constructor(private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
@@ -90,6 +91,7 @@ return {
       this.dateOrdered = moment(data.Datetime).format("MM-DD-YYYY hh:mm A")
       this.invoiceDate = moment(new Date()).format("MM-DD-YYYY hh:mm A")
       this.paymentMethod = data.PaymentMethod;
+      this.comments = data.Comments
     })
   } 
 })
@@ -304,9 +306,18 @@ updateStocks2(itemId, Quantity, gramsperorder)
     //console.log("error edit stock", err)
   })
 }
+async saveQuantityChanged()
+{
+  //console.log("finalized", this.dataMaterials)
+  //console.log("new order details", orders)
+  //console.log("new order details", this.orders.map(function(e) {return e.Materials}))
+  this.updateMaterial()
+}
 async changeStatus()
 {
-  var data = this.data
+ // console.log("finalized", this.dataMaterials)
+  
+ var data = this.data
   
   if (data.Status == 'Pending')
   {
@@ -355,7 +366,8 @@ async changeStatus()
             OrderDetails: data.OrderDetails,
             read: false,
             DatetimeToSort: new Date(),
-            PaymentMethod: data.PaymentMethod
+            PaymentMethod: data.PaymentMethod,
+            Comments: data.Comments
           })
           }).catch(async err => {
               var ErrorAlert = this.alertCtrl.create({
@@ -679,8 +691,8 @@ getMaterials()
 
 decreaseStock()
 {
-  this.getMaterials()
-  var getmaterial = this.getProductId.map(function (e) {return e.Materials})
+  //this.getMaterials()
+  var getmaterial = this.orders.map(function (e) {return e.Materials})
        
   var ew = _.flatten(getmaterial)
 
@@ -856,18 +868,69 @@ decreaseStock()
       getMaterialOfProducts(Data)
       {
         this.dataMaterials = []
-        Data = Data.Materials.map((i, index) => 
-        {
-          return Object.assign({}, i, 
-            {
-              Quantity: Data.Quantity
-            })
-        })
+        // Data = Data.Materials.map((i, index) => 
+        // {
+        //   return Object.assign({}, i, 
+        //     {
+        //       Quantity: Data.Quantity
+        //     })
+        // })
         //console.log("the data", Data)
-        this.dataMaterials = Data
+        this.dataMaterials = Data.Materials
         this.modal.present(); 
       }
       close() {
         this.modal.dismiss(); 
+    }
+    async showComments()
+    {
+      var showCommentAlert = await this.alertCtrl.create
+      ({
+        message: this.comments != '' ? `${this.comments}` : `No comments...`,
+        backdropDismiss: false,
+        buttons: 
+        [
+          {
+            text: 'Close',
+            role: 'cancel'
+          }
+        ]
+      })
+      await showCommentAlert.present();
+    }
+    editMaterialQuantity(event, mat)
+    {
+      var value = event.target.value
+      //console.log("quantity value", value)
+      //console.log("material", mat)
+      mat.Quantity = parseInt(value)
+      //console.log("this order", this.orders)
+
+    }
+     updateMaterial()
+    {
+      this.afstore.doc(`Orders/${this.id}`).update
+      ({
+        OrderDetails: this.orders
+      }).then(async (success) => 
+      {
+        var successAlert = await this.alertCtrl.create
+        ({
+          message: 'Updated materials successfully!',
+          backdropDismiss: false,
+          buttons: 
+          [
+            {
+              text: 'Close',
+              role: 'cancel'
+            }
+          ]
+        })
+        await successAlert.present();
+      }).catch((err) => 
+      {
+        //console.log("error updating quantity")
+        alert(JSON.stringify(err))
+      })
     }
 }

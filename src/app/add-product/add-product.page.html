@@ -7,6 +7,49 @@
   </ion-toolbar>
 
   <ion-content  fullscreen>  
+
+
+    <ion-modal  mode="sm" [backdropDismiss]="false"
+  class="example-modal">
+    <ng-template>
+      <ion-content color="light">
+        
+        <ion-item *ngFor="let mat of arrayForMaterial" [hidden]="registerForm.value.category == 'Milktea'">
+          
+            <ion-label text-wrap>{{mat.itemName}} :</ion-label>
+            <ion-input value="{{mat.gramsperorder <= 0 ? null : mat.gramsperorder}}"
+            placeholder="Enter grams per order" type="number"
+            (ionChange)="updateGramsPerOrderEvent($event, mat)"></ion-input>
+        </ion-item>
+        <ion-item *ngFor="let mat of arrayForMaterial" [hidden]="registerForm.value.category != 'Milktea'">
+          
+          <ion-label text-wrap>{{mat.itemName}} Small:</ion-label>
+          <ion-input value="{{mat.gramsperordersmall <= 0 ? null : mat.gramsperordersmall}}"
+          placeholder="Enter grams per order small" type="number"
+          (ionChange)="updateGramsPerOrderSmallEvent($event, mat)"></ion-input>
+
+      </ion-item>
+
+      <ion-item *ngFor="let mat of arrayForMaterial" [hidden]="registerForm.value.category != 'Milktea'">
+          
+     
+        <ion-label text-wrap>{{mat.itemName}} Medium:</ion-label>
+        <ion-input value="{{mat.gramsperordermedium <= 0 ? null : mat.gramsperordermedium}}"
+        placeholder="Enter grams per order medium" type="number"
+        (ionChange)="updateGramsPerOrderMediumEvent($event, mat)"></ion-input>
+    </ion-item>
+    
+        <ion-item lines="none">
+         <ion-buttons slot="end">
+          <ion-button color="danger" (click)="close()">Close</ion-button>
+
+          <ion-button color="success" (click)="savechanges()">Save Changes</ion-button>
+         </ion-buttons>
+        </ion-item> 
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
     <form [formGroup]="registerForm"  (ngSubmit)="submit()" novalidate>
         <img src="{{photoLink}}" *ngIf="photoLink != ''" class="camera"/>
         <ion-input class="uploadfile"  type="file" #inputFile (change)="fileChanged($event)" accept="image/*"></ion-input>
@@ -68,7 +111,7 @@
           </ion-text>
           </div>
        
-        <ion-item id="custom-item" counter="true">
+        <!-- <ion-item id="custom-item" counter="true">
           <ion-label position="floating">Grams On Hand</ion-label>
           <ion-input maxlength="6" type="tel" formControlName="gramsnonhand"></ion-input>
         </ion-item>
@@ -92,7 +135,7 @@
           <ion-text color="danger" *ngIf="registerForm.controls.gramsperoder.errors.invalidMsg">
             {{registerForm.controls.gramsperoder.errors.invalidMsg}}
           </ion-text>
-        </div>
+        </div> -->
        
         <ion-item counter="true" [hidden]="!hideSizeDropdown">
           <ion-label position="floating">Small Price</ion-label>
@@ -121,12 +164,12 @@
           </ion-text>
           </div>
 
-          <ion-item counter="true" [hidden]="!hideSizeDropdown">
+          <!-- <ion-item counter="true" [hidden]="!hideSizeDropdown">
             <ion-label position="floating">Grams Per Order Small</ion-label>
             <ion-input maxlength="6"  type="tel" formControlName="gramsperodersmall"></ion-input>
-          </ion-item>
+          </ion-item> -->
   
-          <ion-text [hidden]="!hideSizeDropdown" color="danger" *ngIf="registerForm.get('gramsperodersmall').hasError('required') && registerForm.get('gramsperodersmall').touched">
+          <!-- <ion-text [hidden]="!hideSizeDropdown" color="danger" *ngIf="registerForm.get('gramsperodersmall').hasError('required') && registerForm.get('gramsperodersmall').touched">
             Grams per oder small shouldn't be empty
            </ion-text> 
            <div [hidden]="!hideSizeDropdown" *ngIf="!registerForm.controls.gramsperodersmall.valid && (registerForm.controls.gramsperodersmall.dirty ||registerForm.controls.gramsperodersmall.touched)" class="error">
@@ -147,8 +190,19 @@
               <ion-text color="danger" *ngIf="registerForm.controls.gramsperodermedium.errors.invalidMsg">
                 {{registerForm.controls.gramsperodermedium.errors.invalidMsg}}
               </ion-text>
-              </div>
+              </div> -->
       
+              <ion-item counter="true">
+                <ion-label position="floating">Materials</ion-label>
+                <ion-select [multiple]="true" formControlName="materials">
+                  <ion-select-option *ngFor="let data of materialArray" [value]="data.id">
+                    {{data.Itemname}}
+                  </ion-select-option>
+            </ion-select>
+               </ion-item>
+               <ion-text color="danger" *ngIf="registerForm.get('materials').hasError('required') && registerForm.get('materials').touched">
+                Materials shouldn't be empty
+               </ion-text> 
     </form>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">  
       <!-- [disabled]="registerForm.invalid" -->

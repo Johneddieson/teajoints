@@ -745,19 +745,26 @@ this.loadCart()
     }
       }    
 
-      AddtoCartObject(data: any, size: any, flavor: any) 
+      AddtoCartObject(data: any, size: any, flavor: string) 
       {
         var concatenatedArrays;
-        if (flavor != null || flavor != '' || flavor != undefined)
+        if (flavor.startsWith("B") || flavor.startsWith("S") || flavor.startsWith("C"))
         {
           var flavorMaterial = data.Materials.filter(f => f.itemName.toLowerCase().includes(flavor.toLowerCase()))
            var oilMaterial = data.Materials.filter(f => f.itemName.toLowerCase().includes('oil'))
           concatenatedArrays = flavorMaterial.concat(oilMaterial)
+          //console.log("fries and chicken fingers")
         }
         else 
         {
+          //console.log("not fries and chicken fingers")
           concatenatedArrays = data.Materials 
-        }   
+        }
+        concatenatedArrays.map((i, index) => 
+        {
+          i.Quantity = data.Quantity
+        })
+        //console.log("concatenated array", concatenatedArrays)   
         var ordernotmilkteaAndfries = Object.assign({}, data, {
               Materials: concatenatedArrays,
                Category: data.Category,

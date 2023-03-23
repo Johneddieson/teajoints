@@ -174,6 +174,74 @@ if (this.PaymentMethod == '' || this.PaymentMethod == undefined
 }
 else 
 {
+  //await this.writeCommentAlert()
+  var chooseIfyouWantToWriteCommentsOrNotAlert = await this.alertCtrl.create
+  ({
+    message: 'Do you want to write some comments before applying your order?',
+    backdropDismiss: false,
+    buttons: 
+    [
+      {
+        text: 'Yes',
+        handler: () => 
+        {
+            this.writeCommentAlert();
+        }
+      },
+      {
+        text: 'No',
+        handler: () => 
+        {
+            this.orderNowFunction('')
+        }
+      }
+    ]
+  })
+  await chooseIfyouWantToWriteCommentsOrNotAlert.present();
+}
+ 
+}
+
+async tanga()
+{
+  var wew = JSON.parse(sessionStorage.getItem('cart'))
+  console.log("wew", wew)
+}
+async writeCommentAlert()
+{
+  var writecommentAlert = await this.alertCtrl.create
+  ({
+    header: 'Please write here if you want to remove some of the food materials or whatever comments do you want.',
+    inputs: 
+    [
+      {
+        type:'textarea',
+        name: 'Comments',
+        label: 'Comments'
+      }
+    ],
+    buttons: 
+    [
+      {
+        text: 'Submit',
+        handler: (comments) => 
+        {
+          //console.log('comments', comments.Comments)
+          this.orderNowFunction(comments.Comments)
+             
+        }
+      },
+      {
+        role: 'cancel',
+        text: 'Close'
+      }
+    ]
+  })
+  await writecommentAlert.present()
+}
+async orderNowFunction(comments: string)
+{
+ //Order Now Function
   this.alertCtrl.create({
     message: 'Are you sure you want to finalize your order?',
     buttons: [
@@ -227,7 +295,9 @@ else
               Datetime: datetime,
               TotalAmount: parseFloat(this.total.toString()).toFixed(2),
               DatetimeToSort: new Date(),
-              PaymentMethod: this.PaymentMethod
+              PaymentMethod: this.PaymentMethod,
+              Comments: comments,
+              IsPaid: false
             }).then(el => {
               this.removeall() 
               this.meReference.update({
@@ -249,12 +319,6 @@ else
   }).then(el => {
     el.present()
   })
-}
-}
-
-async tanga()
-{
-  var wew = JSON.parse(sessionStorage.getItem('cart'))
-  console.log("wew", wew)
+  //End of Order Now Function 
 }
 }

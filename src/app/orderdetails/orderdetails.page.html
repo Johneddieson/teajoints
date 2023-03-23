@@ -34,23 +34,17 @@
   class="example-modal">
     <ng-template>
       <ion-content color="light">
-        
-        
         <ion-item *ngFor="let mat of dataMaterials">
-          
           <ion-label text-wrap>{{mat.itemName}} :</ion-label>
           <ion-input value="{{mat.Quantity}}"
-          placeholder="Enter grams per order" type="number"
-          ></ion-input>
-
+          placeholder="Enter Quantity" type="number"
+          (ionChange)="editMaterialQuantity($event, mat)"></ion-input>
       </ion-item>
-
-    
         <ion-item lines="none">
          <ion-buttons slot="end">
           <ion-button color="danger" (click)="close()">Close</ion-button>
 
-          <ion-button color="success">Save Changes</ion-button>
+          <ion-button color="success" (click)="saveQuantityChanged()">Save Changes</ion-button>
          </ion-buttons>
         </ion-item> 
       </ion-content>
@@ -70,6 +64,9 @@
 <ion-footer>
   <ion-row>
     <ion-col size="7">
+      <ion-button color="success" (click)="showComments()">
+        <ion-icon name="mail-unread-outline" slot="icon-only"></ion-icon>
+      </ion-button>
     </ion-col>
     <ion-col size="5">
       <ion-text>
