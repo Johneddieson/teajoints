@@ -9,6 +9,7 @@ import html2canvas from 'html2canvas';
 import { pipeFromArray } from 'rxjs/internal/util/pipe';
 import {format, isThisMinute, parseISO} from 'date-fns'
 import { ThisReceiver } from '@angular/compiler';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-adminpage',
@@ -54,15 +55,20 @@ export class AdminpagePage implements OnInit {
     private afstore: AngularFirestore
   ) 
   {
-    // this.afstore.collection('Materials')
-    // .valueChanges()
-    // .subscribe(data => 
-    //   {
-    //     var thedata = data as any
-    //     var wew = thedata.map(function (e) {return e.Itemname})
-    //     wew =  wew.filter(f => f == 'Honey')
-    //     console.log("tanga tanga", wew)
-    //   })
+  //   this.afstore.collection('Materials').snapshotChanges()
+  // .pipe(map(actions => actions.map(a => {
+  //   return {
+  //     id: a.payload.doc.id,
+  //     ...a.payload.doc.data() as any
+  //   }
+  // })))
+  // .subscribe(data => {
+  //   data.forEach(fe => {
+  //     this.afstore.doc(`Materials/${fe.id}`).update({
+  //       Stock: 20000
+  //     })
+  //   })
+  // })
   }
 
   setToday() {

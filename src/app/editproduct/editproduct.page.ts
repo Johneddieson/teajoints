@@ -44,6 +44,7 @@ registerForm: FormGroup;
  public materialArray : any[] = []
  public arrayForMaterial = []
 existingMaterials = [];
+public disableSaveChangesButton: boolean = false
 @ViewChild(IonModal) modal: IonModal;
   constructor(private actRoute: ActivatedRoute, public http: HttpClient, public formBuilder: FormBuilder, public loadingCtrl: LoadingController, public alertCtrl: AlertController,
     private afstore: AngularFirestore) {
@@ -97,7 +98,7 @@ existingMaterials = [];
    }
 
   
-   ngOnInit() {  
+   ngOnInit() { 
   }
   setMaterials()
   {
@@ -326,7 +327,7 @@ Validators.required,
     this.http.post('https://upload.uploadcare.com/base/', data).subscribe((events: any) => {
       var json = {events}
       for (var prop in json) {
-        console.log("wew", json[prop].file)
+        //console.log("wew", json[prop].file)
         for (const variables of files) {
           this.photoLink = `https://ucarecdn.com/${json[prop].file}/${variables.name}`
 
@@ -442,15 +443,16 @@ this.validationMessageObject = {
   close() {
     this.modal.dismiss()  
 }
- savechanges()
+ async savechanges()
 { 
+
   this.productReference.update({
         Description: this.registerForm.value.description,
         Stock: 0,
         GramsPerOrder: 0,
         UnitPrice: this.category != "Milktea" ? this.registerForm.value.unitprice.toString() : "0",
         SmallPrice: this.category == "Milktea" ? this.registerForm.value.smallprice.toString() : "0",
-        MediumPrice: this.category == "Milktea" ? this.registerForm.value.mediumprice : "0",
+        MediumPrice: this.category == "Milktea" ? this.registerForm.value.mediumprice.toString() : "0",
         ImageUrl: this.photoLink,
         Materials: this.arrayForMaterial
       }).then(async (success) => 
@@ -484,6 +486,7 @@ this.validationMessageObject = {
 updateGramsPerOrderEvent(event, mat)
 {
   mat.gramsperorder = parseInt(event.target.value)
+  this.validationForGramsPerOrder()
   //mat.gramsperordermedium = this.category != 'Milktea' ? 0 : parseInt(event.target.value)
   //mat.gramsperordersmall = this.category != 'Milktea' ? 0 : parseInt(event.target.value) 
 }
@@ -492,11 +495,46 @@ updateGramsPerOrderSmallEvent(event, mat)
   //mat.gramsperorder = this.category != 'Milktea' ? parseInt(event.target.value) : 0
   //mat.gramsperordermedium = this.category != 'Milktea' ? 0 : parseInt(event.target.value)
   mat.gramsperordersmall = parseInt(event.target.value) 
+  this.validationForGramsPerOrder()
 }
 updateGramsPerOrderMediumEvent(event, mat)
 {
   //mat.gramsperorder = this.category != 'Milktea' ? parseInt(event.target.value) : 0
   //mat.gramsperordermedium = this.category != 'Milktea' ? 0 : parseInt(event.target.value)
-  mat.gramsperordermedium = parseInt(event.target.value) 
+  mat.gramsperordermedium = parseInt(event.target.value)
+  this.validationForGramsPerOrder() 
+}
+
+validationForGramsPerOrder()
+{
+  var filterNanValues;
+
+    if (this.category != 'Milktea')
+    {
+      filterNanValues = this.arrayForMaterial.filter(f => (isNaN(f.gramsperorder) || f.gramsperorder == 0) 
+      || (isNaN(f.gramsperordersmall) && f.gramsperordersmall == 0)  || 
+      (isNaN(f.gramsperordermedium) && f.gramsperordermedium == 0)
+      )
+    }
+    else 
+    {
+      filterNanValues = this.arrayForMaterial.filter(f => (isNaN(f.gramsperorder) && f.gramsperorder == 0) 
+      || (isNaN(f.gramsperordersmall) || f.gramsperordersmall == 0)  || 
+      (isNaN(f.gramsperordermedium) || f.gramsperordermedium == 0)
+      )
+    }
+    
+    var showCondimentsWithNaNValues = filterNanValues.map(function(e) {return `${e.itemName.replace(",", "")} \n`}).toString()
+    showCondimentsWithNaNValues = showCondimentsWithNaNValues.replace(",", "")
+    if (filterNanValues.length >= 1)
+    {
+      this.disableSaveChangesButton = true
+    }
+    else 
+    {
+      //console.log("success")
+      //alert("success")
+      this.disableSaveChangesButton = false
+    } 
 }
 }

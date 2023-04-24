@@ -43,7 +43,7 @@
          <ion-buttons slot="end">
           <ion-button color="danger" (click)="close()">Close</ion-button>
 
-          <ion-button color="success" (click)="savechanges()">Save Changes</ion-button>
+          <ion-button color="success" [disabled]="disableSaveChangesButton" (click)="savechanges()">Save Changes</ion-button>
          </ion-buttons>
         </ion-item> 
       </ion-content>
@@ -194,7 +194,7 @@
       
               <ion-item counter="true">
                 <ion-label position="floating">Materials</ion-label>
-                <ion-select [multiple]="true" formControlName="materials">
+                <ion-select  [multiple]="true" formControlName="materials">
                   <ion-select-option *ngFor="let data of materialArray" [value]="data.id">
                     {{data.Itemname}}
                   </ion-select-option>

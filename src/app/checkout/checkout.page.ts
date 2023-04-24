@@ -220,11 +220,6 @@ else
  
 }
 
-async tanga()
-{
-  var wew = JSON.parse(sessionStorage.getItem('cart'))
-  console.log("wew", wew)
-}
 async writeCommentAlert()
 {
   var writecommentAlert = await this.alertCtrl.create
@@ -351,16 +346,94 @@ async orderNowFunction(comments: string)
         text: 'Yes',
         handler: async () => 
         {
-          
-
-          var loading = await this.loadingController.create
+          var getCurrentAddressAlert = await this.alertCtrl.create
           ({
-            message: 'Please wait...',
-            spinner: 'bubbles'
+            header: 'Click the get my current location button to get your realtime location.',
+            backdropDismiss: false,
+            buttons: 
+            [
+              {
+                text: 'Close',
+                role: 'cancel'
+              },
+             
+              {
+                text: 'Get My Current Location',
+                handler: async () => 
+                {
+
+                  navigator.geolocation.getCurrentPosition((success) => {
+                     this.msg.myLoc(success.coords.latitude, success.coords.longitude).subscribe(async data  => 
+                       {
+                         //console.log("my address", data.Response.View[0].Result[0].Location.Address)
+                         var address = data.Response.View[0].Result[0].Location.Address 
+                  getCurrentAddressAlert.header = "If the result is wrong, you can edit it manually or you can click close button to try again."
+                  getCurrentAddressAlert.inputs = 
+                  [
+                      {
+                        type: 'text',
+                        name: 'Street',
+                        value: `${address.HouseNumber} ${address.Street}`,
+                        placeholder: 'Enter Street'
+                      },
+                      {
+                        type: 'text',
+                        name: 'Barangay',
+                        value: `${address.District}`,
+                        placeholder: 'Enter Barangay'
+                      },
+                      {
+                        type: 'text',
+                        name: 'City',
+                        value: `${address.City} ${address.County}`,
+                        placeholder: 'Enter City'
+                      },
+                      {
+                        type: 'text',
+                        name: 'Country',
+                        value: `${address.Country}`,
+                        disabled: true
+                      },
+                    ]
+                    getCurrentAddressAlert.buttons = 
+                    [
+                      {
+                        text: 'Submit',
+                        handler: (addressvalue) => 
+                        {
+                          //console.log("Submitted", addressvalue.Address)
+                           
+                          this.meReference.update
+                          ({
+                            Address1: `${addressvalue.Street} ${addressvalue.Barangay} ${addressvalue.City}`
+                          }).then(async (addressupdatedsuccessfully) => 
+                          {
+                             var loading = await this.loadingController.create
+                          ({
+                            message: 'Please wait...',
+                            spinner: 'bubbles'
+                          })
+                          await loading.present();
+                          this.CartDetails()
+                          this.savingfunction(comments)
+                          })
+                          return false
+                        }
+                      },
+                      {
+                        text: 'Close',
+                        role: 'cancel'
+                      }
+                    ]
+                  })
+                   })
+                                   
+                  return false
+                }
+              }
+            ]
           })
-          await loading.present();
-          this.CartDetails()
-          this.savingfunction(comments)
+          await getCurrentAddressAlert.present();
         }
       },
       {

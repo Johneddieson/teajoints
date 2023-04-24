@@ -1,38 +1,4 @@
-<!-- <ion-toolbar>
-  <ion-buttons slot="start">
-    <ion-menu-button menu="main-menu"></ion-menu-button>
-    <ion-title>POS</ion-title>
-  </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button *ngIf="numbers != 0" (click)="checkout()">
-        <ion-badge color="danger">{{numbers}}</ion-badge>
-        <ion-icon name="cart-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
 
-   <ion-content>
-  <section class="shop" id="shop">
-    <div class="container">
-      <div class="box" *ngFor="let data of productList">
-        <img src="{{data.ImageUrl}}">
-        <h4>{{data.ProductName}}</h4>
-        <h5>{{data.UnitPrice | currency: '₱'}}</h5>
-        <h5>{{data.Stock}} remaining</h5>
-        <h5><span (click)="Decrease(data)" class="minus"> - </span>{{data.Quantity}}<span (click)="Increase(data)" class="plus"> + </span></h5>
-        <div class="cart" (click)="AddtoCart(data)">
-          <ion-button>Add to cart</ion-button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">  
-    <ion-fab-button color="primary" (click)="SearchCategory()">  
-      <ion-icon  name="search-outline"></ion-icon>  
-    </ion-fab-button>  
-  </ion-fab>  
-</ion-content>  -->
 
 <ion-toolbar>
   <ion-buttons slot="start">
@@ -45,12 +11,6 @@
         <ion-badge color="danger" *ngIf="numbers != 0">{{numbers}}</ion-badge>
         <ion-icon name="cart-outline"></ion-icon>
       </ion-menu-button>
-      
-      <!-- <ion-button *ngIf="numbers != 0" (click)="checkout()">
-        <ion-badge color="danger">{{numbers}}</ion-badge>
-        <ion-icon name="cart-outline"></ion-icon>
-      </ion-button> -->
-      
     </ion-buttons>
   </ion-toolbar>
 <ion-content>
@@ -64,11 +24,7 @@
         <!-- If Not Milktea -->
         <div *ngIf="data.Category != 'Milktea'">
           <span class="price">{{data.UnitPrice | currency: '₱'}}</span>
-        <!-- <br>
-        <span class="price">{{parseToFloat(data.Stock / data.GramsPerOrder)}} remaining</span>
-        <br>
-        <span *ngIf="data.ProductName == 'Fries' || data.ProductName == 'Chicken Fingers'">Flavors</span>           -->
-      </div>
+       </div>
 
 
         <!-- If Milktea -->
@@ -76,16 +32,7 @@
           <span class="price">Small : {{data.SmallPrice | currency: '₱'}}</span>
           <br>
           <span class="price">Medium : {{data.MediumPrice | currency: '₱'}}</span>  
-          <!-- <br>
-          <span class="price">{{parseToFloat(data.Stock / data.GramsPerOderSmall)}} remaining (Small)</span>
-          <br>
-          <span class="price">{{parseToFloat(data.Stock / data.GramsPerOderMedium)}} remaining (Medium)</span> -->
-          <!-- <br>
-            <ion-checkbox slot="start"></ion-checkbox> <ion-label>Small</ion-label>
-          <br>
-            <ion-checkbox slot="start"></ion-checkbox> <ion-label>Medium</ion-label> -->
-        </div>
-
+          </div>
         <span class="price">
           <h5>
             <span (click)="Decrease(data)" class="minus" button> - </span>{{data.Quantity}}<span (click)="Increase(data)" class="plus" button> + </span>

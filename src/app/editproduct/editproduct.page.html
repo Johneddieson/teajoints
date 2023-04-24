@@ -12,28 +12,25 @@
   class="example-modal">
     <ng-template>
       <ion-content color="light">
-        
         <ion-item *ngFor="let mat of arrayForMaterial" [hidden]="category == 'Milktea'">
-          
             <ion-label text-wrap>{{mat.itemName}} :</ion-label>
-            <ion-input value="{{mat.gramsperorder <= 0 ? null : mat.gramsperorder}}"
+            <!-- <ion-input value="{{mat.gramsperorder <= 0 ? null : mat.gramsperorder}}" -->
+              <ion-input value="{{mat.gramsperorder}}"
             placeholder="Enter grams per order" type="number"
             (ionChange)="updateGramsPerOrderEvent($event, mat)"></ion-input>
         </ion-item>
         <ion-item *ngFor="let mat of arrayForMaterial" [hidden]="category != 'Milktea'">
-          
           <ion-label text-wrap>{{mat.itemName}} Small:</ion-label>
-          <ion-input value="{{mat.gramsperordersmall <= 0 ? null : mat.gramsperordersmall}}"
+          <!-- <ion-input value="{{mat.gramsperordersmall <= 0 ? null : mat.gramsperordersmall}}" -->
+            <ion-input value="{{mat.gramsperordersmall}}"
           placeholder="Enter grams per order small" type="number"
           (ionChange)="updateGramsPerOrderSmallEvent($event, mat)"></ion-input>
-
       </ion-item>
 
       <ion-item *ngFor="let mat of arrayForMaterial" [hidden]="category != 'Milktea'">
-          
-     
         <ion-label text-wrap>{{mat.itemName}} Medium:</ion-label>
-        <ion-input value="{{mat.gramsperordermedium <= 0 ? null : mat.gramsperordermedium}}"
+        <!-- <ion-input value="{{mat.gramsperordermedium <= 0 ? null : mat.gramsperordermedium}}" -->
+          <ion-input value="{{mat.gramsperordermedium}}"
         placeholder="Enter grams per order medium" type="number"
         (ionChange)="updateGramsPerOrderMediumEvent($event, mat)"></ion-input>
     </ion-item>
@@ -42,7 +39,8 @@
          <ion-buttons slot="end">
           <ion-button color="danger" (click)="close()">Close</ion-button>
 
-          <ion-button color="success" (click)="savechanges()">Save Changes</ion-button>
+          <ion-button  
+          color="success" [disabled]="disableSaveChangesButton" (click)="savechanges()">Save Changes</ion-button>
          </ion-buttons>
         </ion-item> 
       </ion-content>

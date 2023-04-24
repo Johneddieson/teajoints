@@ -29,6 +29,7 @@ export class AddProductPage implements OnInit {
  sub2
  public arrayForMaterial = []
  existingMaterials = [];
+ public disableSaveChangesButton: boolean = true
 @ViewChild(IonModal) modal: IonModal;
   @ViewChild(IonInput) myInputVariable: IonInput;
   constructor(
@@ -71,6 +72,7 @@ export class AddProductPage implements OnInit {
       updateGramsPerOrderEvent(event, mat)
       {
         mat.gramsperorder = parseInt(event.target.value)
+        this.validationForGramsPerOrder()
         //mat.gramsperordermedium = this.category != 'Milktea' ? 0 : parseInt(event.target.value)
         //mat.gramsperordersmall = this.category != 'Milktea' ? 0 : parseInt(event.target.value) 
       }
@@ -78,13 +80,15 @@ export class AddProductPage implements OnInit {
       {
         //mat.gramsperorder = this.category != 'Milktea' ? parseInt(event.target.value) : 0
         //mat.gramsperordermedium = this.category != 'Milktea' ? 0 : parseInt(event.target.value)
-        mat.gramsperordersmall = parseInt(event.target.value) 
+        mat.gramsperordersmall = parseInt(event.target.value)
+        this.validationForGramsPerOrder() 
       }
       updateGramsPerOrderMediumEvent(event, mat)
       {
         //mat.gramsperorder = this.category != 'Milktea' ? parseInt(event.target.value) : 0
         //mat.gramsperordermedium = this.category != 'Milktea' ? 0 : parseInt(event.target.value)
         mat.gramsperordermedium = parseInt(event.target.value) 
+        this.validationForGramsPerOrder()
       }
 
 
@@ -384,7 +388,7 @@ export class AddProductPage implements OnInit {
       .subscribe((events: any) => {
         var json = { events };
         for (var prop in json) {
-          console.log('wew', json[prop].file);
+          //console.log('wew', json[prop].file);
           for (const variables of files) {
             this.photoLink = `https://ucarecdn.com/${json[prop].file}/${variables.name}`;
           }
@@ -628,5 +632,36 @@ this.validationMessageObject = {
 }
     return this.validationMessageObject
   }
-
+  validationForGramsPerOrder()
+  {
+    var filterNanValues;
+  
+      if (this.registerForm.value.category != 'Milktea')
+      {
+        filterNanValues = this.arrayForMaterial.filter(f => (isNaN(f.gramsperorder) || f.gramsperorder == 0) 
+        || (isNaN(f.gramsperordersmall) && f.gramsperordersmall == 0)  || 
+        (isNaN(f.gramsperordermedium) && f.gramsperordermedium == 0)
+        )
+      }
+      else 
+      {
+        filterNanValues = this.arrayForMaterial.filter(f => (isNaN(f.gramsperorder) && f.gramsperorder == 0) 
+        || (isNaN(f.gramsperordersmall) || f.gramsperordersmall == 0)  || 
+        (isNaN(f.gramsperordermedium) || f.gramsperordermedium == 0)
+        )
+      }
+      
+      var showCondimentsWithNaNValues = filterNanValues.map(function(e) {return `${e.itemName.replace(",", "")} \n`}).toString()
+      showCondimentsWithNaNValues = showCondimentsWithNaNValues.replace(",", "")
+      if (filterNanValues.length >= 1)
+      {
+        this.disableSaveChangesButton = true
+      }
+      else 
+      {
+        //console.log("success")
+        //alert("success")
+        this.disableSaveChangesButton = false
+      } 
+  }
 }

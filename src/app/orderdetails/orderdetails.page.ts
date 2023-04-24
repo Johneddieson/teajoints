@@ -46,6 +46,7 @@ getProductId = []
 currentStockofMaterial: string = ''
 public dataMaterials = []
 comments: string = ''
+public disabledSaveChanges: boolean = false
 @ViewChild(IonModal) modal: IonModal;
   constructor(private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
@@ -308,10 +309,8 @@ updateStocks2(itemId, Quantity, gramsperorder)
 }
 async saveQuantityChanged()
 {
-  //console.log("finalized", this.dataMaterials)
-  //console.log("new order details", orders)
-  //console.log("new order details", this.orders.map(function(e) {return e.Materials}))
   this.updateMaterial()
+  this.close()
 }
 async changeStatus()
 {
@@ -848,7 +847,7 @@ decreaseStock()
         var alertCtrl = await this.alertCtrl.create({
           header: `${this.firstname} ${this.lastname}`,
           subHeader: `${this.phonenumber} ${this.email}`,
-          message: `<br> Payment Method: ${this.paymentMethod} <br> Address1: ${this.address1} <br> Address2: ${this.address2}`,
+          message: `<br> <b>Payment Method:</b> ${this.paymentMethod} <br> <br> <b>Address:</b> ${this.address1}`,
           buttons: [
             {
               text: 'Close',
@@ -867,17 +866,16 @@ decreaseStock()
 
       getMaterialOfProducts(Data)
       {
-        this.dataMaterials = []
-        // Data = Data.Materials.map((i, index) => 
-        // {
-        //   return Object.assign({}, i, 
-        //     {
-        //       Quantity: Data.Quantity
-        //     })
-        // })
-        //console.log("the data", Data)
-        this.dataMaterials = Data.Materials
-        this.modal.present(); 
+        if (this.name != 'orders' ||this.status == 'Rejected')
+        {
+          alert("You can no longer alter the condiments!")
+        }
+        else 
+        {
+          this.dataMaterials = []
+          this.dataMaterials = Data.Materials
+          this.modal.present(); 
+        }
       }
       close() {
         this.modal.dismiss(); 
@@ -905,7 +903,7 @@ decreaseStock()
       //console.log("material", mat)
       mat.Quantity = parseInt(value)
       //console.log("this order", this.orders)
-
+      this.condimentsQuantityValidation()
     }
      updateMaterial()
     {
@@ -933,4 +931,20 @@ decreaseStock()
         alert(JSON.stringify(err))
       })
     }
-}
+
+    condimentsQuantityValidation()
+    {
+      var mapMaterials = this.orders.map(function(e) {return e.Materials})
+    var flattenMaterialsArray =  _.flatten(mapMaterials)
+      var filterInvalid = flattenMaterialsArray.filter(f => isNaN(f.Quantity))
+      if (filterInvalid.length > 0)
+      {
+        this.disabledSaveChanges = true
+      }
+      else 
+      {
+        this.disabledSaveChanges = false
+      }
+    }
+
+  }

@@ -1,9 +1,9 @@
 import { LocationStrategy } from '@angular/common';
-import { ApplicationRef, ChangeDetectorRef, Component, NgZone, OnInit, OnChanges, SimpleChanges, ɵɵsetComponentScope } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, NgZone, OnInit, OnChanges, SimpleChanges, ɵɵsetComponentScope, ViewChild } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestoreDocument, AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController, MenuController } from '@ionic/angular';
+import { AlertController, IonModal, LoadingController, MenuController } from '@ionic/angular';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { MessengerService } from '../messenger.service';
@@ -28,6 +28,9 @@ export class AdmincheckoutPage implements OnInit {
 
   sub
   myInformation: any = {}
+  public dataMaterials = []
+  public disabledSaveChanges: boolean = false
+  @ViewChild(IonModal) modal: IonModal;
   constructor(private menuCtrl: MenuController,
     private loadingController: LoadingController, private alertCtrl: AlertController, private locationStrategy: LocationStrategy, 
     private router: Router, private afauth: AngularFireAuth, private afstore: AngularFirestore, 
@@ -37,98 +40,12 @@ export class AdmincheckoutPage implements OnInit {
     private cdRef: ChangeDetectorRef,
     ) {
       this.msg.cartSubject.subscribe((d) => {
-        //this.CartDetails()
         this.loadCart()
        }) 
-    //   this.afauth.authState.subscribe(data => {
-      
-    //   this.msg.cartSubject.next(this.CartDetails())
-    //   this.msg.cartSubject.next(this.loadCart())
-       
-     
-     
-    // if (data && data.uid) {
-    
-    //     this.stockRefence =   this.afstore.collection('Products')
-    //     this.stockRefence.snapshotChanges()
-    //         .pipe(map(actions => actions.map(a => {
-    //           return {
-    //             id: a.payload.doc.id,
-    //             ...a.payload.doc.data() as any
-    //           }
-    //         })))
-    //         .subscribe(Data => {
-    //           this.msg.cartSubject.subscribe(d => {
-    //             this.getCartDetails = JSON.parse(sessionStorage.getItem('cart'))
-    //             const mergeById = (array1, array2) =>
-    //             array1.map(itm => ({
-    //                 ...Object.assign({}, itm, {
-    //                  Stock: array2.find((item) => (item.id === itm.id) && item).Stock,
-    //                  Category: itm.Category,
-    //                  ImageUrl: itm.ImageUrl,
-    //                  ProductName: itm.ProductName,
-    //                  Quantity: itm.Quantity,
-    //                  UnitPrice: itm.UnitPrice,
-    //                  id: itm.id
-    //                })
-    //             }));
-           
-    //             var results = mergeById(this.getCartDetails, Data)
-    //             sessionStorage.removeItem('cart')
-    //             this.getCartDetails = sessionStorage.setItem('cart', JSON.stringify(results))
-    //             this.loadCart()
-    //             this.CartDetails()  
-    //            console.log("tanga tanga")  
-    //           })  
-    //       })
-
-
-    //     this.meReference = afstore.doc(`users/${data.uid}`);
-    //     this.sub = this.meReference.valueChanges().subscribe(data => {
-    //       this.myInformation = data
-    //     })
-    //   }
-    // })
    }
 
   ngOnInit(): void {
    this.msg.cartSubject.next(this.loadCart()) 
-    // setInterval(() => {
-    //   this.loadCart()
-    // }, 100)
-    
-    //this.msg.cartSubject.next(this.CartDetails())
-    // this.msg.cartSubject.subscribe((d) => {
-    //   this.CartDetails()
-    //   this.loadCart()
-    //  })
-
-    // this.router.events.subscribe(() => {
-    //   this.zone.run(() => {
-    //     setTimeout(() => {
-    //       this.applicationRef.tick()
-    //       this.CartDetails()
-    //       this.loadCart()
-        
-    //     }, 0)
-    //   })
-    // })
-
-   //this.msg.cartSubject.subscribe(data => {
-  //    this.CartDetails()
-   //   this.loadCart()
-   //})
-    //this.msg.cartSubject.next(this.getCartDetails)
-
-    //this.CartDetails()
-    //this.loadCart()
-
-    // console.log("tanga tanga ngoninit")
-    
-    // this.msg.cartSubject.subscribe((d) => {
-    //   this.CartDetails()
-    //   this.loadCart()
-    //  })
   }
   
   CartDetails() {
@@ -814,4 +731,55 @@ async updateStocks(itemId, Quantity, gramsperorder, count, materialsLength)
   // })
   // }
 }
+getMaterialOfProducts(data)
+{
+  this.dataMaterials = []
+  this.dataMaterials = data.Materials
+  this.modal.present();
+  //console.log("data in admincheckout", data)
+}
+close() {
+  this.modal.dismiss();
+  // this.loadCart() 
+}
+
+editMaterialQuantity(event, mat)
+    {
+      var value = event.target.value
+      mat.Quantity = parseInt(value)
+      this.condimentsQuantityValidation()
+    }
+
+    condimentsQuantityValidation()
+    {
+      var orders = this.getCartDetails
+      var mapMaterials = orders.map(function(e) {return e.Materials})
+    var flattenMaterialsArray =  _.flatten(mapMaterials)
+      var filterInvalid = flattenMaterialsArray.filter(f => isNaN(f.Quantity))
+      if (filterInvalid.length > 0)
+      {
+        this.disabledSaveChanges = true
+      }
+      else 
+      {
+        this.disabledSaveChanges = false
+      }
+    }
+  async saveQuantityChanged()
+    {
+      sessionStorage.setItem('cart', JSON.stringify(this.getCartDetails))
+      var alertSaveMaterialChanges = await this.alertCtrl.create
+      ({
+        message: 'Saved Successfully!',
+        buttons: 
+        [
+          {
+            text: 'Ok',
+            role: 'cancel'
+          }
+        ]
+      })
+      await alertSaveMaterialChanges.present();
+      this.close()
+    }
 }

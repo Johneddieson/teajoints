@@ -8,6 +8,29 @@
 </ion-header>
 
 <ion-content>
+  <ion-modal  mode="sm" [backdropDismiss]="false"
+  class="example-modal">
+    <ng-template>
+      <ion-content color="light">
+        <ion-item *ngFor="let mat of dataMaterials">
+          <ion-label text-wrap>{{mat.itemName}} :</ion-label>
+          <ion-input value="{{mat.Quantity}}"
+          (ionChange)="editMaterialQuantity($event, mat)"
+          placeholder="Enter Quantity" type="number"></ion-input>
+      </ion-item>
+        <ion-item lines="none">
+         <ion-buttons slot="end">
+          <!-- <ion-button color="danger" [disabled]="disabledSaveChanges" 
+          (click)="close()">Close
+          </ion-button> -->
+          <ion-button color="success" [disabled]="disabledSaveChanges" 
+          (click)="saveQuantityChanged()">Save Changes
+        </ion-button>
+         </ion-buttons>
+        </ion-item> 
+      </ion-content>
+    </ng-template>
+  </ion-modal>
   <div class="small-container cart-page">
     <table>
       <tr>
@@ -18,7 +41,7 @@
       <tr *ngFor="let data of getCartDetails">
         <td>
           <div class="cart-info">
-           <img src="{{data.ImageUrl}}">
+           <img src="{{data.ImageUrl}}" style="cursor: pointer;" (click)="getMaterialOfProducts(data)">
             <div>
               <p>{{data.ProductName}} <br> <small>Price: {{data.UnitPrice | currency: '₱'}}</small>
               <br>

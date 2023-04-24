@@ -63,7 +63,8 @@ option =
             } 
             this.materialList = data
           })
-     }
+
+        }
      searchMaterial(event)
      {
       const query = event.target.value;
@@ -264,7 +265,8 @@ option =
           },
           {
             text: 'Close',
-            role: 'cancel'
+            role: 'cancel',
+            
           }
         ]        
       })
