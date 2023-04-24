@@ -408,16 +408,17 @@ async orderNowFunction(comments: string)
                             Address1: `${addressvalue.Street} ${addressvalue.Barangay} ${addressvalue.City}`
                           }).then(async (addressupdatedsuccessfully) => 
                           {
-                             var loading = await this.loadingController.create
-                          ({
-                            message: 'Please wait...',
-                            spinner: 'bubbles'
-                          })
-                          await loading.present();
+                          //    var loading = await this.loadingController.create
+                          // ({
+                          //   message: 'Please wait...',
+                          //   spinner: 'bubbles'
+                          // })
+                          // await loading.present();
                           this.CartDetails()
                           this.savingfunction(comments)
-                          })
-                          return false
+                          this.successAlert()  
+                        })
+                          //return false
                         }
                       },
                       {
@@ -475,5 +476,20 @@ this.meReference.update({
 alert(err)
 this.loadingController.dismiss();
 })
+}
+async successAlert()
+{
+  var alertSuccess = await this.alertCtrl.create
+  ({
+    message: 'Ordered sent successfully, please stand by in a bit while processing your order. Thanks!',
+    buttons: 
+    [
+      {
+        text: 'Ok',
+        role: 'cancel'
+      }
+    ]
+  })
+  await alertSuccess.present();
 }
 }
