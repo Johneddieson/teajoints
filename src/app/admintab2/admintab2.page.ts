@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AlertController, IonModal } from '@ionic/angular';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
+import { PaymongoService } from '../paymongo.service';
 @Component({
   selector: 'app-admintab2',
   templateUrl: './admintab2.page.html',
@@ -29,7 +30,8 @@ export class Admintab2Page implements OnInit, OnChanges {
   constructor(private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private router: Router,
     private currencyPipe: CurrencyPipe,
-    private alertCtrl: AlertController) {
+    private alertCtrl: AlertController,
+    private paymongoService: PaymongoService) {
   this.historyQuery();
   }
 
@@ -88,24 +90,44 @@ handleChangeStatus(event) {
                 ...a.payload.doc.data() as any
               }
             }))).subscribe(data => {
-              data = data.map((i, index) => {
-                return Object.assign({
-                  BillingAddress1: i.BillingAddress1,
-                  BillingAddress2: i.BillingAddress2,
-                  BillingFirstname: i.BillingFirstname,
-                  BillingIndexId: i.BillingIndexId,
-                  BillingLastname: i.BillingLastname,
-                  BillingPhonenumber: i.BillingPhonenumber,
-                  Billingemail: i.Billingemail,
-                  Datetime: i.Datetime,
-                  Status: i.Status,
-                  TotalAmount: i.TotalAmount,
-                  id: i.historyid,
-                  DatetimeToSort: moment(i.Datetime).toDate(),
-                  OrderDetails: i.OrderDetails,
-                  BillingFullName: `${i.BillingFirstname} ${i.BillingLastname}`
-                })
-              })
+              console.log("history data", data)
+              //data = data.map((i, index) => {
+                data.map((i, index) => {  
+              // return Object.assign({
+              //     BillingAddress1: i.BillingAddress1,
+              //     BillingAddress2: i.BillingAddress2,
+              //     BillingFirstname: i.BillingFirstname,
+              //     BillingIndexId: i.BillingIndexId,
+              //     BillingLastname: i.BillingLastname,
+              //     BillingPhonenumber: i.BillingPhonenumber,
+              //     Billingemail: i.Billingemail,
+              //     Datetime: i.Datetime,
+              //     Status: i.Status,
+              //     TotalAmount: i.TotalAmount,
+              //     id: i.historyid,
+              //     DatetimeToSort: moment(i.Datetime).toDate(),
+              //     OrderDetails: i.OrderDetails,
+              //     BillingFullName: `${i.BillingFirstname} ${i.BillingLastname}`
+              //   })
+              i.DatetimeToSort = moment(i.Datetime).toDate()
+              i.BillingFullName =  `${i.BillingFirstname} ${i.BillingLastname}`
+              i.id = i.historyid
+       
+                   if (i.PaymentMethod == 'Online Payment')
+                   {
+                    var linkreplaceDomain = i.link.replace("https://pm.link/teajoints-snq/", "")
+                    this.paymongoService.retrievePaymentLink(linkreplaceDomain).subscribe(linkobject => 
+                      {
+                        i.billingstatus = linkobject.data.attributes.status.toUpperCase()
+                      },
+                      error => console.log("retrievelinkerror", JSON.stringify(error))
+                      )  
+                   }
+                   else 
+                   {
+                    i.billingstatus = i.BillingLastname == 'Walk-In' ? 'Cash' :  'COD'
+                  }                  
+                  })
               data = data.sort((a, b) => Number(b.DatetimeToSort) - Number(a.DatetimeToSort))
                 if (this.customerName != "")
                 {
@@ -116,7 +138,6 @@ handleChangeStatus(event) {
                   data = data.filter(f => f.Billingemail.toLowerCase().includes(this.inp_customerEmail.toLowerCase())) 
                   
                 }
-                console.log("the stats", this.status)
                 if (this.status != undefined) 
                 {
                   data = data.filter(f => f.Status.includes(this.status)) 

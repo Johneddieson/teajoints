@@ -4,6 +4,7 @@ import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/fire
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { map } from 'rxjs/operators';
+import { PaymongoService } from '../paymongo.service';
 
 @Component({
   selector: 'app-mainpage',
@@ -23,7 +24,12 @@ export class MainpagePage implements OnInit {
 sub
 products: any[] = []
 category = "";
-  constructor(private afauth: AngularFireAuth, private afstore: AngularFirestore,
+amount: number = 25000;
+  description: string = 'Sample Payment';
+  statement_descriptor: string = 'ACME Store';
+  paymentLink: string = '';
+
+  constructor(private paymongoService: PaymongoService, private afauth: AngularFireAuth, private afstore: AngularFirestore,
     private actRoute: ActivatedRoute,
     private router : Router,
     private alertCtrl: AlertController,
@@ -176,5 +182,13 @@ category = "";
       this.dropdown = false
     }
     
+      }
+
+      createPaymentLink() {
+        this.paymongoService.createPaymentLink(this.amount, this.description, this.statement_descriptor).subscribe(
+          // response => this.paymentLink = response.data.attributes.url,
+          response => console.log("url link", response.data.attributes.checkout_url),  
+          error => console.log("error paymongo", error)
+        );
       }
 }

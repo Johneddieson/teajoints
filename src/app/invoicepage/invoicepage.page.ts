@@ -41,6 +41,7 @@ export class InvoicepagePage implements OnInit {
   paymentMethod;
   type;
   comments;
+  PaymentLink;
   constructor(private applicationRef: ApplicationRef, private zone: NgZone, private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
     private router: Router,
@@ -69,6 +70,7 @@ return {
 
     })).subscribe(async data => {
         //console.log("haha", data)
+        this.PaymentLink = this.name == 'orders' ? data.linkReference : data.link
       this.orders = data.OrderDetails;
       this.data = data
       this.total =  data.TotalAmount;
@@ -152,5 +154,9 @@ return {
   // pdf.save('output.pdf');
   pdf.save(`${fullname} - ${this.dateOrdered2}`); 
   });
+ }
+ goToLink()
+ {
+  window.open(this.PaymentLink, '_blank');
  }
 }

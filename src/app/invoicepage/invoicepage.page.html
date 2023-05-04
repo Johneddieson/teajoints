@@ -11,7 +11,13 @@
       <ion-fab-button (click)="convertToPDF()">  
         <ion-icon name="print-outline"></ion-icon>  
       </ion-fab-button>  
-    </ion-fab>  
+    </ion-fab>
+    <ion-fab *ngIf="paymentMethod == 'Online Payment' && name != 'orders' && 
+    lastname == 'Walk-In'" vertical="bottom" horizontal="start" slot="fixed">  
+        <ion-fab-button color="success" (click)="goToLink()">  
+          <ion-icon name="cash-outline"></ion-icon>  
+        </ion-fab-button>  
+      </ion-fab> 
   <!-- <div id="invoice">
     <div class="toolbar hidden-print">
         <div class="text-right">

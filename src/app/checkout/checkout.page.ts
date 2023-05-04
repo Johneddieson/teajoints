@@ -9,6 +9,7 @@ import { MessengerService } from '../messenger.service';
 import * as firebase from 'firebase/app'
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
+import { PaymongoService } from '../paymongo.service';
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.page.html',
@@ -23,8 +24,17 @@ export class CheckoutPage implements OnInit {
   sub
   myInformation: any = {}
   PaymentMethod: string = ''
-  
-  constructor(private loadingController: LoadingController, private alertCtrl: AlertController, private locationStrategy: LocationStrategy, private router: Router, private afauth: AngularFireAuth, private afstore: AngularFirestore, private msg: MessengerService) {
+  amount: number = 25000;
+  description: string = 'Sample Payment';
+  statement_descriptor: string = 'ACME Store';
+  paymentLink: string = '';
+  constructor(private loadingController: LoadingController, 
+    private alertCtrl: AlertController, 
+    private locationStrategy: LocationStrategy, 
+    private router: Router, 
+    private afauth: AngularFireAuth, 
+    private afstore: AngularFirestore, private msg: MessengerService,
+    private paymongoService: PaymongoService) {
 
     this.afauth.authState.subscribe(data => {
       if (data && data.uid) {
@@ -416,7 +426,7 @@ async orderNowFunction(comments: string)
                           // await loading.present();
                           this.CartDetails()
                           this.savingfunction(comments)
-                          this.successAlert()  
+                            
                         })
                           //return false
                         }
@@ -447,6 +457,12 @@ async orderNowFunction(comments: string)
 }
 savingfunction(comments)
 {
+  if (parseFloat(this.total.toString()) < 100 && this.PaymentMethod == "Online Payment")
+  {
+    this.minimumAlert()
+  }
+  else 
+  {
   var datetime = moment(new Date()).format("MM-DD-YYYY hh:mm A")
   this.total = this.total + 30;
 this.afstore.collection('Orders').add({
@@ -464,7 +480,7 @@ TotalAmount: parseFloat(this.total.toString()).toFixed(2),
 DatetimeToSort: new Date(),
 PaymentMethod: this.PaymentMethod,
 Comments: comments,
-//IsPaid: false
+linkReference: ''
 }).then(el => {
   this.loadingController.dismiss()
 this.removeall() 
@@ -472,10 +488,12 @@ this.meReference.update({
   Address1: '',
   Address2: ''
 })
+this.successAlert()
 }).catch(err => {
 alert(err)
 this.loadingController.dismiss();
 })
+}
 }
 async successAlert()
 {
@@ -492,4 +510,21 @@ async successAlert()
   })
   await alertSuccess.present();
 }
+
+async minimumAlert()
+{
+  var minimumAlert = await this.alertCtrl.create
+  ({
+    message: 'If your payment method is cash on delivery, your order must be greater than or equal to 100',
+    buttons: 
+    [
+      {
+        text: 'Close',
+        role: 'cancel'
+      }
+    ]
+  })
+  await minimumAlert.present();
+}
+
 }

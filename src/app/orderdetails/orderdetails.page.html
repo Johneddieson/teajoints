@@ -39,8 +39,9 @@
          <ion-buttons slot="end">
           <!-- <ion-button color="danger" [disabled]="disabledSaveChanges" (click)="close()">Close</ion-button> -->
 
-          <ion-button [disabled]="disabledSaveChanges" color="success" (click)="saveQuantityChanged()">Save Changes</ion-button>
-         </ion-buttons>
+          <ion-button *ngIf="status == 'Pending'" [disabled]="disabledSaveChanges" color="success" (click)="saveQuantityChanged()">Save Changes</ion-button>
+          <ion-button *ngIf="status != 'Pending'" color="danger" (click)="close()">Close</ion-button> 
+        </ion-buttons>
         </ion-item> 
       </ion-content>
     </ng-template>

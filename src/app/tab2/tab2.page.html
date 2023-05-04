@@ -25,9 +25,6 @@
       </ion-card-subtitle>
 
       <ion-item>
-        <!-- <ion-icon *ngIf="item.value.itemPriority === 'high'" color="danger" size="small" name="ellipse"></ion-icon>
-        <ion-icon *ngIf="item.value.itemPriority === 'low'" color="success" size="small" name="ellipse"></ion-icon>
-        <ion-icon *ngIf="item.value.itemPriority === 'middle'" color="warning" size="small" name="ellipse"></ion-icon> -->
         <ion-label text-wrap>{{data.Message}}</ion-label>
       </ion-item>
 
@@ -35,8 +32,9 @@
 
   
     <ion-card-content>
-      <!-- {{item.value.itemDueDate | date:'fullDate'}} -->
-      <ion-label>Due  {{data.Datetime}}</ion-label>
+      <ion-label>Date :  {{data.Datetime}}</ion-label>
+      <br>
+      <ion-label *ngIf="data.link != ''">Billing Status :  {{data.paymentStatus}}</ion-label>
     </ion-card-content>
 
     <ion-row>
@@ -44,19 +42,14 @@
 
       <ion-item *ngIf="!data.read" button (click)="update(data)">
         <!-- <ion-icon name="book"></ion-icon> -->
-        <p>Mark as read</p>
+        <ion-text color="danger">Mark as read</ion-text>
       </ion-item>
 
-      <!-- <ion-item button (click)="delete(item.key)">
-        <ion-icon name="trash-outline"></ion-icon>
-        <p>Cancel</p>
-      </ion-item> -->
+      <ion-item *ngIf="data.PaymentMethod == 'Online Payment' && data.Status == 'Approved'" button
+      (click)="redirectToLinkPagePayment(data.link)">
+        <ion-text color="success">Pay now</ion-text>
+      </ion-item>
     </ion-row>
 
   </ion-card>
-  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="addNewItem()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab> -->
-</ion-content>
+ </ion-content>

@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
 import * as _ from 'lodash';
+import { PaymongoService } from '../paymongo.service';
 @Component({
   selector: 'app-orderdetails',
   templateUrl: './orderdetails.page.html',
@@ -47,6 +48,10 @@ currentStockofMaterial: string = ''
 public dataMaterials = []
 comments: string = ''
 public disabledSaveChanges: boolean = false
+amount: number = 25000;
+  description: string = 'Sample Payment';
+  statement_descriptor: string = 'ACME Store';
+  paymentLink: string = '';
 @ViewChild(IonModal) modal: IonModal;
   constructor(private actRoute: ActivatedRoute,
     private afstore: AngularFirestore, private afauth: AngularFireAuth,
@@ -54,7 +59,8 @@ public disabledSaveChanges: boolean = false
     private currencyPipe: CurrencyPipe,
     private alertCtrl: AlertController,
     private http: HttpClient,
-    private loadingCtrl: LoadingController) {
+    private loadingCtrl: LoadingController,
+    private paymongoService: PaymongoService) {
 this.afauth.authState.subscribe(user => {
   if (user.uid && user) {
    // console.log("wew", user)
@@ -314,8 +320,6 @@ async saveQuantityChanged()
 }
 async changeStatus()
 {
- // console.log("finalized", this.dataMaterials)
-  
  var data = this.data
   
   if (data.Status == 'Pending')
@@ -328,26 +332,47 @@ async changeStatus()
         text: 'Yes',
         handler: async () => 
         {
+          var items = data.OrderDetails.map(function (e) { return `${e.ProductName}(${e.Quantity} pcs), Unit price of ₱${e.UnitPrice}` }).join(', ')
           var datetime = moment(new Date()).format("DD-MM-YYYY hh:mm A")
-        
-          //Update order to Approved
+       
+          if (data.PaymentMethod == 'Online Payment')
+          {
+             //Update order to Approved
           this.afstore.doc(`Orders/${data.id}`).update({
             Status: 'Approved'
           }).then(async el => {
-          //User Notification Approved
           var totalAmount = this.currencyPipe.transform(data.TotalAmount, "", "")
-          var items = data.OrderDetails.map(function (e) { return `${e.ProductName}(${e.Quantity} pcs), Unit price of ₱${e.UnitPrice}` }).join(', ')
           var confirmed = `Your order has been approved by the admin. ${items}. Total amount of ₱${totalAmount}`
-          this.afstore.collection(`users/${data.BillingIndexId}/notifications`).add({
-            Message: confirmed,
-            Datetime: datetime,
-            read: false,
-            remarks: "Your order has been approved",
-            DatetimeToSort: new Date()
-          })
         //Decrease Stock
           this.decreaseStock()
-        
+           //create payment link
+          var totalamountReplace = data.TotalAmount.replace(".", "")
+          var descriptionForOnlinePayment = data.OrderDetails.map(function (e) { return `Orders : ${e.ProductName}(${e.Quantity} pcs), Unit price of ₱${e.UnitPrice} \n
+          Fullname: ${data.BillingFirstname} ${data.BillingLastname}` }).join(', ')
+          this.paymongoService.createPaymentLink(parseInt(totalamountReplace), descriptionForOnlinePayment, "Teajoints sizzling house").subscribe(
+            response => 
+            {
+              //update linkference column
+              this.afstore.doc(`Orders/${data.id}`).update
+              (
+                {
+                  linkReference: data.PaymentMethod == 'Online Payment' ? 
+                  response.data.attributes.checkout_url : ''
+                }
+                )
+            
+              //User Notification Approved
+              this.afstore.collection(`users/${data.BillingIndexId}/notifications`).add({
+                Message: confirmed,
+                Datetime: datetime,
+                read: false,
+                remarks: "Your order has been approved",
+                DatetimeToSort: new Date(),
+                PaymentMethod: data.PaymentMethod,
+                Status: 'Approved',
+                link: data.PaymentMethod == "COD" ? "" :  response.data.attributes.checkout_url
+              })
+              
          
           //History Saving
           this.afstore.collection('History').add({
@@ -366,9 +391,15 @@ async changeStatus()
             read: false,
             DatetimeToSort: new Date(),
             PaymentMethod: data.PaymentMethod,
-            Comments: data.Comments
+            Comments: data.Comments,
+            link: data.PaymentMethod == 'Online Payment' ? 
+            response.data.attributes.checkout_url : ''
           })
-          }).catch(async err => {
+            }, 
+            error => alert(JSON.stringify(error))
+          );
+        
+        }).catch(async err => {
               var ErrorAlert = this.alertCtrl.create({
                 message: JSON.stringify(err),
                 buttons: [
@@ -402,6 +433,87 @@ async changeStatus()
             })
             await alertControllerApprovedStatusSuccess.present();
           }, 3000);
+          }
+          else 
+          {
+
+          //Update order to Approved
+          this.afstore.doc(`Orders/${data.id}`).update({
+            Status: 'Approved'
+          }).then(async el => {
+          var totalAmount = this.currencyPipe.transform(data.TotalAmount, "", "")
+          var confirmed = `Your order has been approved by the admin. ${items}. Total amount of ₱${totalAmount}`
+        //Decrease Stock
+          this.decreaseStock()
+        
+           //User Notification Approved
+              this.afstore.collection(`users/${data.BillingIndexId}/notifications`).add({
+                Message: confirmed,
+                Datetime: datetime,
+                read: false,
+                remarks: "Your order has been approved",
+                DatetimeToSort: new Date(),
+                PaymentMethod: data.PaymentMethod,
+                Status: 'Approved',
+                link: ""
+              })
+          //History Saving
+          this.afstore.collection('History').add({
+            BillingAddress1: data.BillingAddress1,
+            BillingAddress2: data.BillingAddress2,
+            BillingFirstname: data.BillingFirstname,
+            BillingIndexId: data.BillingIndexId,
+            BillingLastname: data.BillingLastname,
+            BillingPhonenumber: data.BillingPhonenumber,
+            Billingemail: data.Billingemail,
+            Datetime: data.Datetime,
+            Status: "Delivered",
+            TotalAmount: data.TotalAmount,
+            id: data.id,
+            OrderDetails: data.OrderDetails,
+            read: false,
+            DatetimeToSort: new Date(),
+            PaymentMethod: data.PaymentMethod,
+            Comments: data.Comments,
+            link: ""
+          })
+           
+        
+        }).catch(async err => {
+              var ErrorAlert = this.alertCtrl.create({
+                message: JSON.stringify(err),
+                buttons: [
+                  {
+                    text: 'Ok',
+                    role: 'cancel'
+                  }
+                ]
+              })
+              await ErrorAlert;
+          })
+          var ApprovedStatusLoadingController = await this.loadingCtrl.create
+          ({
+            spinner: 'bubbles',
+            message: 'Approving status please wait...'
+          })
+          await ApprovedStatusLoadingController.present();
+
+          setTimeout(async () => {
+            await ApprovedStatusLoadingController.dismiss();
+            var alertControllerApprovedStatusSuccess = await this.alertCtrl.create
+            ({
+              message: 'This order approved successfully!',
+              buttons: 
+              [
+                {
+                  text: 'Close',
+                  role: 'cancel'
+                }
+              ]
+            })
+            await alertControllerApprovedStatusSuccess.present();
+          }, 3000);
+        }
         }
       },
       {
@@ -439,7 +551,10 @@ async changeStatus()
               Datetime: datetime,
               read: false,
               remarks: "Your order is preparing",
-              DatetimeToSort: new Date()
+              DatetimeToSort: new Date(),
+              PaymentMethod: data.PaymentMethod,
+              Status: 'Preparing',
+              link: ""
             })              
             })
             .catch(async err => {
@@ -513,7 +628,10 @@ async changeStatus()
               Datetime: datetime,
               read: false,
               remarks: "Your order is to deliver",
-              DatetimeToSort: new Date()
+              DatetimeToSort: new Date(),
+              PaymentMethod: data.PaymentMethod,
+              Status: 'To Deliver',
+              link: ""
             })              
             })
             .catch(async err => {
@@ -589,7 +707,10 @@ async changeStatus()
               Datetime: datetime,
               read: false,
               remarks: "Your order has been delivered",
-              DatetimeToSort: new Date()
+              DatetimeToSort: new Date(),
+              PaymentMethod: data.PaymentMethod,
+              Status: 'Delivered',
+              link: ""
             })              
             })
             .catch(async err => {
@@ -744,7 +865,10 @@ decreaseStock()
                           Datetime: datetime,
                           read: false,
                           remarks: dataremarks.remarks,
-                          DatetimeToSort: new Date()
+                          DatetimeToSort: new Date(),
+                          PaymentMethod: data.PaymentMethod,
+                          Status: 'Rejected',
+                          link: ""
                         })
     
                         //History Saving
@@ -866,7 +990,7 @@ decreaseStock()
 
       getMaterialOfProducts(Data)
       {
-        if (this.name != 'orders' ||this.status == 'Rejected')
+        if (this.name != 'orders' || this.status == 'Rejected')
         {
           alert("You can no longer alter the condiments!")
         }
@@ -946,5 +1070,25 @@ decreaseStock()
         this.disabledSaveChanges = false
       }
     }
+    async  createPaymentLink(id, TotalAmount, items) {
+      var totalamountReplace = TotalAmount.replace(".", "")
+      //console.log("id", id)
+      //console.log("TotalAmount", totalamountReplace)
+      //console.log("items", items)
+      this.paymongoService.createPaymentLink(parseInt(totalamountReplace), items, "Teajoints sizzling house").subscribe(
+        response => 
+        {
+          this.afstore.doc(`Orders/${id}`).update({linkReference: response.data.attributes.checkout_url})
+          
+        }, 
+        //console.log("url link", response.data.attributes.checkout_url),  
+        error => alert(JSON.stringify(error))
+      );
 
+      // this.paymongoService.createPaymentLink(totalamountReplace, items, "Teajoints sizzling house")
+      // .subscribe(response => 
+      //   {
+
+      //   })
+    }
   }

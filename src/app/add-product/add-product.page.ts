@@ -38,18 +38,8 @@ export class AddProductPage implements OnInit {
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     private afstore: AngularFirestore
-  ) {
-        // this.afstore.collection('Products').get()
-        // .pipe(map(actions => {
-        //   var tempdoc = actions.docs.map((doc) => {
-        //     return {id: doc.id, ...doc.data() as any}
-        //   })
-        //   return tempdoc
-        // }))
-        // .subscribe(data => {
-        //   console.log("the data", data)
-        // })
-  
+  ) 
+  {
         this.materialReference = this.afstore.collection(`Materials`, ref => ref.orderBy('Itemname'))
         this.sub2 = this.materialReference.snapshotChanges()
           .pipe(map(actions => actions.map(a => {
@@ -459,7 +449,7 @@ export class AddProductPage implements OnInit {
             return tempdoc
           }))
           .subscribe(async data => {
-            var existing = data.filter(f => f.Category == this.registerForm.value.category && f.ProductName == this.registerForm.value.firstname)
+            var existing = data.filter(f => f.Category.toLowerCase().replace(/\s+/g, '') == this.registerForm.value.category.toLowerCase().replace(/\s+/g, '') && f.ProductName.toLowerCase().replace(/\s+/g, '') == this.registerForm.value.firstname.toLowerCase().replace(/\s+/g, ''))
 
               if (existing.length > 0) 
               {

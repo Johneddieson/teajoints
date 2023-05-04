@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AlertController, MenuController } from '@ionic/angular'
 import { AuthServiceService } from './auth-service.service';
 import { AdmincheckoutPage } from './admincheckout/admincheckout.page';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -33,11 +34,13 @@ export class AppComponent {
     ) {
         this.angularFireAuth.authState.subscribe(data => {
           if (data) {
-            if (data.displayName == 'admin') {
+            if (data.displayName == 'admin') 
+            {
               this.isAdmin = true
               this.angularFireStoreDocument = this.angularFireStore.collection('users').doc(`${data.uid}`)
-           
-            } else {
+            } 
+            else 
+            {
              this.isAdmin = false
               this.angularFireStoreDocument = this.angularFireStore.collection('users').doc(`${data.uid}`)
               
@@ -188,43 +191,61 @@ export class AppComponent {
           handler:  (data) => 
           {
           //  console.log("data", data)
-            if (data.Itemname == '' && data.Stock == '')
+        
+          this.angularFireStore.collection('Materials').get()
+          .pipe(map(actions => {
+            var tempdoc = actions.docs.map((doc) => {
+              return {id: doc.id, ...doc.data() as any}
+            })
+            return tempdoc
+          })).subscribe(existingmaterials => 
             {
-                alert("Itemname and Stock shouldn't be empty")
-            }
-            else if (data.Itemname == '')
-            {
-              alert("Itemname shouldn't be empty")
-            }
-            else if (data.Stock == '')
-            {
-              alert("Stock shouldn't be empty")
-            }
-            else 
-            {
-   this.angularFireStore
-     .collection('Materials')
-     .add({
-       Itemname: data.Itemname,
-       Stock: parseInt(data.Stock),
-     })
-     .then(async (success) => {
-       var MaterialsSavedAlert = await this.alertCtrl.create({
-         message: 'Material added successfully!',
-         backdropDismiss: false,
-         buttons: [
-           {
-             text: 'Close',
-             role: 'cancel',
-           },
-         ],
+              if (data.Itemname == '' && data.Stock == '')
+              {
+                  alert("Itemname and Stock shouldn't be empty")
+              }
+              else if (data.Itemname == '')
+              {
+                alert("Itemname shouldn't be empty")
+              }
+              else if (data.Stock == '')
+              {
+                alert("Stock shouldn't be empty")
+              }
+              else 
+              {
+                var existing = existingmaterials.filter(f => f.Itemname.toLowerCase().replace(/\s+/g, '') == data.Itemname.toLowerCase().replace(/\s+/g, ''))
+                if (existing.length > 0)
+                {
+                  alert("Itemname already exists.")
+                }
+                else 
+                {
+          this.angularFireStore
+       .collection('Materials')
+       .add({
+         Itemname: data.Itemname,
+         Stock: parseInt(data.Stock),
+       })
+       .then(async (success) => {
+         var MaterialsSavedAlert = await this.alertCtrl.create({
+           message: 'Material added successfully!',
+           backdropDismiss: false,
+           buttons: [
+             {
+               text: 'Close',
+               role: 'cancel',
+             },
+           ],
+         });
+         await MaterialsSavedAlert.present();
+       })
+       .catch((err) => {
+         alert(JSON.stringify(err));
        });
-       await MaterialsSavedAlert.present();
-     })
-     .catch((err) => {
-       alert(JSON.stringify(err));
-     });
+              }
             }
+            })
           }
         },
         {
